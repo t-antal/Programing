@@ -1,0 +1,1002 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Alapismeretek</title>
+<link href="krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<a name="1. FEJEZET" id="1. FEJEZET"></a>
+
+<div id="main">
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="../index.html#Előszó1">Előszó</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="02.html">2. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+  <h2><i>1. FEJEZET:</i></h2>
+  <h2>Alapismeretek</h2>
+  <br />
+  Kezdjük a C nyelv tanulását az alapfogalmakkal! Az a célunk, hogy a nyelv elemeit működőképes programokon keresztül mutassuk be, anélkül, hogy belemennénk a részletekbe, formális szabályokba és a kivételek tárgyalásába. Ezért nem törekszünk a teljességre vagy pontosságra, de természetesen ettől függetlenül a leírt példák helyesek. El szeretnénk érni, hogy az olvasó a lehető leggyorsabban hasznos kis programokat írjon, emiatt ebben a fejezetben csak az alapfogalmakra (változók, állandók, aritmetika, vezérlési szerkezetek, függvények, ill. az egyszerű adatbevitel és -kivitel) koncentrálunk. Szándékosan nem foglalkozunk a C nyelv olyan lehetőségeivel, amelyek elsősorban a nagyobb programok írásánál szükségesek. Ezek közé tartozik a mutatók és struktúrák használata, a C nyelv gazdag operátorkészletének jelentős része, néhány vezérlési szerkezet és a standard könyvtár.
+  <p> Ennek a megközelítésnek természetesen hátrányai is vannak: a legsúlyosabb, hogy a nyelv egy elemét leíró összes információt a fejezet rövidsége miatt itt nem adhatjuk meg és ebből félreértések keletkezhetnek. A másik gond, hogy a példaprogramok nem használhatják ki a C nyelv összes lehetőségét, így nem olyan tömörek és elegánsak, mint ahogy szeretnénk. Mindent elkövettünk, hogy ezeket a hátrányokat csökkentsük, de kérjük az olvasót, hogy az itt elmondottakat vegye figyelembe a fejezet tanulmányozása során. Az előzőek miatt a későbbi fejezetekben kénytelenek leszünk ismétlésekbe bocsátkozni, de reméljük, hogy ez inkább segíti az olvasót a megértésben, mintsem bosszantaná.</p>
+  <p> A tapasztalt programozók természetesen már ebből a fejezetből is kikövetkeztethetik a számukra szükséges további tudnivalókat. A kezdőknek javasoljuk, hogy az itteni példákhoz hasonló kis programokat írjanak.</p>
+  <p> Az 1. fejezetet a kezdő és tapasztalt programozók egyaránt keretként használhatják a 2. fejezettel kezdődő részletes leíráshoz. <br />
+  </p>
+  <h3><a name="1.1." id="1.1."></a>1.1. Indulás</h3>
+  <br />
+  Egy új programozási nyelv elsajátításának egyetlen útja, hogy az adott nyelven programokat írunk. Az első példaprogram minden nyelv tanulásának kezdetén előfordul. A feladat, hogy nyomtassuk ki a következő szöveget:
+  <pre>
+Halló mindenki!
+</pre>
+  A feladat megoldása számos problémát vet fel: képesnek kell lennünk egy program létrehozására, annak sikeres lefordítására, betöltésére, futtatására, és ki kell találnunk, hogy a kiírt szöveg hol jelenik meg. Ezeken a rutin jellegű részleteken túljutva a többi már viszonylag egyszerű.
+  <p> A C nyelvben a „Halló mindenki!” szöveget kiíró program a következő módon néz ki: </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+main()
+{
+   <span class="f">printf</span>(&quot;Halló mindenki!<span class="e">\n</span>&quot;);
+}
+</pre>
+  A program futtatásának módja az általunk használt rendszertől függ. Például a UNIX operációs rendszer alatt a programot egy olyan forrásállományban kell létrehozni, amelynek neve <span class="m">.c</span>-re végződik. Ilyen név lehet pl. az, hogy <span class="m">hallo.c</span>. Az így elkészített forrásprogramot a
+  <pre>
+cc hallo.c
+</pre>
+  paranccsal le kell fordítani.
+  <p> Ha a program beírásakor nem hibáztunk (pl. nem hagytunk ki betűket vagy nem írtunk valamit hibásan), akkor a fordítás rendben megtörténik és egy <span class="m">a.out</span> nevű végrehajtható állomány keletkezik. Ezt az </p>
+  <pre>
+a.out
+</pre>
+  paranccsal futtathatjuk. Ennek hatására a kimeneten megjelenik a
+  <pre>
+Halló mindenki!
+</pre>
+  szöveg.
+  <p> Más operációs rendszer alatt dolgozva természetesen más szabályok érvényesek. Ha gondunk támad, forduljunk a helyi viszonyokat ismerő szakemberhez.</p>
+  <p> Most némi magyarázatot fűzünk a mintaprogramunkhoz. Egy C nyelvű program, bármilyen méretű is legyen, <i>függvényekből</i> és <i>változókból</i> áll. A függvény utasításokat tartalmaz, amelyek meghatározzák, hogy a számítás menetét hogyan kell végrehajtani, és a változók azokat az értékeket tárolják, amelyekkel a számolást végre kell hajtani. A C nyelv függvényei hasonlóak a FORTRAN szubrutinjaihoz, ill. függvényeihez vagy a Pascal eljárásaihoz, ill. függvényeihez. A példaprogramunk egy <span class="m">main</span> nevű függvényből áll. Általában a függvény neve tetszőleges lehet, de a <span class="m">main</span> egy speciális név és a program végrehajtása mindig a <span class="m">main</span> elején kezdődik. Ebből következik, hogy minden programban valahol kell hogy legyen egy <span class="m">main</span>.</p>
+  <p> A <span class="m">main</span> a feladat végrehajtása érdekében általában további függvényeket hív, és ezeket vagy a programmal együtt mi írjuk, vagy a függvénykönyvtárban találhatók. A példaprogram első <br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+</pre>
+  sora éppen azt mondja meg a fordítóprogramnak, hogy a fordítás során a programba foglalja bele a standard bemeneti/kimeneti könyvtárra vonatkozó információkat. Ez a sor a legtöbb C nyelvű forrásprogram elején megtalálható. A standard könyvtárat a <a href="07.html#7. FEJEZET">7. fejezetben</a> és a <a href="b.html#B. FÜGGELÉK">B. Függelékben</a> írjuk le.
+  <p> A függvények közti adatcsere egyik módszere, hogy a hívó függvény adatokból álló listát, az ún. <i>argumentumokat</i> adja át a hívott függvénynek. A függvény neve utáni <span class="m">()</span> zárójelek ezt az argumentumlistát határolják. A mintapéldánkban a <span class="m">main</span>-t olyan függvényként definiáltuk, amelynek nincs argumentuma és ezt a <span class="m">()</span> üres lista jelöli.<br />
+    <br />
+  </p>
+  <table border="1" align="center">
+    <caption align="bottom">
+    Az első C nyelvű program
+    </caption>
+    <tr>
+      <td width="248" height="46"><span class="d">#include</span> <span class="m">&lt;stdio.h&gt;</span></td>
+      <td width="336">beépíti a standard könyvtárra vonatkozó információkat;</td>
+    </tr>
+    <tr>
+      <td height="47"><span class="m">main()</span></td>
+      <td>definiál egy függvényt <span class="m">main()</span> névvel, argumentumok nélkül;</td>
+    </tr>
+    <tr>
+      <td><span class="m">{</span></td>
+      <td>kapcsos zárójelek határolják a <span class="m">main()</span>-t alkotó utasításokat;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">printf</span>(&quot;Halló mindenki!<span class="e">\n</span>&quot;);</span></td>
+      <td><span class="m">main</span> a <span class="f">printf</span> könyvtári függvényt hívja a kívánt szöveg kiíratásához; a <span class="e">\n</span> egy újsor-karaktert jelöl</td>
+    </tr>
+    <tr>
+      <td height="33"><span class="m">}</span></td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  A függvényt alkotó utasításokat a <span class="m">{}</span> kapcsos zárójelek határolják. A <span class="m">main</span> függvény csak egyetlen utasítást tartalmaz:<br />
+  <pre>
+<span class="f">printf</span>(&quot;Halló mindenki!<span class="e">\n</span>&quot;);
+</pre>
+  Egy függvényt a nevével és az azt követő, zárójelben elhelyezett argumentumlistával hívunk, így ez az utasítás a <span class="f">printf</span> függvény hívása a <span class="m">&quot;Halló mindenki!<span class="e">\n</span>&quot;</span> argumentummal. A <span class="f">printf</span> egy könyvtári függvény, amely az idézőjelek közti szöveget <i>(karakterláncot)</i> a kimeneti egységre írja ki.
+  <p> A két felső idézőjel közt elhelyezkedő tetszőleges számú karakterből álló szöveget <i>karakterláncnak (stringnek)</i> vagy <i>karakterlánc-állandónak</i> (stringkonstansnak) nevezzük. Ilyen karakterlánc a mi esetünkben a <span class="m">&quot;Halló mindenki!<span class="e">\n</span>&quot;</span>. A könyv ezen bevezető részében a karakterláncokat csak a <span class="f">printf</span> és más függvények argumentumaként használjuk.<br />
+    A karakterláncban lévő <span class="e">\n</span> jelsorozat a C nyelvben az újsor-karaktert jelöli, amelynek kiírása után a további szöveg a következő sor elején (bal margójánál) kezdve következik. Ha a <span class="e">\n</span> jelsorozatot elhagyjuk (javasoljuk ennek kipróbálását), akkor a kiírás után a kocsi vissza és a soremelés kiírása elmarad. A <span class="f">printf</span> függvény argumentumában az újsor-karaktert csakis a <span class="e">\n</span> jelsorozat beiktatásával kérhetjük, és ha megpróbálkoznánk az argumentum<br />
+  </p>
+  <pre>
+<span class="f">printf</span>(&quot;Halló mindenki!
+&quot;);
+</pre>
+  típusú beírásával, akkor a C fordítóprogram hibát jelezne.
+  <p> A <span class="f">printf</span> soha nem hoz létre automatikusan soremelést, így egyetlen sornyi szöveg <span class="f">printf</span> hívások sorozataként is kiíratható. Ennek megfelelően az első példaprogramunkat így is írhattuk volna:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+main( )
+{
+   <span class="f">printf</span>(&quot;Halló &quot;);
+   <span class="f">printf</span>(&quot;mindenki!&quot;);
+   <span class="f">printf</span>(&quot;<span class="e">\n</span>&quot;);
+}
+</pre>
+  Mindkét változat azonos módon nyomtatja ki a kívánt szöveget.<br />
+  Megjegyezzük, hogy a <span class="e">\n</span> csak egyetlen karaktert jelent. A <span class="e">\n</span> jelsorozathoz hasonló, ún. escape jelsorozatok általános és jól bővíthető lehetőséget nyújtanak a nehezen nyomtatható vagy nyomtatási képpel nem rendelkező karakterek előállítására. A C nyelvben ilyen escape jelsorozat még a <span class="e">\t</span> a tabulátor, <span class="e">\b</span> a kocsi-visszaléptetés (back-space), <span class="e">\&quot;</span> az idézőjel vagy <span class="e">\\</span> a fordított törtvonal (backslash) előállítása. Az escape jelsorozatok teljes listája a <a href="02.html#2.3.">2.3. pontban</a> található.<br />
+  <br />
+  <p> <b>1.1.</b> gyakorlat. Futtassa le a <span class="m">&quot;Halló mindenki!&quot;</span> szöveget kiíró programot a saját rendszerén! Próbálja meg a program egyes részeit elhagyni és figyelje meg milyen hibajelzést ad a rendszer!<br />
+  </p>
+  <p> <b>1.2.</b> gyakorlat. Próbálja ki, hogy mi történik, ha a <span class="f">printf</span> argumentumában a <span class="e">\x</span> jelsorozat szerepel (ahol <span class="e">\x</span> a fenti listában nem szereplő escape jelsorozat)!<br />
+    <br />
+  </p>
+  <h3><a name="1.2." id="1.2."></a>1.2. Változók és aritmetikai kifejezések</h3>
+  <br />
+  A következő példaprogrammal a °C = (5/9) (°F-32) képlet alapján, táblázatos formában ki akarjuk íratni az összetartozó, Fahrenheit- (°F) és Celsius-fokban (°C) mért hőmérsékletértékeket a következő formában:<br />
+  <pre>
+0        -17
+20       -6
+40       4
+60       15
+80       26
+100      37
+120      48
+140      60
+160      71
+180      82
+200      93
+220      104
+240      115
+260      126
+280      137
+300      148
+</pre>
+  A program most is egyetlen, <span class="m">main</span> nevű függvény definiálásából áll, hosszabb az előző példaprogramnál, de nem bonyolultabb annál. Ebben a programban már néhány új fogalmat (megjegyzés, deklaráció, változók, aritmetikai kifejezések, ciklus, formátumozott adatkivitel) is bevezetünk. Maga a példaprogram a következő:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* Fahrenheit-fok-Celsius-fok táblázat kiírása
+F = 0, 20, ..., 300 Fahrenheit-fokra */</span>
+main()
+{
+   <span class="k">int</span> fahr, celsius;
+   <span class="k">int</span> also, felso, lepes;
+   also = 0;      <span class="c">/* a táblázat alsó határa */</span>
+   felso = 300;   <span class="c">/* a táblázat felső határa */</span>
+   lepes = 20;    <span class="c">/* a táblázat lépésköze */</span>
+
+   fahr = also;
+   <span class="k">while</span> (fahr &lt;= felso) {
+      celsius = 5 * (fahr-32) / 9;
+      <span class="f">printf</span>(&quot;%d<span class="e">\t</span>%d<span class="e">\n</span>&quot;, fahr, celsius);
+      fahr = fahr + lepes; 
+   }
+}
+</pre>
+  A program első két sora, a<br />
+  <pre>
+<span class="c">/* Fahrenheit-fok-Celsius-fok táblázat kiírása
+F = 0, 20, ..., 300 Fahrenheit-fokra */</span>
+</pre>
+  sorok egy <i>megjegyzést</i> alkotnak <i>(comment)</i>, amely röviden leírja a program működését és feladatát. Bármilyen, <span class="c">/*</span> és <span class="c">*/</span> közt elhelyezkedő szöveget a C fordítóprogram figyelmen kívül hagy, ezért ide tetszőleges, a program megértését és használatát segítő szöveget írhatunk. A programban bárhol lehet megjegyzés, ahol betűköz, tabulátor vagy új sor előfordulhat.
+  <p> A C nyelvben minden változót a használata előtt deklarálni kell, ami általában a függvény kezdetén, a végrehajtható utasítások előtt történik. A <i>deklaráció</i> változók tulajdonságait írja le és egy típus megadásából, valamint az adott típusú változók felsorolásából áll, mint pl.:<br />
+  </p>
+  <pre>
+<span class="k">int</span> fahr, celsius;
+<span class="k">int</span> also, felso, lepes;
+</pre>
+  Az <span class="k">int</span> típus azt jelenti, hogy a felsorolt változók egész (integer) értéket vehetnek fel, ellentétben a <span class="k">float</span> típus megadásával, amely lebegőpontos értékű változót – azaz olyan változót, amelynek értéke törtrészt is tartalmaz – jelöl. Az <span class="k">int</span> és <span class="k">float</span> típusú változók pontossága és lehetséges nagysága a használt számítógéptől függ. Gyakran 16 bites <span class="k">int</span> típusú változókat használnak, amelyek értéke -32 768 és +32 767 közé eshet, de előfordul 32 bites <span class="k">int</span> típusú változó is. A <span class="k">float</span> típusú számokat általában 32 biten ábrázolják, legalább hat értékes számjegy pontossággal és az abszolút értékük 10<sup>-38</sup>-tól 10<sup>+38</sup>-ig terjedhet.
+  <p> Az <span class="k">int</span> és <span class="k">float</span> típuson kívül a C nyelv még további adattípusokat is értelmez. Ilyen a<br />
+  </p>
+  <pre>
+<span class="k">char</span>      karakter, egy bájton ábrázolva;
+<span class="k">short</span>     rövid egész típusú szám;
+<span class="k">long</span>      hosszú egész típusú szám;
+<span class="k">double</span>    kétszeres pontosságú lebegőpontos (valós) szám.
+</pre>
+  Ezen adattípusok méretei szintén a felhasznált számítógéptől függenek. Ezekből az elemi (alap)adattípusokból épülnek fel az összetett adattípusok: <i>tömbök, struktúrák</i> és <i>unionok</i>. Az adott típusú adatokra <i>mutatók (pointerek)</i> mutathatnak és a <i>függvények</i> adott típusú értékkel térnek vissza az őket hívó függvényhez. Mindezekről a későbbiekben még szó lesz. A hőmérséklet-átszámító program számítási műveletei az<br />
+  <pre>
+also = 0;
+felso = 300;
+lepes = 20;
+fahr = also;
+</pre>
+  értékadó utasításokkal kezdődnek, amelyek a felhasznált változók kezdeti értékeit állítják be. Az egyes utasításokat a pontosvessző zárja.
+  <p> A táblázat minden sorát azonos módon kell kiszámítani, így a soronként egyszer ismétlődő számítások megvalósítására ciklust használunk, amelyet a <span class="k">while</span> utasítással alakítunk ki a következő módon:<br />
+  </p>
+  <pre>
+<span class="k">while</span> (fahr &lt;= felso) {
+   ...
+}
+</pre>
+  A <span class="k">while</span> utasítással szervezett ciklus működése a következő: futás közben a számítógép megvizsgálja a zárójelben elhelyezett kifejezést, és ha az igaz (<span class="m">fahr</span> kisebb vagy egyenlő, mint <span class="m">felso</span>), akkor végrehajtja a kapcsos zárójelek közti ciklusmagot (esetünkben ez három utasításból áll). Ezután a gép a feltételt újra megvizsgálja, és ha ismét igaz az értéke, akkor a ciklusmag újra végrehajtódik. Ha egyszer a vizsgálat eredménye hamis lesz (<span class="m">fahr</span> értéke nagyobb lesz, mint <span class="m">felso</span>), a ciklus befejeződik, és a program a ciklust követő utasítással folytatódik. A példaprogramunkban a ciklus után már nincs újabb utasítás, így a program befejeződik.
+  <p> A <span class="k">while</span> utasítás ciklusmagja egy vagy több, kapcsos zárójelek közt elhelyezett utasításból (mint a hőmérséklet-átalakító programban) vagy egyetlen, kapcsos zárójelek nélkül elhelyezett utasításból állhat. Ez utóbbit szemlélteti a következő példa:<br />
+  </p>
+  <pre>
+<span class="k">while</span> (i &lt; j)
+   i = 2 * i;
+</pre>
+  A <span class="k">while</span> hatáskörébe tartozó utasításokat mindkét esetben beljebb írtuk, hogy világosan kitűnjön, mely utasítások tartoznak a ciklusmaghoz. Ez a beljebb kezdés a program logikai szerkezetét hangsúlyozza. A C fordítóprogramok eléggé kötetlenül kezelik az utasítások elhelyezését, a bekezdések és üres helyek csak a program olvasását és megértését segítik. Célszerű, ha soronként csak egy utasítást írunk és az operátorok előtt, ill. után írt szóközzel tesszük egyértelművé a tagolást. A zárójelek elhelyezkedése kevésbé kritikus, erre egyéni stílust alakíthatunk ki, vagy átvehetjük valamelyik, éppen divatos stílust. Bármilyen, nekünk tetsző formát választhatunk, de célszerű, ha a későbbiekben ehhez következetesen ragaszkodunk.
+  <p> A program a munka zömét a ciklusmagban végzi. A Celsius-fokban mért hőmérsékletet kiszámító és a Celsius nevű változónak értékül adó utasítás<br />
+  </p>
+  <pre>
+celsius = 5 * (fahr-32) / 9;
+</pre>
+  Az ok, ami miatt először 5-tel szorzunk, majd 9-cel osztunk az 5/9-del való szorzás helyett az, hogy a C nyelv – több más programozási nyelvhez hasonlóan – az egész számok osztásánál csonkít, az eredmény törtrészét elhagyja. Mivel 5 és 9 egész számok, 5/9-ed csonkított eredménye nulla, így minden Celsius-fok értéke nulla lenne.
+  <p> Ez a példaprogram egy kicsivel többet is bemutat a <span class="f">printf</span> függvény működéséből. A <span class="f">printf</span> általános célú, formátumozott kimenetet előállító függvény, amelyet részletesen a <a href="07.html">7. fejezetben</a> fogunk ismertetni. A függvény első argumentuma a kinyomtatandó karakterlánc, amelyben a <span class="m">%</span> jelek mutatják, hova kell az első (második, harmadik stb.) argumentum(ok) értékét behelyettesíteni és milyen formában kell azokat kiírni. Például a <span class="m">%d</span> egy egész típusú argumentumot jelöl ki, így a<br />
+  </p>
+  <pre>
+<span class="f">printf</span>(&quot;%d<span class="e">\t</span>%d<span class="e">\n</span>&quot;, fahr, celsius);
+</pre>
+  utasítás két egész típusú változó (<span class="m">fahr</span> és <span class="m">celsius</span>) értékét fogja kiírni, köztük egy tabulátort (<span class="e">\t</span>) elhelyezve. Az első argumentum minden egyes <span class="m">%</span> jeles konstrukciójához egy megfelelő második, harmadik stb. argumentum párosul. A <span class="m">%</span> konstrukciókból és a további argumentumokból álló pároknak szám és típus szerint meg kell egyeznie, különben hibás eredményt kapunk.
+  <p> Egyébként a <span class="f">printf</span> nem része a C nyelvnek, a nyelvben magában nincs definiálva az adatbevitel és -kivitel. A <span class="f">printf</span> csak egy hasznos függvény, ami a C programok által hozzáférhető standard könyvtárban található. A <span class="f">printf</span> viselkedését az ANSI szabvány definiálja, így a szabványon keresztül a függvény tulajdonságai minden fordítóprogram és könyvtár számára azonosak.</p>
+  <p> Azért, hogy a figyelmünket főleg a C nyelvnek szentelhessük, az adatok beviteléről és kiviteléről a <a href="07.html">7. fejezetig</a> nem sokat beszélünk. Elsősorban a formátumozott adatátvitel tárgyalását halasztjuk későbbre. Ha numerikus adatokat akarunk a programmal beolvastatni, akkor a <a href="07.html#7.4.">7.4. pontban</a> olvassuk el a <span class="f">scanf</span> függvényre vonatkozó részeket. A <span class="f">scanf</span> hasonló a <span class="f">printf</span> függvényhez, csak adatkiírás helyett adatot olvas.</p>
+  <p> A hőmérséklet-átalakító programunknak számos baja van. Az egyik legegyszerűbben megszüntethető hiba, hogy a kiírás nem túl szép, mivel a számok nincsenek jobbra igazítva. Ezen könnyű segíteni: ha a <span class="f">printf</span> utasításban lévő <span class="m">%d</span> konstrukciót a szélességet megadó résszel egészítjük ki, akkor a számok a rendelkezésükre álló mezőben jobbra igazodva jelennek meg. Például azt írhatjuk, hogy<br />
+  </p>
+  <pre>
+<span class="f">printf</span>(&quot;%3d %6d<span class="e">\n</span>&quot;, fahr, celsius);
+</pre>
+  akkor az egyes sorokban az első szám három számjegy széles, a második szám pedig hat számjegy széles mezőbe íródik az alábbiak szerint:<br />
+  <pre>
+0     -17
+20     -6
+40      4
+60     15
+80     26
+100    37
+...   ...
+</pre>
+  A legkomolyabb probléma az egész aritmetika használatából adódik, mivel a kapott Celsius-fok értékek nem túl pontosak. Pl. a 0 °F-nek a -17,8 °C felel meg és nem pedig a táblázatban szereplő -17 °C. Pontosabb eredményt kapunk, ha az egészaritmetika helyett lebegőpontos aritmetikát használunk. Ez a program kis változtatását igényli. Ennek megfelelően a program második változata:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* Fahrenheit-fok-Celsius-fok táblázat kiírása F = 0, 20,
+..., 300 Fahrenheit-fokra; a program lebegőpontos
+változata */</span>
+main ( ) {
+   <span class="k">float</span> fahr, celsius;
+   <span class="k">int</span> also, felso, lepes;
+   also = 0; <span class="c">     /* a táblázat alsó határa */</span>
+   felso = 300; <span class="c"> /* a táblázat felső határa */</span>
+   lepes = 20; <span class="c">  /* a táblázat lépésköze */</span>
+   fahr = also;
+   <span class="k">while</span> (fahr &lt;= felso) {
+      celsius = (5.0/9.0) * (fahr-32.0);
+      <span class="f">printf</span>(&quot;%3.0f %6.1f<span class="e">\n</span>&quot;, fahr, celsius);
+      fahr = fahr + lepes;
+   }
+}
+</pre>
+  A program lényegében azonos az előző változattal, csak a <span class="m">fahr</span> és <span class="m">celsius</span> változók <span class="k">float</span>-ként lettek deklarálva és az átalakítást megadó képletet sokkal inkább a megszokott formában írtuk. Az előző programban nem írhattunk 5/9-det, mert az egészosztás okozta csonkítás miatt az eredmény nulla lett volna. Az új képlet állandóiban a tizedespont jelzi, hogy lebegőpontos számokról van szó, így az 5.0 / 9.0 nem csonkul, hiszen két lebegőpontos szám hányadosa is lebegőpontos szám.
+  <p> Ha egy aritmetikai operátornak egész típusú operandusai vannak, akkor a gép az egész számokra érvényes műveletet fogja elvégezni. Ha egy aritmetikai operátor egyik operandusa lebegőpontos, a másik pedig egész típusú, a művelet végrehajtása előtt az egész típusú operandus automatikusan lebegőpontossá konvertálódik. Amennyiben a képletben <span class="m">fahr-32</span> szerepelne, a <span class="m">32</span> automatikusan lebegőpontos számmá alakulna. Ennek ellenére célszerű a lebegőpontos állandókban a tizedespontot akkor is kiírni, ha a szám éppen egész értékű, mivel ez az olvasó számára jobban kihangsúlyozza a szám lebegőpontos jellegét.</p>
+  <p> Az egész típusú adatok lebegőpontossá alakításának részletes szabályaival a <a href="02.html">2. fejezetben</a> foglalkozunk. Pillanatnyilag csak azt jegyezzük meg, hogy a<br />
+  </p>
+  <pre>
+fahr = also;
+</pre>
+  értékadás, valamint a<br />
+  <pre>
+<span class="k">while</span> (fahr &lt;= felso)
+</pre>
+  vizsgálat az előbb elmondottak szerint működik, azaz az <span class="k">int</span> típusú adatok a végrehajtás előtt <span class="k">float</span> típusúvá alakulnak.
+  <p> A <span class="f">printf</span> függvényben szereplő <span class="m">%3.0f</span> konverziós előírás azt jelenti, hogy a lebegőpontos szám (a mi esetünkben a <span class="m">fahr</span>) legalább három karakter széles mezőbe lesz kinyomtatva, tizedespont és törtrész nélkül. A <span class="m">%6.1f</span> egy másik szám (a <span class="m">celsius</span>) kiírását specifikálja: ez legalább hat karakter széles mezőben lesz kinyomtatva, amiből egy számjegy a tizedespont után van. Az így kiírt táblázat a következő:<br />
+  </p>
+  <pre>
+0     -17.8
+20     -6.4
+40      4.4
+...     ...
+</pre>
+  A szélesség vagy pontosság hiányozhat is a specifikációból: a <span class="m">%6f</span> azt írja elő, hogy a szám legalább hat karakter széles mezőbe nyomtatódik; a <span class="m">%.2f</span> azt, hogy a számnak a tizedespont után még két karaktere lehet és a teljes szélességére nincs előírás; a <span class="m">%f</span> pedig pusztán csak azt jelzi, hogy a számot lebegőpontos formában kell kiírni. A következőben bemutatunk néhány formátumspecifikációt:<br />
+  <pre>
+%d       <span class="def">a számot decimális egészként írja ki;</span>
+%6d      <span class="def">a számot decimális egészként, legalább hat karakter széles mezőbe írja ki;</span>
+%f       <span class="def">a számot lebegőpontosként írja ki;</span>
+%6f      <span class="def">a számot lebegőpontosként, legalább 6 karakter széles mezőbe írja ki;</span>
+%.2f     <span class="def">a számot lebegőpontosként, két tizedessel írja ki;</span>
+%6.2f    <span class="def">a számot lebegőpontosként, legalább 6 karakter széles mezőbe, két tizedessel írja ki.</span>
+</pre>
+  Többek közt a <span class="f">printf</span> függvény a <span class="m">%o</span> specifikációt az oktális, a <span class="m">%x</span> specifikációt a hexadecimális, a <span class="m">%s</span> specifikációt a karakterlánc típusú kiíráshoz, és a <span class="m">%%</span> specifikációt pedig a <span class="m">%</span> jel kiírására használja.<br />
+  <br />
+  <p> <b>1.3.</b> gyakorlat. Módosítsuk a hőmérséklet-átalakító programot úgy, hogy a táblázat fölé fejlécet is nyomtasson!</p>
+  <p> <b>1.4.</b> gyakorlat. Írjunk programot, amely a Celsius-fokban adott értékeket alakítja Fahrenheit-fokká! <br />
+  </p>
+  <h3><a name="1.3." id="1.3."></a>1.3. A for utasítás<br />
+  </h3>
+  Az egyes feladatok megoldására többféle módon írhatunk programot. Próbáljuk meg a hőmérséklet-átalakító programunk következő változatát:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* Fahrenheit-fok-Celsius-fok átszámítási táblázat */</span>
+main ( )
+{
+   <span class="k">int</span> fahr;
+
+   <span class="k">for</span> (fahr = 0; fahr &lt;= 300; fahr = fahr+20)
+      <span class="f">printf</span>(&quot;%3d %6.1f<span class="e">\n</span>&quot;, fahr, (5.0/9.0)*(fahr-32));
+}
+</pre>
+  <p>Ez a program ugyanazt csinálja, mint az előző, de attól szemlátomást különbözik. Az egyik legjelentősebb változás, hogy eltűnt a változók többségének deklarálása, csak a fahr maradt meg, <span class="k">int</span> típusúként. Az alsó és felső határt, ill. a lépésközt csak állandóként szerepeltetjük a <span class="k">for</span> utasításban, ami maga is új a számunkra. A Celsius-fokot kiszámító kifejezés sem önálló utasítás, hanem a <span class="f">printf</span> függvény harmadik argumentumaként szerepel.</p>
+  <p> Ez az utóbbi változtatás egy teljesen általános szabályra mutat példát: minden olyan összefüggésben, ahol valamilyen típusú változó értékét használjuk, megengedett egy ugyanolyan típusú összetett kifejezés használata is. Mivel a <span class="f">printf</span> harmadik argumentumának a <span class="m">%6.1f</span> specifikációhoz illeszkedően egy lebegőpontos számnak kell lennie, ezen a helyen bármilyen lebegőpontos kifejezés megadható.</p>
+  <p> A <span class="k">for</span> utasítás szintén egy ciklusszervező utasítás, a <span class="k">while</span> utasítás általánosítása. Ha összehasonlítjuk a korábban használt <span class="k">while</span> utasítással, a <span class="k">for</span> működése teljesen világos. A zárójelek között három, egymástól pontosvesszővel elválasztott rész található. Az első, kezdeti értékadó rész<br />
+  </p>
+  <pre>
+fahr = 0
+</pre>
+  amit csak egyszer hajt végre a program, a ciklusba való belépés előtt. A második rész a ciklust vezérlő ellenőrzés vagy feltétel<br />
+  <pre>
+fahr &lt;= 300
+</pre>
+  alakú. Működés közben a gép megvizsgálja ezt a feltételt, és ha igaz, akkor végrehajtja a ciklusmagot (ami most csak egyetlen <span class="f">printf</span> utasítás). Ezután történik a lépésközzel való növelés<br />
+  <pre>
+fahr = fahr + 20
+</pre>
+  amit a feltétel újbóli ellenőrzése követ. A ciklus akkor fejeződik be, ha a feltétel értéke hamis lesz. Csakhogy, mint a <span class="k">while</span> utasításnál, a ciklusmag itt is lehet egyetlen utasítás vagy kapcsos zárójelek között elhelyezett utasításcsoport. A kezdeti értékadás, feltételvizsgálat és a lépésközzel való növelés tetszőleges kifejezéssel adható meg.
+  <p> A <span class="k">while</span> és a <span class="k">for</span> között szabadon választhatunk aszerint, hogy számunkra melyik tűnik világosabbnak. A <span class="k">for</span> utasítás általában akkor előnyös, ha a kezdeti értékadás és lépésközzel való növelés egy-egy logikailag összefüggő utasítás, mivel ekkor a <span class="k">for</span> utasítással szervezett ciklus sokkal tömörebb a <span class="k">while</span> utasítással szervezett ciklusnál és a ciklust vezérlő utasítások egy helyen vannak.<br />
+    <br />
+  </p>
+  <p><b>1.5.</b> gyakorlat. Módosítsuk a hőmérséklet-átalakító programot úgy, hogy a táblázatot fordított sorrendben, tehát 300 foktól 0 fokig nyomtassa ki!<br />
+    <br />
+  </p>
+  <h3><a name="1.4." id="1.4."></a>1.4. Szimbolikus állandók<br />
+  </h3>
+  Mielőtt elbúcsúznánk a hőmérséklet-átalakító programunktól, még egy észrevételt teszünk: nagyon rossz gyakorlat a 300-hoz vagy a 20-hoz hasonló „bűvös számokat” beépíteni a programba. Ezek később, a program olvasásakor nem sokat mondanak és az esetleges megváltoztatásuk nagyon nehézkes. Az ilyen bűvös számok kiküszöbölésének egyik módja, hogy „beszélő” neveket rendelünk hozzájuk. A <span class="d">#define</span> szerkezet lehetővé teszi, hogy egy megadott karakterlánchoz szimbolikus nevet vagy szimbolikus állandót rendeljünk, az alábbiak szerint:<br />
+  <pre>
+<span class="d">#define</span> <span class="defit">név helyettesítő szöveg</span>
+</pre>
+  Ezután a fordítóprogram a <i>név</i> minden önálló előfordulásakor (amikor a név nincs idézőjelek közt vagy nem része egy másik névnek) a név helyett a megadott <i>helyettesítő szöveget</i> írja be. A névre ugyanazok a szabályok vonatkoznak, mint a változók nevére: betűkből, ill. számjegyekből állhat, és betűvel kell kezdődnie. A helyettesítő szöveg tetszőleges karaktersorozat lehet, nem csak szám. A <span class="d">#define</span> használatát a következő példán mutatjuk be.<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="d">#define</span> ALSO  0    <span class="c">/* a táblázat alsó határa */</span>
+<span class="d">#define</span> FELSO 300  <span class="c">/* a táblázat felső határa */</span>
+<span class="d">#define</span> LEPES 20   <span class="c">/* a táblázat lépésköze */</span>
+
+<span class="c">/* a Fahrenheit-fok-Celsius-fok táblázat kiírása */</span>
+main( )
+{
+   <span class="k">int</span> fahr;
+
+   <span class="k">for</span> (fahr = ALSO; fahr &lt;= FELSO; fahr = fahr + LEPES)
+   <span class="f">printf</span>(&quot;%3d %6.1f<span class="e">\n</span>&quot;, fahr, (5.0/9.0)*(fahr-32));
+}
+</pre>
+  Az <span class="m">ALSO, FELSO, LEPES</span> szimbolikus állandók és nem változók, így nem szerepelnek a deklarációkban. A szimbolikus neveket általában nagybetűkkel írjuk (de ez nem kötelező), hogy megkülönböztethetők legyenek a kisbetűvel írt változónevektől. Megjegyezzük, hogy a define szerkezet végén nincs pontosvessző.<br />
+  <br />
+  <h3><a name="1.5." id="1.5."></a>1.5. Karakteres adatok bevitele és kivitele<br />
+  </h3>
+  A következőkben néhány egymással összefüggő, karakteres adatok feldolgozására alkalmas programot ismertetünk. A későbbiekben látni fogjuk, hogy számos bonyolult program ezeknek a példaprogramoknak a kibővített változata.<br />
+  A karakteres adatok be- és kivitelének standard könyvtárral támogatott megvalósítása nagyon egyszerű. Szövegek be- és kivitelét - függetlenül attól, hogy honnan erednek vagy hová irányulnak - karakterek áramaként fogjuk fel. A <i>szövegáram</i> legalább két sorból álló karakteráram (karaktersorozat), amelynek mindegyik sora nulla vagy annál több karakterből áll és a végén egy újsor-karakter helyezkedik el. A standard könyvtár feladata, hogy az adatáramok be- és kivitelét a fenti modell alapján kezelje. A C nyelvet használó programozó ezeket a könyvtári függvényeket használja, és nem törődik azzal, hogy az egyes sorok a programon kívül mit jelentenek.
+  <p> A standard könyvtárban számos olyan függvény van, amelyekkel egy időben egy karakter olvasható vagy írható, és ezen függvények közül a legegyszerűbb a <span class="f">getchar</span> és <span class="f">putchar</span> függvény. Minden egyes hívásakor a <span class="f">getchar</span> függvény a szövegáramból beolvassa a következő karaktert és annak értékét adja vissza a hívó függvénynek. Ennek megfelelően a<br />
+  </p>
+  <pre>
+c = <span class="f">getchar</span>( )
+</pre>
+  végrehajtása után a <span class="m">c</span> változó a bemenő szöveg következő karakterét fogja tartalmazni. A karakterek általában a terminálról (billentyűzetről) érkeznek, az adatállományból történő beolvasással a <a href="07.html">7. fejezetben</a> fogunk foglalkozni.
+  <p> A <span class="f">putchar</span> függvény minden egyes hívásakor kiír egy karaktert. A<br />
+  </p>
+  <pre>
+<span class="f">putchar</span>(c)
+</pre>
+  végrehajtása során a <span class="m">c</span> egész típusú változó tartalma mint egy karakter íródik ki, általában a képernyőre. A <span class="f">putchar</span> és a <span class="f">printf</span> hívások felváltva is történhetnek, ilyenkor a kimenet a hívások sorrendjében fog megjelenni.<br />
+  <h4>1.5.1. Állománymásolás<br />
+  </h4>
+  A <span class="f">getchar</span> és <span class="f">putchar</span> felhasználásával nagyon sok programot írhatunk a bemenet és a kimenet pontos ismerete nélkül. A legegyszerűbb ilyen mintaprogram a bemenetet karakterenként átmásolja a kimenetre. A program szerkezete:<br />
+  <pre>
+<span class="defit">egy karakter beolvasása</span>
+<span class="k">while</span> <span class="defit">(a karakter nem az állományvége-jel)</span>
+<span class="defit">az éppen beolvasott karakter kimenetre írása</span>
+<span class="defit">egy új karakter beolvasása</span>
+</pre>
+  Mindez C nyelvű programként megfogalmazva:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* a bemenet átmásolása a kimenetre - 1. változat */</span>
+main()
+{
+   <span class="k">int</span> c;
+   c = <span class="f">getchar</span>(); 
+   <span class="k">while</span>(c != <span class="f">EOF</span>){
+      <span class="f">putchar</span>(c);
+      c = <span class="f">getchar</span>();
+      }
+}
+</pre>
+  <p>A <span class="k">while</span> utasításban szereplő <span class="m">!=</span> operátor jelentése „nem egyenlő”.<br />
+    A billentyűzeten vagy képernyőn megjelenő karakter a számítógépen belül bitmintaként tárolódik. A <span class="k">char</span> típus egy ilyen karakteres adat tárolására alkalmas tárolóhelyet specifikál, de erre a célra bármilyen egész típusú adat is alkalmas. A programban a karakter tárolására <span class="k">int</span> típusú változót használtunk egy bonyolult, de lényeges okból.</p>
+  <p> A program működése során a fő probléma az érvényes bemeneti adatok végének érzékelése. A probléma úgy oldható meg, ha a <span class="f">getchar</span> függvény egy olyan értékkel tér vissza a bemeneti adatok elfogyása esetén, ami semmilyen más, létező karakterrel nem téveszthető össze. Ezt az értéket <span class="f">EOF</span>-nak, (<i>end of file</i>), állományvége-jelnek nevezik. A programban a <span class="m">c</span> változót úgy kellett deklarálni, hogy elegendően nagy legyen bármilyen, a <span class="f">getchar</span> által visszaadott érték tárolására. Ezért a <span class="m">c</span> változó nem lehet <span class="k">char</span> típusú, mivel az nem elegendően nagy az <span class="f">EOF</span> befogadására, így <span class="k">int</span> típusú változót használunk.</p>
+  <p> Az <span class="f">EOF</span> az <span class="m">&lt;stdio.h&gt;</span> headerben definiált egész érték, amelynek konkrét értéke mindaddig nem lényeges, amíg különbözik bármely <span class="k">char</span> típusú értéktől. Az <span class="f">EOF</span> szimbolikus állandó használatával garantálható, hogy egyetlen program működése sem függ az <span class="f">EOF</span> tényleges számértékétől.</p>
+  <p> A gyakorlottabb C programozók a fenti másolóprogramot sokkal tömörebben írnák meg. A C nyelvben a<br />
+  </p>
+  <pre>
+c = <span class="f">getchar</span>()
+</pre>
+  jellegű értékadások kifejezésekbe is beépíthetők és értékük megegyezik az értékadás bal oldalának értékével. Ez azt jelenti, hogy egy értékadás egy nagyobb kifejezés része lehet. Ha az egy karaktert a c változóhoz rendelő értékadást a <span class="k">while</span> ciklus ellenőrző részébe építjük be, akkor a másoló program a következő módon fog kinézni:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* a bemenet átmásolása a kimenetre - 2. változat */</span>
+main( )<br />
+{<br />
+   <span class="k">int</span> c;
+
+   <span class="k">while</span> ((c = <span class="f">getchar</span>()) != <span class="f">EOF</span>)
+      <span class="f">putchar</span>(c);
+}
+</pre>
+  A program a <span class="k">while</span> ciklusban beolvas egy karaktert, hozzárendeli a c változóhoz, majd megvizsgálja, hogy a beolvasott karakter megegyezik-e az állományvége-jellel. Ha nem, akkor a <span class="k">while</span> ciklusmagja végrehajtódik és a karakter kiíródik, majd a ciklusmag ismétlődik. Amikor a bemeneti karaktersorozat véget ér, a <span class="k">while</span> ciklus befejeződik és ezzel együtt a <span class="m">main</span> is.
+  <p> A programnak ez a változata egy helyre koncentrálja az adatbeolvasást - csak egyszer szerepel benne a <span class="f">getchar</span> függvény hívása -, így rövidebbé, ill. olvashatóbbá válik a program. Ezzel a programozási stílussal gyakran találkozunk. Bár a túlzott tömörítésnek megvan az a veszélye, hogy a program áttekinthetetlenné válik, ezt a továbbiakban is igyekszünk elkerülni.</p>
+  <p> A <span class="k">while</span> utasításban az értékadás körüli zárójelek feltétlenül szükségesek, mivel a <span class="m">!=</span> operátor <i>precedenciája</i> nagyobb, mint az <span class="m">=</span> operátoré és ezért a zárójelek hiányában először a reláció kiértékelése történne meg, és csak ezt követné az értékadás. A zárójelet elhagyva a<br />
+  </p>
+  <pre>
+c = <span class="f">getchar</span>() !=<span class="f">EOF</span>
+</pre>
+  utasítást kapjuk, ami egyenértékű a<br />
+  <pre>
+c = (<span class="f">getchar</span>() != <span class="f">EOF</span>)
+</pre>
+  utasítással, aminek nem kívánt következménye, hogy a <span class="m">c</span> változóhoz a <span class="m">0</span> vagy <span class="m">1</span> értéket rendeli attól függően, hogy a <span class="f">getchar</span> az állományvége-jelet olvasta-e vagy sem. A kérdéskörrel a <a href="02.html">2. fejezetben</a> még részletesen foglalkozunk.<br />
+  <br />
+  <p><b>1.6.</b> gyakorlat. Igazoljuk, hogy a <span class="f">getchar</span>( ) != <span class="f">EOF</span> kifejezés értéke valóban <span class="m">0</span> vagy <span class="m">1</span>!<br />
+  </p>
+  <p><b>1.7.</b> gyakorlat. Írjunk programot, ami kiírja az <span class="f">EOF</span> értékét!<br />
+    <br />
+  </p>
+  <h4>1.5.2. Karakterek számlálása<br />
+  </h4>
+  A következő példaprogram a másolóprogramhoz hasonlóan működik és megszámlálja a beolvasott karaktereket.<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* a beolvasott karaktereket számláló program */</span>
+<span class="c">/* 1. változat */
+</span> main( )
+{
+   <span class="k">long</span> nc;
+
+   nc = 0;
+   <span class="k">while</span> (<span class="f">getchar</span>( ) != <span class="f">EOF</span>)
+      ++nc; 
+   <span class="f">printf</span>(&quot;%ld<span class="e">\n</span>&quot;, nc); 
+}
+</pre>
+  A programban szereplő<br />
+  <pre>
+++nc;
+</pre>
+  utasításban egy új operátor, a <span class="m">++</span> található, amelynek jelentése: növelj eggyel (<i>inkrementálás</i>). Ehelyett természetesen azt is írhatnánk, hogy <span class="m">nc = nc+1</span>, de a <span class="m">++nc</span> sokkal tömörebb és gyakran hatékonyabb is. Létezik a <span class="m">--</span> operátor is, ami az eggyel való csökkentést (<i>dekrementálás</i>) valósítja meg. A <span class="m">++</span> és <span class="m">--</span> operátor egyaránt lehet <i>előtag (prefix)</i> és <i>utótag (postfix)</i> operátor (<span class="m">++nc</span>, ill. <span class="m">nc++</span> vagy <span class="m">--nc</span>, ill. <span class="m">nc--</span>). A kétféle forma a kifejezésben különböző értéket ad, ennek pontos leírásával a <a href="02.html">2. fejezetben</a> találkozunk, de a lényeg az, hogy mind a <span class="m">++nc</span>, mind az <span class="m">nc++</span> növeli az <span class="m">nc</span> értékét. Egyelőre mi a prefix formát használjuk.
+  <p> A karaktereket számláló program a kapott számot <span class="k">int</span> helyett <span class="k">long</span> típusú változóban tárolja. Az <span class="k">int</span> típusú változók max. értéke 32 767 lehet, ami viszonylag kicsi, és számlálóként <span class="k">int</span> típusú változót használva hamar túlcsordulás jelentkezne. A <span class="k">long</span> típusú egész számot a legtöbb számítógép legalább 32 biten ábrázolja (bár néhány számítógépen az <span class="k">int</span> és a <span class="k">long</span> típusú változók egyaránt 16 bitesek). A <span class="m">%ld</span> konverziós specifikáció azt jelzi a <span class="f">printf</span> függvénynek, hogy a megfelelő argumentum <span class="k">long</span> típusú egész szám.</p>
+  <p> Sokkal nagyobb számokig is elszámlálhatnánk, ha <span class="k">double</span> (kétszeres pontosságú lebegőpontos) változót használnánk.</p>
+  <p> A ciklusszervezés másik módjának szemléltetésére a <span class="k">while</span> helyett használjuk a <span class="k">for</span> utasítást.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* a beolvasott karaktereket számláló program */</span>
+<span class="c">/* 2. változat */</span>
+main ( )
+{
+   <span class="k">double</span> nc;
+   <span class="k">for</span> (nc = 0; <span class="f">getchar</span>() != <span class="f">EOF</span>; ++nc)
+      ;
+   <span class="f">printf</span>(&quot;%.0f<span class="e">\n</span>&quot;, nc);
+}
+</pre>
+  <p>A kiíratásban a <span class="k">float</span> és <span class="k">double</span> típusú adatokhoz egyaránt használhatjuk a <span class="m">%f</span> specifikációt, és a <span class="m">%.0f</span> specifikáció elnyomja a tizedespont és a törtrész kiírását (a törtrész hossza nulla jegy).</p>
+  <p> A ciklusmag üres, hiszen minden műveletet az ellenőrző és növelő részben végzünk el. A C nyelv szintaktikai (nyelvtani) szabályai viszont megkövetelik, hogy a <span class="k">for</span> utasítással szervezett ciklusnak legyen magja. Az önmagában álló pontosvessző, azaz <i>nulla</i> (vagy <i>üres</i>) <i>utasítás</i> ezt a követelményt kielégíti. Az üres utasítást külön sorba írtuk, hogy kihangsúlyozzuk a fontosságát.</p>
+  <p> Mielőtt befejeznénk a karaktereket számláló program tárgyalását, felhívjuk a figyelmet arra, hogy ha a bemeneten egyáltalán nincs adat, akkor a <span class="f">getchar</span> első hívása után a <span class="k">while</span> vagy a <span class="k">for</span> vizsgáló része hamis eredményt ad, a program nulla számú karaktert számol, azaz helyesen működik, ami nagyon fontos. A dolog a <span class="k">while</span> és a <span class="k">for</span> azon kedvező tulajdonságával kapcsolatos, hogy mindkettő a ciklus elején, a ciklusmag végrehajtása előtt ellenőrzi a feltételt (előtesztelő ciklus). Ha tehát semmit sem kell csinálni, akkor a ciklus valóban nem csinál semmit, még akkor sem, ha emiatt soha nem hajtja végre a ciklusmagot. A programjainknak határesetben (ha a bemeneten nulla hosszúságú adatsor van) is helyesen kell működniük.<br />
+    <br />
+  </p>
+  <h4>1.5.3. Sorok számlálása<br />
+  </h4>
+  A következő példaprogramunk megszámolja a bemenetre adott adatsorokat. Mint korábban már említettük, a standard könyvtár a bemeneti szövegáramot egymást követő sorok sorozataként értelmezi és minden sort az újsor-jel zár. Ebből következik, hogy a sorok számlálása lényegében az újsor-karakterek számlálásának felel meg. Így a program:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* a bemenő szöveg sorainak számlálása */</span>
+main ( )
+{
+   <span class="k">int</span> c, nl;
+
+   nl = 0;
+   <span class="k">while</span> ((c = <span class="f">getchar</span>( )) != <span class="f">EOF</span>) 
+      <span class="k">if</span> (c == '<span class="e">\n</span>')
+         ++nl; 
+   <span class="f">printf</span>(&quot;%d<span class="e">\n</span>&quot;, nl); 
+}
+</pre>
+  A <span class="k">while</span> ciklusmagja most egy <span class="k">if</span> utasítást tartalmaz, amely a <span class="m">++nl</span> inkrementáló utasítás végrehajtását vezérli. Az <span class="k">if</span> utasítás ellenőrzi a zárójelben lévő feltételt, és ha az igaz, akkor végrehajtja a következő utasítást (vagy a kapcsos zárójelek közt elhelyezett utasításcsoportot). A program elrendezése most is világossá teszi, hogy mi mit vezérel.
+  <p> Az <span class="m">==</span> kettős egyenlőségjel jelentése a C nyelvben az „egyenlő valamivel” (hasonlóan a Pascal = jeléhez vagy a FORTRAN <span class="m">.EQ.</span> operátorához). Az <span class="m">==</span> szimbólumot azért vezették be, hogy az egyenlőség vizsgálatát megkülönböztessék az <span class="m">=</span> jellel jelölt értékadástól. Még egy figyelmeztető megjegyzés: a kezdő C programozók gyakran írnak <span class="m">=</span> jelet ott, ahol <span class="m">==</span> kellene. Amint ezt a <a href="02.html">2. fejezetben</a> látni fogjuk, az eredmény általában egy érvényes (de az adott helyen értelmetlen) kifejezés, így a fordítóprogram nem ad hibajelzést.</p>
+  <p> Két aposztróf között elhelyezett karakter egy egész számot jelent, amelynek értéke a karakter gépi karakterkészletben kódjával egyezik meg. Az aposztrófok között lévő karaktert <i>karakterállandónak</i> nevezzük és helyette használhatjuk a neki megfelelő kis egész számot (kódot) is. Például az <span class="m">'A'</span> egy karakterállandó, amelynek értéke az ASCII karakterkészletben 65, vagyis ez a szám az A belső, gépi ábrázolása. Természetesen <span class="m">'A'</span> helyett 65-öt is írhatnánk, de az <span class="m">'A'</span> jelentése sokkal világosabb és független az éppen használt karakterkészlettől.</p>
+  <p> Az escape sorozatok karakterállandókénti megadása szintén lehetséges, így a <span class="m">'<span class="e">\n</span>'</span> az újsor-karakter értékét jelenti, ami az ASCII karakterkészletben 10. Ne feledjük, hogy a <span class="m">'<span class="e">\n</span>'</span> egyetlen karakter és a kifejezésekben egyetlen számnak felel meg, az <span class="m">&quot;<span class="e">\n</span>&quot;</span> pedig egy karaktersorozat (string), ami adott esetben csak egy karaktert tartalmaz. A karakterek és karaktersorozatok témájával szintén a <a href="02.html">2. fejezetben</a> foglalkozunk majd részletesebben.<br />
+    <br />
+  </p>
+  <p><b>1.8.</b> gyakorlat. Írjunk programot, ami megszámolja a bemenetre adott szövegben lévő szóközöket, tabulátorokat és újsor-karaktereket!</p>
+  <p> <b>1.9.</b> gyakorlat. Írjunk programot, ami a bemenetre adott szöveget úgy másolja át a kimenetre, hogy közben az egy vagy több szóközből álló karaktersorozatokat egyetlen szóközzel helyettesíti!</p>
+  <p> <b>1.10.</b> gyakorlat. Írjunk programot, ami a bemenetre adott szöveget úgy másolja át a kimenetre, hogy közben a tabulátorkaraktereket <span class="e">\t</span>, a visszaléptetés- (backspace) karaktereket <span class="e">\b</span> és a fordított törtvonal- (backslash) karaktereket <span class="e">\\</span> karakterekkel helyettesíti! Ezzel az átírással a tabulátor- és visszaléptetés-karakterek a nyomtatásban is láthatóvá válnak.<br />
+    <br />
+  </p>
+  <h4>1.5.4. Szavak számlálása<br />
+  </h4>
+  A sorozat negyedik programja a sorokon és a karaktereken kívül megszámolja a bemenetre adott szövegben lévő szavakat is. A szó számunkra olyan tetszőleges karaktersorozatot jelent, amelyben nem fordul elő a szóköz-, tabulátor- vagy újsor-karakter. A szó fenti, elég laza definíciója alapján működő program (ami a UNIX <span class="m">wc</span> segédprogramjának váza) a következő:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="d">#define</span> BENN 1 <span class="c">/* a szó belseje */</span>
+<span class="d">#define</span> KINT 0 <span class="c">/* a szón kivül */</span>
+
+<span class="c">/* a bemenetre adott szövegben lévő sorok,
+szavak és karakterek számolása */</span> 
+main( ) 
+{
+   <span class="k">int</span> c, nc, nl, nw, allapot;
+
+   allapot = KINT;
+   nl = nw = nc = 0;
+   <span class="k">while</span> ((c = <span class="f">getchar</span>( )) != <span class="f">EOF</span>) {
+      ++nc;
+      <span class="k">if</span> (c == '<span class="e">\n</span>')
+         ++nl;
+      <span class="k">if</span> (c == ' ' || c == '<span class="e">\n</span>' || c == '<span class="e">\t</span>')
+         allapot = KINT; 
+      <span class="k">else</span> <span class="k">if</span> (allapot == KINT) {
+         allapot = BENN;
+         ++nw; 
+      } 
+   }
+   <span class="f">printf</span>(&quot;%d %d %d<span class="e">\n</span>&quot;, nl, nw, nc); 
+}
+</pre>
+  Amint a program megtalálja egy szó első karakterét, azonnal növeli a szószámlálót (<span class="m">nw</span>). Az <span class="m">allapot</span> változó azt jelzi, hogy pillanatnyilag a szó belsejében vagyunk-e vagy sem. Kezdetben „nincs a szóban”, amit a hozzárendelt <span class="m">KINT</span> érték jelez. A programban a <span class="m">BENN</span> és a <span class="m">KINT</span> <i>szimbolikus állandók</i> használata előnyösebb az 1 és 0 értékeknél, mivel a program olvashatóbbá válik. Az olvashatóság ebben a kis példában nem okoz nehézséget, de nagy programoknál az áttekinthetőség növekedése lényegesen több hasznot jelent. Az olyan program, amiben a „bűvös számok” helyett szimbolikus állandókat használunk, könnyebben is módosítható.
+  <p> A program<br />
+  </p>
+  <pre>
+nl = nw = nc = 0;<br />
+</pre>
+  sorában mindhárom változóhoz nulla értéket rendelünk. Ez nem egy speciális utasításfajta, hanem abból következik, hogy az értékadásban egy kifejezés szerepel valamilyen értékkel és az értékadások balról jobbra haladva hajtódnak végre. Az előzővel teljesen egyenértékű az<br />
+  <pre>
+nl = (nw = (nc = 0));<br />
+</pre>
+  értékadás. A <span class="m">||</span> operátor a logikai VAGY műveletet jelenti, így a<br />
+  <pre>
+<span class="k">if</span> (c == ' ' || c == '<span class="e">\n</span>' || == '<span class="e">\t</span>'
+</pre>
+  utasítás azt jelenti, hogy „ha <span class="m">c</span> szóköz <i>vagy</i> <span class="m">c</span> újsor <i>vagy</i> <span class="m">c</span> tabulátor, akkor...”. (Mint korábban már említettük, a <span class="e">\t</span> escape sorozat a tabulátorkaraktert jelzi.) Van egy másik logikai operátor is, az <span class="m">&amp;&amp;</span>, ami a logikai ÉS műveletet jelenti és ennek precedenciája nagyobb, mint a logikai <span class="m">VAGY</span> műveleté. Az <span class="m">&amp;&amp;</span> és <span class="m">||</span> operátorokkal összekapcsolt kifejezések kiértékelése balról jobbra történik, és a kiértékelés azonnal félbeszakad, ha a kifejezés igaz vagy hamis volta egyértelművé válik. Ha a <span class="m">c</span> szóköz volt, akkor nincs értelme azt vizsgálni, hogy <span class="m">c</span> tartalma újsor- vagy tabulátorkarakter-e, így ezek a vizsgálatok már nem mennek végbe. Ez itt most nem különösen fontos, de bonyolultabb esetekben, amint azt hamarosan látni fogjuk, nagyon lényeges lehet.
+  <p> A példában előfordul az <span class="k">else</span> utasítás, ami meghatározza a program működését abban az esetben, ha az <span class="k">if</span> utasítás feltétele hamis volt. Az utasítás általános formája:<br />
+  </p>
+  <pre>
+<span class="k">if</span> <span class="defit">(kifejezés)</span>
+   <span class="defit">1. utasítás</span>
+<span class="k">else</span>
+   <span class="defit">2. utasítás</span>
+</pre>
+  Az <span class="k">if</span><span class="m">-</span><span class="k">else</span> szerkezetnek mindig csak az egyik utasítása hatásos. Ha a <i>kifejezés</i> igaz, akkor az <i>1. utasítást</i>, ha nem, akkor pedig a <i>2. utasítást</i> hajtja végre a program. Az <i>1.</i> és <i>2. utasítások</i> önálló utasítások vagy kapcsos zárójelben elhelyezett utasításcsoportok lehetnek. A szavakat számláló programban az <span class="k">else</span> után egy <span class="k">if</span> utasítás áll, ami két másik, kapcsos zárójelbe foglalt utasítást vezérel.<br />
+  <br />
+  <p><b>1.11.</b> gyakorlat. Hogyan lehet ellenőrizni a szavakat számláló programot? Milyen bemeneti adatsort kell használni, hogy a legnagyobb valószínűséggel érzékeljük a program esetleges hibáit? </p>
+  <p><b>1.12.</b> gyakorlat. Írjunk programot, ami a bemenetére adott szöveg minden szavát új sorba írja ki!<br />
+    <br />
+  </p>
+  <h3><a name="1.6." id="1.6."></a>1.6. Tömbök<br />
+  </h3>
+  Írjunk programot, amely megszámlálja, hogy a bemenetre adott szövegben hányszor fordulnak elő az egyes számjegyek, az üres helyet jelentő karakterek (szóköz, tabulátor, új sor), valamint az összes többi karakter! Ez egy elég mesterkélt feladat, de lehetővé teszi, hogy egyetlen programban jól szemléltessük a C nyelv számos lehetőségét.
+  <p> Mivel a bemeneti adatokat 12 kategóriába kell sorolni, kézenfekvőnek látszik az egyes számjegyek előfordulásainak számát egy tömbben tárolni, tíz külön változó helyett. Ennek megfelelően a program egyik változata a következő:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* számjegyeket, üres helyeket és más
+karaktereket számláló program*/</span> 
+main ( )
+{
+   <span class="k">int</span> c, i, nures, nmas; 
+   <span class="k">int</span> ndigit[10];
+
+   nures = nmas = 0;
+   <span class="k">for</span> (i = 0; i &lt; 10; ++i) 
+      ndigit[i] = 0;
+
+   <span class="k">while</span> ((c = getchar()) != <span class="f">EOF</span>)
+      <span class="k">if</span> (c &gt;= '0' &amp;&amp; c &lt;= '9')
+         ++ndigit[c-'0']; 
+      <span class="k">else</span> <span class="k">if</span> (c == ' ' || c == '<span class="e">\n</span>' || c == '<span class="e">\t</span>')
+         ++nures; 
+      <span class="k">else</span>
+         ++nmas;
+
+   <span class="f">printf</span>(&quot;számok =&quot;) ;
+   <span class="k">for</span> (i = 0; i &lt; 10; ++i)
+      <span class="f">printf</span>(&quot; %d&quot;, ndigit[i]);
+   <span class="f">printf</span> (&quot;, üres = %d, más = %d<span class="e">\n</span>&quot;, nures, nmas);
+}
+</pre>
+  A program az eredményt pl. a következő módon írja ki:<br />
+  <pre>
+számok = 9 3 0 0 0 0 0 0 0 1, üres = 123, más = 345
+</pre>
+  Az<br />
+  <pre>
+<span class="k">int</span> ndigit[10];
+</pre>
+  deklaráció a 10 egész számot tartalmazó <span class="m">ndigit</span> tömböt deklarálja. A C nyelvben a tömbök indexe mindig nullától indul, így az <span class="m">ndigit</span>-nek <span class="m">ndigit[0], ndigit[1], ..., ndigit[9]</span> elemei vannak. Ez tükröződik a tömböt kezdő értékkel feltöltő (inicializáló) és kinyomtató <span class="k">for</span> ciklusokban.
+  <p> Az index tetszőleges egész típusú kifejezés lehet, ami megadható egy egész típusú változóval (pl. <span class="m">i</span>) vagy egész típusú állandóval.</p>
+  <p> A példaprogram nagymértékben kihasználja a számjegyek karakteres ábrázolásának tulajdonságait. Így pl. az<br />
+  </p>
+  <pre>
+<span class="k">if</span> (c &gt;= '0' &amp;&amp; c &lt;= '9')
+</pre>
+  vizsgálat eldönti, hogy a <span class="m">c</span> változóban lévő karakter számjegy-e. Ha az, akkor ennek a számjegynek a numerikus értéke<br />
+  <pre>
+c - '0'
+</pre>
+  Ez a módszer természetesen csak akkor alkalmazható, ha a <span class="m">'0', '1', ..., '9'</span> egymást követő, növekvő sorrendű, pozitív egész számok. Szerencsére ez minden karakterkészlet esetén teljesül.
+  <p> Definíció szerint a <span class="k">char</span> típusú adatok kis egész számok, ezért az aritmetikai kifejezésekben a <span class="k">char</span> és <span class="k">int</span> típusú változók és állandók egyenértékűek. Ez elég természetes és kényelmes megoldás, pl. a <span class="m">c-'0'</span> egész kifejezés értéke 0 és 9 közt van, attól függően, hogy a <span class="m">'0' ... '9'</span> karakterek közül melyik tárolódott a <span class="m">c</span> változóban. Az így kapott érték felhasználható az <span class="m">ndigit</span> tömb indexeként.<br />
+    Annak eldöntése, hogy a karakter számjegy, üres hely vagy valami más-e, a következő vizsgálatsorozattal lehetséges:<br />
+  </p>
+  <pre>
+<span class="k">if</span> (c &gt;= '0' &amp;&amp; c &lt;= '9')
+   ++ndigit[c-'0']; 
+<span class="k">else</span> <span class="k">if</span> (c == ' ' || c == '<span class="e">\n</span>' || c == '<span class="e">\t</span>')
+   ++nures; 
+<span class="k">else</span>
+   ++nmas;
+</pre>
+  Az<br />
+  <pre>
+<span class="k">if</span> <span class="defit">(1.feltétel)</span>
+   <span class="defit">1. utasítás</span>
+<span class="k">else</span> <span class="k">if</span> <span class="defit">(2.feltétel)</span>
+   <span class="defit">2. utasítás</span>
+...
+   ...
+<span class="k">else</span>
+   <span class="defit">n. utasítás</span>
+</pre>
+  felépítésű szerkezetek gyakran előfordulnak a programokban, mint a többutas elágazások megvalósításai. A gép a <i>feltételeket</i> felülről kezdi kiértékelni és ha az igaz, akkor végrehajtja a megfelelő <i>utasítást</i>, majd befejezi a szerkezetet. (Természetesen bármelyik utasítás helyett kapcsos zárójelben elhelyezett utasításcsoport is állhat.) Ha egyik feltétel sem teljesül, akkor az utolsó <span class="k">else</span> utáni <i>utasítást</i> hajtja végre. Ha az utolsó <span class="k">else</span> és a hozzá tartozó <i>utasítás</i> hiányzik (mint a szavakat számláló programban), akkor semmi nem történik. Egy programban a kezdeti <span class="k">if</span> és a végső <span class="k">else</span> között tetszőleges számú<br />
+  <pre>
+<span class="k">else</span> <span class="k">if</span> <span class="defit">(feltétel)</span>
+   <span class="defit">utasítás</span>
+</pre>
+  felépítésű utasításcsoport lehet.
+  <p> Stilisztikai szempontból célszerű a példaprogramban bemutatott formát követni, mert így a programsorok nem lesznek túl hosszúak, a hosszú döntési láncok nem nyúlnak a jobb margón túlra.</p>
+  <p> A <a href="03.html">3. fejezetben</a> fogjuk ismertetni a <span class="k">switch</span> utasítást, ami szintén a többutas elágazások leírására alkalmas. Ez főleg akkor használható előnyösen, ha azt vizsgáljuk, hogy egy egész vagy karakteres típusú kifejezés egyezik-e egy állandókból álló halmaz valamelyik elemével. Összehasonlítás céljából a <a href="03.html#3.4.">3.4. pontban</a> bemutatjuk a példaprogramunk <span class="k">switch</span> utasítással megvalósított változatát.<br />
+    <br />
+  </p>
+  <p><b>1.13.</b> gyakorlat. Írjunk programot, ami kinyomtatja a bemenetre adott szavak hosszának hisztogramját! A legcélszerűbb, ha a hisztogramot vízszintesen ábrázoljuk, mert a függőleges ábrázolás túl bonyolult lenne.<br />
+  </p>
+  <p><b>1.14.</b> gyakorlat. Írjunk programot, ami kinyomtatja a bemenetre adott különböző karakterek előfordulási gyakoriságának hisztogramját!<br />
+    <br />
+  </p>
+  <h3><a name="1.7." id="1.7."></a>1.7. Függvények<br />
+  </h3>
+  A C nyelv függvényei megfelelnek a FORTRAN szubrutinjainak vagy függvényeinek, vagy a Pascal eljárásainak vagy függvényeinek. A függvény kényelmes lehetőséget nyújt a programozónak, hogy egy számítási részt önállóan kezelhető, zárt egységbe foglaljon. Ezek a zárt egységek ezután szabadon felhasználhatók anélkül, hogy a konkrét felépítésükkel, megvalósításukkal törődnünk kellene. Megfelelően tervezett és megvalósított függvények esetén teljesen figyelmen kívül hagyhatjuk, hogy <i>hogyan</i> keletkezett a függvény értéke (eredménye), elegendő csak az <i>eredményt</i> tudni. A C nyelvben a függvények használata egyszerű, kényelmes és hatékony. Gyakran találkozunk majd rövid, néhány sorban definiált és csak egyszer meghívott függvényekkel, amelyeknek pusztán csak az a szerepe, hogy a programot áttekinthetővé tegyék.
+  <p> Ez idáig csak kész, könyvtári függvényekkel (<span class="f">printf</span>, <span class="f">getchar</span>, <span class="f">putchar</span>) találkoztunk, így itt az ideje, hogy magunk is írjunk függvényeket. Mivel a C nyelvnek nincs a FORTRAN-ban értelmezett **-hoz hasonló hatványozó operátora, ezért a függvénydefiniálás bemutatására írjuk meg a <span class="m">power(m, n)</span> függvényt, amely előállítja egy <span class="m">m</span> egész szám <span class="m">n</span>-edik hatványát (<span class="m">n</span> pozitív egész szám). Például a <span class="m">power(2, 5)</span> értéke 32 lesz. A példaként választott függvény nem egy valódi hatványozó eljárás, mivel csak kis egész számok pozitív, egész kitevős hatványait képes kiszámítani. (A standard könyvtár <span class="f">pow</span>(x, y) függvénye egy általános, x<sup>y</sup> alakú kifejezés értékét határozza meg.)</p>
+  <p> A következőkben bemutatjuk a power függvényt és az azt hívó <span class="m">main</span> főprogramot (ami maga is függvény), ami alapján a teljes szerkezet elemezhető.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="k">int</span> power(<span class="k">int</span> m, <span class="k">int</span> n);
+
+<span class="c">/* a hatványozó függvény ellenőrzése */</span>
+main()
+{
+   <span class="k">int</span> i;
+
+   <span class="k">for</span> (i = 0; i &lt; 10; ++i)
+      <span class="f">printf</span>(&quot;%d %d %d<span class="e">\n</span>&quot;, i, power(2, i) , power(-3, i));
+   <span class="k">return</span> 0; 
+}
+
+<span class="c">/* a power(m, n) függvény az m alapot az n-edik hatványra
+emeli, ahol n &gt;= 0 */</span>
+<span class="k">int</span> power(<span class="k">int</span> alap, <span class="k">int</span> n) 
+{
+   <span class="k">int</span> i, p;
+
+   p = 1;
+   <span class="k">for</span> (i = 1; i &lt;= n; ++i)
+      p = p * alap; 
+   <span class="k">return</span> p; 
+}
+</pre>
+  A függvénydefiníció általános alakja:<br />
+  <pre class="defit">
+visszatérési típus   függvénynév (paraméter-deklarációk, ha vannak)
+{
+      deklarációk
+      utasítások
+}
+</pre>
+  <p>A függvénydefiníciók tetszőleges sorrendben szerepelhetnek, egy vagy több forrásállományban (bár természetesen egy függvény nem osztható szét két forrásállományba). Ha a forrásprogram több állományban helyezkedik el, bonyolultabb a fordítás és a betöltés, mintha egyetlen állományban lenne, de ez az operációs rendszer problémája és nem a nyelv jellegzetessége. Pillanatnyilag feltételezzük, hogy mindkét függvény azonos állományban van, így a C programok futtatásáról elmondottak továbbra is érvényesek.<br />
+    A <span class="m">main</span> a <span class="m">power</span> függvényt kétszer hívja a<br />
+  </p>
+  <pre>
+<span class="f">printf</span>(&quot;%d %d %d<span class="e">\n</span>&quot;, i, power (2, i), power(-3, i));
+</pre>
+  sorban. Mindegyik híváskor két argumentumot adunk át a <span class="m">power</span> függvénynek és az egy egész értékkel tér vissza, amit a hívó program formátumozott formában kiír. Egy aritmetikai kifejezésben a <span class="m">power(2, i)</span> éppen olyan egész mennyiség, mint <span class="m">2</span> és <span class="m">i</span>. (Nem minden függvény ad egész értéket, erről majd a <a href="04.html">4. fejezetben</a> mondunk többet.) A <span class="m">power</span> függvény első sorában az<br />
+  <pre>
+<span class="k">int</span> power(<span class="k">int</span> alap, <span class="k">int</span> n)
+</pre>
+  a paraméterek (argumentumok) típusát és nevét, valamint a függvény visszatéréskor szolgáltatott értékének típusát deklarálja. A power függvény által használt paraméterek nevei a <span class="m">power</span> függvényre nézve lokálisak, azaz egyetlen más függvényben sem „láthatók”, bármely eljárás ugyanezeket a neveket minden gond nélkül saját célra használhatja. Ez szintén igaz a <span class="m">power</span>-ben deklarált <span class="m">i</span> és <span class="m">p</span> változókra is, és a <span class="m">power</span>-ben használt <span class="m">i</span> változónak semmi köze a <span class="m">main</span>-ben használt <span class="m">i</span> változóhoz.
+  <p> A fogalmak egyértelművé tétele érdekében a továbbiakban <i>paraméternek</i> nevezzük a függvénydefiníció során zárójelben megadott változóneveket, és <i>argumentumnak</i> a függvény hívása során átadott értékeket. Ezekre a fogalmakra néha a <i>formális</i> és <i>aktuális argumentum</i> vagy <i>formális</i> és <i>aktuális paraméter</i> fogalmakat is használják.</p>
+  <p> A <span class="m">power</span> függvényben kiszámított értéket a <span class="k">return</span> utasítás adja vissza a <span class="m">main</span> függvénynek. A <span class="k">return</span> utasítás után tetszőleges kifejezés állhat a<br />
+  </p>
+  <pre>
+<span class="k">return</span> <span class="defint">kifejezés;</span>
+</pre>
+  szintaktika szerint. Egy függvénynek nem feltétlenül szükséges értékkel visszatérni a hívó programba. Egy kifejezés nélküli <span class="k">return</span> utasítás visszaadja a vezérlést a hívó programnak, de nem ad át hasznos információt. Ez történik akkor is, ha a vezérlés átlépi a függvény végét jelző jobb oldali kapcsos zárójelet. Természetesen a hívó függvénynek jogában áll nem figyelembe venni a hívott függvény által visszaadott értéket.
+  <p> Vegyük észre, hogy a <span class="m">main</span> végén is van egy <span class="k">return</span> utasítás. Mivel a <span class="m">main</span> ugyanolyan függvény, mint bármelyik más, ezért visszaadhat egy értéket a hívó programnak. A <span class="m">main</span> hívó programja az a környezet, amiben a program lefut, és a visszaadott értéket ez a környezet használja fel. Tipikusan a nulla visszaadott érték a program normális lefutását jelzi, a nullától különböző érték pedig a program abnormális vagy hibás lefutására utal. Az egyszerűség kedvéért eddig elhagytuk a <span class="k">return</span> utasítást a <span class="m">main</span> függvényeinkből, de ezután használni fogjuk, hogy a programunk egy állapotjelzést adhasson a környezetének.</p>
+  <p> Az<br />
+  </p>
+  <pre>
+<span class="k">int</span> power(<span class="k">int</span> m, <span class="k">int</span> n);
+</pre>
+  deklaráció a <span class="m">main</span> elején azt mondja meg, hogy a power függvény két egész típusú argumentumot vár és egész típusú eredménnyel tér vissza. Ezt a deklarációi <i>függvény-prototípusnak</i> nevezik, és meg kell hogy egyezzen a <span class="m">power</span> függvény definíciójával és használatával. Programozási hiba, ha a függvény definíciója vagy bármilyen használata nem egyezik a függvényprototípussal.
+  <p> Természetesen a paraméterek neveinek nem kell egyezni, a függvény prototípusaiban a paraméternevek opcionálisak és a power prototípusát így is írhatnánk:<br />
+  </p>
+  <pre>
+<span class="k">int</span> power(<span class="k">int</span>, <span class="k">int</span>);
+</pre>
+  Mindenesetre a jól választott nevek jó programdokumentálást tesznek lehetővé, ezért a továbbiakban is gyakran használni fogjuk a neveket a prototípusban.
+  <p> Végezetül egy történelmi megjegyzést szeretnénk tenni: az ANSI C és a korábbi C változatok közti legnagyobb eltérés éppen a függvények definiálásában és deklarálásában tapasztalható. A C nyelv eredeti definícója szerint a <span class="m">power</span> függvényt a következő módon írtuk volna meg:<br />
+  </p>
+  <pre>
+<span class="c">/* a power(m, n) függvény az m alapot az n-edik hatványra
+emeli, ahol n &gt;= 0 - régi tipusú változat */</span>
+power(alap, n)
+<span class="k">int</span> alap, n;
+{
+   <span class="k">int</span> i, p;
+
+   p = 1;
+   <span class="k">for</span> (i = 1; i &lt;= n; ++i)
+      p = p * alap; 
+   <span class="k">return</span> p; 
+}
+</pre>
+  Itt a paraméterek nevét zárójelek között adtuk meg és a típusaikat a nyitó kapcsos zárójel előtt deklaráltuk. A deklarálatlan paraméterek <span class="k">int</span> típusúak lesznek. (A függvény törzse mindkét változatban megegyezik.) A <span class="m">main</span> kezdetén a <span class="m">power</span> függvényt az<br />
+  <pre>
+<span class="k">int</span> power();
+</pre>
+  utasítással deklaráltuk volna. Itt nincs megengedve a paraméterlista, így a fordítóprogram nem képes egyszerű módon ellenőrizni, hogy a <span class="m">power</span> függvényt helyesen hívták-e. Valójában kiindulhatnánk az alapfeltételezésből is, és mivel a <span class="m">power</span> <span class="k">int</span> típusú értékkel tér vissza, így az egész deklarációt elhagyhatnánk.
+  <p> A függvényprototípusok új szintaktikája sokkal egyszerűbbé teszi a fordítóprogram számára az argumentumok számában és típusában elkövetett hibák észlelését. A függvények régi típusú definiálási és deklarálási módja átmenetileg még érvényben van az ANSI C-ben, de javasoljuk, hogy mindenki az új változatot használja, ha a fordítóprogramja támogatja azt.<br />
+    <br />
+  </p>
+  <p><b>1.15.</b> gyakorlat. Írjuk át az <a href="01.html#1.2.">1.2. pontban</a> ismertetett hőmérséklet-átalakító programot úgy, hogy az átalakításhoz függvényt használunk!<br />
+    <br />
+  </p>
+  <h3><a name="1.8." id="1.8."></a>1.8. Argumentumok - az érték szerinti hívás<br />
+  </h3>
+  A C nyelv függvényeinek egyik tulajdonságát a más nyelvekben - különösen FORTRAN nyelvben - gyakorlatot szerzett programozók szokatlannak fogják találni: a C nyelvben minden függvényargumentumot érték szerint adunk át. Ez azt jelenti, hogy a hívott függvény mindig az argumentumok értékét kapja meg (átmeneti változókban), azok címe helyett. Ez sok esetben eltérést okoz az olyan nyelvekhez képest, ahol a hívott eljárás az eredeti argumentum címét kapja meg egy helyi másolat helyett (mint pl. a FORTRAN-ban, ahol név szerinti a paraméterátadás, vagy mint pl. a Pascalban, ahol a var deklaráción keresztüli paraméterátadás van).
+  <p> A legfontosabb különbség ezekhez a nyelvekhez képest, hogy a C nyelvben a hívott függvény közvetlenül nem férhet hozzá és nem változtathatja meg a hívó függvény változóit, csak a saját, átmeneti másolatával dolgozhat.</p>
+  <p> Az érték szerinti hívás mindenképpen előny. Felhasználásával sokkal tömörebb, kevesebb segédváltozót tartalmazó program írható, mivel a hívott függvényben a paraméterek ugyanúgy kezelhetők, mint az inicializált lokális változók. Az elmondottak illusztrálására nézzük a <span class="m">power</span> függvény egy újabb változatát!<br />
+  </p>
+  <pre>
+<span class="c">/*a power(m, n) függvény az m alapot az n-edik hatványra
+emeli, ahol n &gt;= 0 - 2. változat */</span> 
+<span class="k">int</span> power(<span class="k">int</span> alap, <span class="k">int</span> n)
+{
+   <span class="k">int</span> p;
+
+   <span class="k">for</span> (p = 1; n &gt; 0; --n)
+      p = p*alap;
+   <span class="k">return</span> p;
+}
+</pre>
+  A programban az <span class="m">n</span> paramétert átmeneti változóként használtuk és lefelé számláltattuk (a <span class="k">for</span> ciklus csökkenő irányú), amíg csak nulla nem lett. Ennek következtében nincs szükség az <span class="m">i</span> segédváltozóra. Az <span class="m">n</span> értékének <span class="m">power</span> függvényen belüli módosítása semmilyen hatással sincs a híváskor használt eredeti értékre.
+  <p> Szükség esetén természetesen elérhető, hogy a hívott függvény megváltoztassa a hívó függvény valamelyik változóját. Ehhez a hívott függvénynek meg kell kapnia a kérdéses változó <i>címét</i> a hívó függvénytől (ami a változót megcímző <i>mutató</i> átadásával lehetséges) és a hívott függvényben a paramétert mutatóként kell deklarálni, amelyen keresztül indirekten érhető el a hívó függvény változója. A kérdéssel az <a href="05.html">5. fejezetben</a> fogunk részletesebben foglalkozni.</p>
+  <p> A leírtak nem érvényesek a tömbökre. Ha argumentumként egy tömb nevét adjuk meg, akkor a függvénynek átadott érték a tömb kezdetének helye (címe) lesz, a tömbelemek átmásolása nem történik meg. Ezt az értéket indexelve a hívott függvény a hívó függvény bármelyik tömbeleméhez hozzáférhet. Ezzel a kérdéssel a következő pontban foglalkozunk.<br />
+    <br />
+  </p>
+  <h3><a name="1.9." id="1.9."></a>1.9. Karaktertömbök<br />
+  </h3>
+  A C nyelvben valószínűleg a leggyakrabban használt tömbtípus a karaktertömb. Annak bemutatására, hogy hogyan használjuk a karaktertömböket, ill. hogyan manipuláljuk azokat a megfelelő függvényekkel, írjunk egy programot, ami szövegsorokat olvas be és kiírja közülük a leghosszabbat. A program váza viszonylag egyszerű:<br />
+  <pre>
+<span class="k">while</span> <span class="defit">(van további sor)</span>
+   <span class="k">if</span> <span class="defit">(a sor hosszabb az eddigi leghosszabbnál)</span>
+      <span class="defit">tárold a sort</span>
+      <span class="defit">tárold a sor hosszát</span>
+<span class="defit">nyomtasd ki a leghosszabb sort</span>
+</pre>
+  A programváz alapján látszik, hogy a program több, jól elkülönülő részre osztható: az első beolvassa, és megvizsgálja, a második pedig eltárolja az új sort, a fennmaradó rész pedig a folyamatot vezérli.<br />
+  Mivel az egyes részek ilyen jól elkülönülnek, célszerű, ha a programot is ennek megfelelően írjuk meg. Ezért először írjunk egy önálló <span class="m">getline</span> függvényt, aminek feladata, hogy előkészítse a következő sort. Megpróbáljuk a <span class="m">getline</span> függvényt úgy megírni, hogy az más programokban is jól használható, kellően általános legyen. A minimális igény, hogy a <span class="m">getline</span> visszatérésekor jelezze, ha elértük az állomány végét. Sokkal általánosabbá tehetjük a függvényt, ha az visszatéréskor a sor hosszát adja meg, vagy nullát, ha elértük az állomány végét. A nulla hossz biztosan megfelel az állományvégének jelzésére, mivel nem lehet tényleges sorhossz (minden szövegsor legalább egy karaktert, az újsor-karaktert tartalmazza, így a hossza minimálisan 1).
+  <p> Ha találunk egy sort, ami hosszabb az eddigi leghosszabb sornál, akkor azt valahová el kell tennünk. Erre a célra egy másik, <span class="m">copy</span> nevű függvényt használunk, amelynek feladata az új sor biztos helyre mentése.</p>
+  <p> Végül szükségünk van egy <span class="m">main</span>-re a <span class="m">getline</span> és a <span class="m">copy</span> vezérléséhez. Az eredmény a következő:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#define</span> MAXSOR 1000 <span class="c">/* a beolvasott sor max. mérete */</span>
+
+<span class="k">int</span> getline(<span class="k">char</span> sor[ ], <span class="k">int</span> maxsor); 
+<span class="k">void</span> copy(<span class="k">char</span> ba[ ], <span class="k">char</span> bol [ ]);
+
+<span class="c">/* a leghosszabb sor kiíratása */
+</span>main()
+{
+   <span class="k">int</span> hossz;         <span class="c">/* az aktuális sor hossza */</span>
+   <span class="k">int</span> max;           <span class="c">/* az eddigi maximális hossz */</span>
+   <span class="k">char</span> sor[MAXSOR];  <span class="c">/* az aktuális sor */</span>
+   <span class="k">char</span> leghosszabb[MAXSOR]; 
+   <span class="c">/* ide teszi a leghosszabb sort */</span>
+   
+   max = 0;
+   <span class="k">while</span> ((hossz = getline(sor, MAXSOR)) &gt; 0) 
+      <span class="k">if</span> (hossz &gt; max) {
+         max = hossz; 
+         copy(leghosszabb, sor);
+      } 
+   <span class="k">if</span> (max &gt; 0) <span class="c">/* volt sor, nem EOF */</span>
+      <span class="f">printf</span>(&quot;%s&quot;, leghosszabb); 
+   <span class="k">return</span> 0;<br />
+}
+<span class="c">/* getline: egy sort beolvas az s-be */</span>
+<span class="c">/* és visszaadja a hosszát */</span>
+<span class="k">int</span> getline(<span class="k">char</span> s[ ], <span class="k">int</span> lim)
+{
+   <span class="k">int</span> c, i;
+   <span class="k">for</span> (i = 0; i &lt; lim-1 &amp;&amp; (c = <span class="f">getchar</span>()) != <span class="f">EOF</span>
+            &amp;&amp; c != '<span class="e">\n</span>'; ++i)
+      s[i] = c;
+   <span class="k">if</span> (c == '<span class="e">\n</span>') {
+      s[i] = c;
+      ++i;
+   }
+   s[i] = '\0'; 
+   <span class="k">return</span> i;
+}
+<span class="c">/* copy: a &quot;ba&quot; helyre másol a &quot;bol&quot; helyről */</span>
+<span class="k">void</span> copy(<span class="k">char</span> ba[ ], <span class="k">char</span> bol[ ])
+{
+   <span class="k">int</span> i;
+
+   i = 0;
+   <span class="k">while</span> ((ba[i] = bol[i]) != '\0')
+      ++i;
+}
+</pre>
+  A <span class="m">getline</span> és <span class="m">copy</span> függvényeket a program elején deklaráljuk és a programról feltételezzük, hogy egyetlen állományban van.
+  <p> A <span class="m">main</span> és a <span class="m">getline</span> egy argumentumpáron keresztül tartja a kapcsolatot és a <span class="m">getline</span> egy értékkel tér vissza. A <span class="m">getline</span> argumentumait az<br />
+  </p>
+  <pre>
+<span class="k">int</span> getline(<span class="k">char</span> s[], <span class="k">int</span> lim)
+</pre>
+  sorban deklaráltuk, ami azt mondja, hogy az első argumentum (<span class="m">s</span>) egy tömb, a második (<span class="m">lim</span>) pedig egy egész változó. A deklarációban a tömb méretének megadásától eltekinthetünk. Az s tömb méretét a <span class="m">getline</span> függvényben sem kell megadni, mivel azt a <span class="m">main</span>-ben már beállítottuk. A <span class="m">getline</span> függvény a <span class="m">power</span>-hez hasonlóan tartalmaz egy <span class="k">return</span> utasítást, amelyen keresztül egy értéket ad vissza a hívó programnak. A deklaráló sor jelzi, hogy a <span class="m">getline</span> egész típusú értéket ad vissza. Mivel az alapfeltételezés szerint a visszatérési érték <span class="k">int</span> típusú, így a deklarációból ez el is hagyható.
+  <p> Néhány függvény a hívó programban felhasználható értékkel tér vissza, mások (mint pl. a <span class="m">copy</span>) csak végrehajtanak egy feladatot és nem adnak vissza értéket. A <span class="m">copy</span> függvény visszatérési típusa <span class="k">void</span>, ami explicit módon azt jelzi, hogy nincs visszatérési érték.<br />
+    A <span class="m">getline</span> a '<span class="e">\0</span>' karaktert (<i>nulla karaktert</i>, amelynek értéke nulla) helyezi a tömb végére, amivel a karaktersorozat (a beolvasott sor) végét jelzi. A C nyelv is ezt a módszert használja a szöveg végének jelzésére. Például a<br />
+  </p>
+  <pre>
+&quot;halló<span class="e">\n</span>&quot;<br />
+</pre>
+  karakterlánc-állandó egy tömbként tárolódik el, amelynek egyes elemei a karakterlánc egyes karakterei és a végét a '<span class="e">\0</span>' végjel mutatja az alábbiak szerint:<br />
+  <br />
+  <table width="300" border="1" class="m" align="center">
+    <tr align="center">
+      <td >h</td>
+      <td >a</td>
+      <td >l</td>
+      <td >l</td>
+      <td >ó</td>
+      <td ><span class="e">\n</span></td>
+      <td ><span class="e">\0</span></td>
+    </tr>
+  </table>
+  <br />
+  A <span class="f">printf</span> függvényben szereplő <span class="m">%s</span> formátummegadás egy ilyen formában megadott karaktersorozat kiírását jelzi. A <span class="m">copy</span> függvény is kihasználja, hogy a kapott argumentumát a '<span class="e">\0</span>' karakter zárja és ezt a karaktert át is másolja a kimenő argumentumába. (Mindez azt jelenti, hogy a '<span class="e">\0</span>' karakter nem része a beolvasott szövegnek.)
+  <p> Egyértelmű, hogy még egy ilyen kis programnál is adódnak tervezési problémák. Például felmerül a kérdés: mit csináljon a <span class="m">main</span>, ha a beolvasott sor hosszabb a megadott korlátnál? A <span class="m">getline</span> jól működik: ha megtelt a tömb, leáll, még akkor is, ha nem olvasott újsor-karaktert. A <span class="m">getline</span>-tól kapott <span class="m">hossz</span> és az utolsó karakter alapján a <span class="m">main</span> eldöntheti, hogy a sor túl hosszú volt-e, és ezután tetszése szerint cselekedhet. A program rövidsége miatt ezt az esetet nem vettük figyelembe.<br />
+    A <span class="m">getline</span> függvény felhasználója nem tudhatja, hogy milyen hosszú a beolvasandó sor, ezért a <span class="m">getline</span> ellenőrzi a túlcsordulást. A <span class="m">copy</span> felhasználója viszont már tudja (vagy megtudhatja) a karaktersorozat hosszát, ezért ott nem alkalmaztunk hibaellenőrzést.<br />
+    <br />
+  </p>
+  <p><b>1.16.</b> gyakorlat. Módosítsuk a leghosszabb sort kiíró program <span class="m">main</span> függvényét úgy, hogy helyesen adja meg a tetszőlegesen hosszú bemeneti sor méretét és annak szövegéből a lehető legtöbbet írja ki!</p>
+  <p> <b>1.17.</b> gyakorlat. Írjunk programot, ami kiírja az összes, 80 karakternél hosszabb bemeneti sort!</p>
+  <p> <b>1.18.</b> gyakorlat. Írjunk programot, ami eltávolítja a beolvasott sorok végéről a szóközöket és tabulátorokat, valamint törli a teljesen üres sorokat!</p>
+  <p> <b>1.19.</b> gyakorlat. Írjunk egy <span class="m">reverse(s)</span> függvényt, ami megfordítja az <span class="m">s</span> karaktersorozat karaktereit! Használjuk fel ezt a függvényt egy olyan programban, ami soronként megfordítja a beolvasott szöveget.<br />
+    <br />
+  </p>
+  <h3><a name="1.10." id="1.10."></a>1.10. A változók érvényességi tartománya és a külső változók<br />
+  </h3>
+  A <span class="m">main</span>-ben használt változók (pl. <span class="m">leghosszabb, sor</span> stb.) a <span class="m">main</span> saját, lokális változói. Mivel ezeket a <span class="m">main</span>-ben deklaráltuk, így közvetlenül egyetlen más függvény sem férhet hozzájuk. Ez ugyanígy igaz a többi függvényre is, pl. a <span class="m">getline i</span> változójának semmi köze a <span class="m">copy i</span> változójához. A függvény lokális változói csak a függvény hívásakor jönnek létre és megsemmisülnek, amikor a függvény visszaadja a vezérlést a hívó programnak. Ezért az ilyen változókat (más nyelvek szóhasználatához igazodva) <i>automatikus</i> változóknak nevezzük. Ezentúl a lokális változókra való hivatkozáskor az automatikus megnevezést fogjuk használni. (A <a href="04.html">4. fejezetben</a> tárgyaljuk majd a <span class="k">static</span> tárolási osztályú változókat, amelyek két függvényhívás közt is megtartják értéküket.)<br />
+  Mivel az automatikus változók csak a függvény hívásakor léteznek, így a következő hívásig nem őrzik meg az értéküket és minden függvényhíváskor explicit módon értéket kell nekik adni. Ha erről megfeledkeznénk, akkor a tartalmuk határozatlan lesz.
+  <p> Az automatikus változók mellett olyan változók is definiálhatók, amelyek az összes függvényre nézve <i>külsők</i>, azaz amelyekhez a nevükre hivatkozva bármely függvény hozzáférhet. (Ezek a változók nagyon hasonlítanak a FORTRAN nyelv COMMON változóihoz vagy a Pascal programok legkülső blokkjában deklarált változókhoz.) Mivel ezek a külső (<i>external</i>) változók az egész programra nézve globálisak, felhasználhatók a függvények közti adatcseréhez az argumentumlista helyett. A külső változók állandóan érvényben vannak, és függetlenül a függvények hívásától vagy a függvényből való visszatéréstől, megtartják az értéküket.</p>
+  <p> A külső változókat csak egyszer, az összes függvényen kívül kell <i>definiálni</i>, és ennek hatására tárolóhely rendelődik hozzájuk. A külső változókat minden olyan függvényben <i>deklarálni</i> kell, amely hozzájuk akar férni. Ez a deklaráció megadja ezen változók típusát a függvényben. A deklaráció történhet explicit módon, az <span class="k">extern</span> utasítással vagy implicit módon, a programkörnyezet alapján. A külső változók használatának megvilágítására írjuk újra a leghosszabb sort kiíró programot úgy, hogy a <span class="m">sor</span>, a <span class="m">leghosszabb</span> és a <span class="m">max</span> változók külső változók legyenek. Ez a függvényhívások, a deklarációk és mindhárom függvénytörzs módosítását igényli.</p>
+  <p> Az új program:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="d">#define</span> MAXSOR 1000   <span class="c">/* a beolvasott sor max. mérete */</span>
+
+<span class="k">int</span> max;              <span class="c">/* az eddigi maximális hossz */</span>
+<span class="k">char</span> sor[MAXSOR];     <span class="c">/* az aktuális sor*/</span>
+<span class="k">char</span> leghosszabb[MAXSOR];
+<span class="c">/* ide teszi a leghosszabb sort */</span>
+
+<span class="k">int</span> getline(<span class="k">void</span>); 
+<span class="k">void</span> copy(<span class="k">void</span>);
+
+<span class="c">/* a leghosszabb sor kiíratása - speciális változat */</span>
+main( )
+{
+   <span class="k">int</span> hossz; <span class="c">/* az aktuális sor hossza */</span>
+   <span class="k">extern</span> <span class="k">int</span> max;
+   <span class="k">extern</span> <span class="k">char</span> leghosszabb[MAXSOR];
+
+   max = 0;
+   <span class="k">while</span> ((hossz = getline( )) &gt; 0) 
+      <span class="k">if</span> (hossz &gt; max) {
+         max = hossz; 
+         copy( ); 
+      } 
+      <span class="k">if</span> (max &gt; 0) <span class="c">/* volt sor, nem EOF */</span>
+         <span class="f">printf</span>(&quot;%s&quot;, leghosszabb); 
+   <span class="k">return</span> 0;<br />
+}
+
+<span class="c">/* getline: speciális változat */</span>
+<span class="k">int</span> getline(<span class="k">void</span>)
+{
+   <span class="k">int</span> c, i;
+   <span class="k">extern</span> <span class="k">char</span> sor[ ];
+
+   <span class="k">for</span> (i = 0; i &lt; MAXSOR-1 &amp;&amp; (c = <span class="f">getchar</span> ( )) != <span class="f">EOF</span>
+               &amp;&amp; c != '<span class="e">\n</span>'; ++i)
+      sor[i] = c;
+   <span class="k">if</span> (c == '<span class="e">\n</span>') {
+      sor[i] = c;
+      ++i;
+   }
+   sor[i] = '<span class="e">\0</span>'; 
+<span class="k">return</span> i;
+}
+
+<span class="c">/* copy: speciális változat */</span>
+<span class="k">void</span> copy(<span class="k">void</span>)
+{
+   <span class="k">int</span> i;
+   <span class="k">extern</span> <span class="k">char</span> sor[ ], leghosszabb [ ];
+
+   i = 0;
+   <span class="k">while</span> ((leghosszabb[i] = sor[i]) != '<span class="e">\0</span>')
+      ++i; 
+}
+</pre>
+  A <span class="m">main</span>, <span class="m">getline</span> és <span class="m">copy</span> függvények külső változóit a példaprogram első soraiban definiáltuk, amivel meghatároztuk a típusukat és lefoglaltuk számukra a tárolóhelyet. Szintaktikailag ezek a külső változódefiníciók ugyanolyanok, mint a lokális változók definíciói, de mivel a függvényeken kívül helyezkednek el, ezért külső változót írnak le. Egy függvény csak akkor használhat külső változókat, ha azok nevei már ismertek a számára. Ennek egyik módja, hogy egy <span class="k">extern</span> deklarációt írunk a függvénybe. A deklaráció ugyanolyan, mint a korábbiak, csak az <span class="k">extern</span> alapszó van előtte.
+  <p> Bizonyos esetekben az <span class="k">extern</span> deklaráció elmaradhat. Ha a külső változó definíciója a forrásállományban megelőzi a változó használatát valamelyik függvényben, akkor ebben a függvényben nem szükséges az <span class="k">extern</span> deklaráció. Példaprogramunkban a <span class="m">main</span>, <span class="m">getline</span> és <span class="m">copy</span> függvények <span class="k">extern</span> deklarációi emiatt feleslegesek. Általános gyakorlat, hogy az összes külső változó definícióját a forrásállomány elejére teszik, és így az összes <span class="k">extern</span> deklaráció elhagyható a programból.</p>
+  <p> Ha a program több forrásállományban van, és a külső változókat pl. a <span class="m">file1</span> állományban definiáljuk, és a <span class="m">file2</span>, ill. <span class="m">file3</span> állományokban használjuk, akkor az <span class="k">extern</span> deklarációra a változók előfordulásának megfelelően szükség van a <span class="m">file2</span> és <span class="m">file3</span> állományokban. Szokásos gyakorlat, hogy az összes külső változó <span class="k">extern</span> deklarációját és a függvényeket egy önálló állományba (amit történelmi okokból fejnek vagy <i>header</i>-nek neveznek) gyűjtik és ezt az <span class="d">#include</span> paranccsal az egyes forrásállományokhoz kapcsolják. Az állománynév utáni <span class="m">.h</span> kiterjesztés ilyen header állományt jelöl. A standard könyvtár függvényei pl. a <span class="m">&lt;stdio.h&gt;</span>-hoz hasonló header állományokban vannak deklarálva. A deklarációk részleteit a <a href="04.html">4. fejezetben</a>, a könyvtárral kapcsolatos ismereteket a <a href="07.html">7. fejezetben</a> és a <a href="b.html">B. Függelékben</a> tekintjük át.</p>
+  <p> Mivel a <span class="m">getline</span> és <span class="m">copy</span> függvényeknek az új programváltozatban nincs argumentumuk, arra gondolhatnánk, hogy a forrásállomány elején a prototípusuk <span class="m">getline()</span> és <span class="m">copy()</span> alakú. De a régebbi C programokkal való kompatibilitás érdekében a szabvány az üres paraméterlistát régi stílusú függvénydeklarációnak tekinti és leállítja a paraméterlista ellenőrzését, ezért a ténylegesen üres paraméterlistában a <span class="k">void</span> kulcsszónak kell szerepelnie. A kérdéssel a <a href="04.html">4. fejezetben</a> még foglalkozunk.</p>
+  <p> Megjegyezzük, hogy a külső változókkal foglalkozó részben nagy gonddal használtuk a <i>definiálás</i> és <i>deklarálás</i> fogalmakat. A definíció a program azon helye, ahol a változót (vagy függvényt) létrehoztuk vagy tárterületet rendeltünk hozzá. A deklaráció viszont olyan programrész, ahol csak leírjuk a változó tulajdonságait, de nem rendelünk hozzá tárterületet.</p>
+  <p> Hajlamosak vagyunk a program összes változóját külső változóként definiálni, mert így egyszerűsíthető a függvények közötti információcsere, rövidebbé válnak az argumentumlisták és a változók mindig a rendelkezésünkre állnak, amikor szükséges. De sajnos, a külső változók akkor is jelen vannak, ha nem akarjuk! Elég veszélyes dolog túlzottan a külső változókra támaszkodni, mert ez olyan programot eredményez, amelyben az adatkapcsolatok áttekinthetetlenek és a változók nem várt módon, sőt sokszor szándékunk ellenére megváltoznak, valamint a programot később nehéz módosítani. A leghosszabb sort kiíró program második változata ilyen szempontból rosszabb az elsőnél és tovább rontja a helyzetet, hogy a változók nevének rögzítésével a <span class="m">getline</span> és a <span class="m">copy</span> függvények elvesztették általános jellegüket.</p>
+  <p> Ebben a fejezetben áttekintettük a C nyelv legfontosabb elemeit. Ezekből az elemekből jelentős méretű, jól használható programok írhatók. Ennek érdekében javasoljuk az olvasónak, hogy most tartson egy kis szünetet a könyv olvasásában, és mielőtt tovább haladna, gondolja át az itt leírtakat, tanulmányozza a példaprogramokat és oldja meg a gyakorlatok feladatait. A következő gyakorlatokkal olyan programozási feladatokat kínálunk, amelyek a korábbiaknál bonyolultabbak.<br />
+    <br />
+  </p>
+  <p><b>1.20.</b> gyakorlat. Írjunk <span class="m">detab</span> néven programot, amely a beolvasott szövegben talált tabulátorkaraktereket annyi szóközzel helyettesíti, amennyi a következő tabulátorpozícióig hátravan! Tételezzük fel, hogy a tabulátorpozíciók adottak, pl. minden <i>n</i>-edik oszlopban. Az <i>n</i> értékét változóként vagy szimbolikus állandóként célszerű megadni?</p>
+  <p> <b>1.21.</b> gyakorlat. Írjunk programot <span class="m">entab</span> néven, amely a beolvasott szövegben talált, szóközökből álló karaktersorozatot a minimális számú tabulátorkarakterrel és szóközökkel helyettesíti úgy, hogy a szövegben a távolság ne változzon! Használjuk ugyanazokat a tabulátorpozíciókat, mint a detab programban! Ha a következő tabulátorpozíció eléréséhez egyetlen szóköz vagy egyetlen tabulátor karakter is elegendő, akkor melyiket részesíti előnyben?</p>
+  <p> <b>1.22.</b> gyakorlat. Írjunk olyan programot, amely a hosszú bemeneti sorokat az <i>n</i>-edik oszlop előtt előforduló utolsó szóközkarakter után egy vagy több rövidebb sorba tördeli! Győződjünk meg arról, hogy a program nagyon hosszú sorok és az <i>n</i>-edik oszlop előtt sem szóközt, sem tabulátort nem tartalmazó sorok esetén egyaránt helyesen működik!</p>
+  <p> <b>1.23.</b> gyakorlat. Írjunk programot, ami egy C program szövegéből eltávolít minden megjegyzés szövegrészt! Ne feledkezzünk meg az idézőjelek közti karaktersorozatok és karakterállandók helyes kezeléséről! A C nyelvben a megjegyzés szövegek nem ágyazhatók egymásba.</p>
+  <p> <b>1.24.</b> gyakorlat. Írjunk programot, ami egy C program szövegét olyan alapvető szintaktikai hibák szempontjából ellenőrzi, mint a nem azonos számú kerek, szögletes és kapcsos kezdő és végzárójelek! Ne feledkezzünk meg az idézőjelekről, aposztrófokról, escape jelsorozatokról és megjegyzés szövegekről sem! Ezt a programot teljesen általános formában elég nehéz elkészíteni.<br />
+  </p>
+  <br>
+  <br>
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="../index.html#Előszó1">Előszó</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="02.html">2. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,742 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Kapcsolódás a UNIX operációs rendszerhez</title>
+<link href="krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div id="main">
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="07.html">7. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="a.html">A. FÜGGELÉK</a>
+   </td>
+</tr>
+</table>
+
+
+  <h2><a name="8. FEJEZET" id="8. FEJEZET"></a><i>8. FEJEZET:<br />
+    </i></h2>
+  <h2>Kapcsolódás a UNIX operációs rendszerhez<br />
+  </h2>
+  A UNIX operációs rendszer szolgáltatásai a C nyelvű programokból az ún. rendszerhívásokon keresztül érhetők el. Ezek a rendszerhívások lényegében adott feladatot ellátó függvények, amelyeket a felhasználói program hívhat. Ebben a fejezetben a C nyelvű programokból hívható legfontosabb rendszerhívásokat ismertetjük. Ha a UNIX operációs rendszer alatt dolgozunk, akkor ezek a függvények közvetlenül a segítségünkre lehetnek. A rendszerhívásokat gyakran alkalmazzuk a program maximális hatékonyságának elérése érdekében vagy a könyvtári függvényekkel nem megvalósítható feladatok ellátására. Abban az esetben, ha a C nyelvet nem UNIX operációs rendszerrel használjuk, akkor az itt közölt példákon keresztül betekinthetünk a C nyelvű programozás rejtelmeibe, és bár a részletek változhatnak, más operációs rendszer esetén is hasonló programok írhatók. Mivel az ANSI C könyvtár sok esetben a UNIX szolgáltatásait modellezi, az itt közölt programok a könyvtár jobb megismerését is segítik.
+  <p> A fejezet anyaga három fő részre oszlik, az adatbevitel és adatkivitel, az állománykezelés és a tárkezelés műveleteire. Az első két rész feltételezi a UNIX jellemzőinek legalább alapfokú ismeretét.</p>
+  <p> A <a href="07.html">7. fejezet</a> az adatbevitel és adatkivitel olyan rendszerillesztési felületével foglalkozott, ami lényegében operációs rendszertől függetlenül egységes, mivel bármelyik konkrét rendszerben a standard könyvtár eljárásait a befogadó rendszer szolgáltatásainak figyelembevételével kell megírni. A következő néhány pontban a UNIX rendszer adatbevitellel és adatkivitellel kapcsolatos rendszerhívásait ismertetjük, és megmutatjuk, hogy ezekhez hogyan készíthetjük el a standard könyvtár megfelelő részeit.<br />
+    <br />
+  </p>
+  <h3><a name="8.1." id="8.1."></a>8.1. Az állományleírók<br />
+  </h3>
+  A UNIX operációs rendszerben az összes adatbeviteli és adatkivíteli művelet állományok olvasásával vagy írásával valósul meg, mivel az összes perifériához való hozzáférés, beleértve a billentyűzetet és a képernyőt is, az állománykezelő rendszeren keresztül történik. Ez azt jelenti, hogy a felhasználói program és a perifériák közötti teljes adatcsere egyetlen homogén interfészen át bonyolódik le.
+  <p> A legáltalánosabb esetben egy állomány olvasása vagy írása előtt szándékunkról tájékoztatni kell az operációs rendszert, és ezt a folyamatot az állomány megnyitásának nevezzük. Ha egy állományba írni akarunk, akkor szükség lehet az adott állomány létrehozására vagy a már meglévő állomány korábbi tartalmának törlésére. Az operációs rendszer ellenőrzi, hogy mindehhez van-e jogunk (A megadott állomány létezik-e? Van-e hozzáférési jogunk az állományhoz?), és ha mindent rendben talált, akkor visszatér a hívó programba egy kis, nem negatív egész számmal, amit <i>állományleírónak</i> nevezünk. Ezután minden esetben, amikor az állományból olvasni vagy abba írni akarunk, az állomány azonosítására az állománynév helyett ezt az állományleírót használjuk. (Az állományleíró a standard könyvtárban használt állománymutatóval vagy az MS-DOS-ban használt állománykezelővel analóg fogalom.) A megnyitott állományra vonatkozó össze információt az operációs rendszer kezeli és a felhasználói program az állományra csak annak állományleírójával hivatkozik.</p>
+  <p> Mivel leggyakrabban a billentyűzeten és a képernyőn keresztüli adatbevitelt és adatkivitelt használjuk, ezért ezek kezelésére egy kényelmes megoldását fejlesztettek ki. Amikor az operációs rendszer parancsértelmezője (a shell) egy felhasználói programot futtat, ahhoz automatikusan három állományt nyit meg. Ezek (ahogyan erről már volt szó) a standard bemenet, a standard kimenet és a standard hibaállomány, amelyekhez rendre a 0,1 és 2 állományleíró tartozik. Így ha egy program mindig a 0 leírójú állományt olvassa és az 1, ill. 2 leírójú állományba ír, akkor nem kell törődnie az állományok megnyitásával.</p>
+  <p> A felhasználó a <span class="m">&lt;</span> vagy <span class="m">&gt;</span> jelekkel átirányíthatja a program bemenetét vagy kimenetét a<br />
+  </p>
+  <pre>
+prog &lt;beallomany &gt;kiallomany
+</pre>
+  formában. Ilyenkor a shell megváltoztatja a 0 és 1 állományleíróhoz tartozó alapértelmezés szerinti hozzárendelést az adott nevű állományokra. Normális esetben a 2 állományleíróhoz mindig a képernyő van hozzárendelve, így a hibaüzenetek mindig ott jelennek meg. Hasonló módon történik a bemenet és a kimenet kezelése pipeing mechanizmus alkalmazásakor. Minden esetben az állományok hozzárendelését az operációs rendszer (shell) változtatja meg és nem a felhasználói program. A programnak nincs tudomása arról, hogy honnan kapja a bemeneti adatokat és hová kerülnek a kimeneti adatok, mindössze csak azt tudja, hogy a 0 állomány bemenet, az 1 és 2 állomány kimenet.<br />
+  <h3><a name="8.2." id="8.2."></a>8.2. Alacsony szintű adatbevitel és adatkivitel – a read és write függvények<br />
+  </h3>
+  A UNIX rendszerben az alacsony szintű adatbevitelt és adatkivitelt a read és write rendszerhívások intézik, amelyek a C nyelvű programból a <span class="m">read</span> és <span class="m">write</span> függvényekkel érhetők el. Mindkét függvény első argumentuma az állományleíró, a második argumentum pedig a felhasználói programban definiált karakteres tömb (puffer), amibe a bejövő adatok érkeznek, ill. aminek a tartalma kiíródik. A függvények harmadik argumentuma az átvinni kívánt bájtok (karakterek) száma. A függvények használatának módja:<br />
+  <pre>
+<span class="k">int</span> n_olvas = read(<span class="k">int</span> fd, <span class="k">char</span> *buf, <span class="k">int</span> n);
+<span class="k">int</span> n_ir = write(<span class="k">int</span> fd, <span class="k">char</span> *buf, <span class="k">int</span> n);
+</pre>
+  Mindegyik függvény a ténylegesen átvitt bájtok számával tér vissza, ami olvasáskor kisebb lehet, mint a híváskor megadott érték. A visszatérési érték 0, ha állomány vége következett és -1, ha valamilyen hiba történt. Íráskor a visszatérési értéknek meg kell egyezni a kiíratni kívánt bájtszámmal, ha nem egyeznek, akkor hiba történt az átvitel közben.
+  <p> Egy függvényhívással bármennyi bájt írható vagy olvasható. A leggyakoribb esetben a bájtszám 1, ami azt jelenti, hogy egy időben egyetlen karaktert írunk vagy olvasunk (puffereletlen adatátvitel). Gyakori még az 1024, 4096 vagy hasonló számú bájt átvitele, mivel ez a blokkméret jól illeszkedik a perifériák fizikai blokkméretéhez. Nagyobb méretű blokkok átvitele hatékonyabb, mivel fajlagosan kevesebb rendszerhívásra van szükség.</p>
+  <p> Az elmondottak alapján írjunk egy egyszerű programot, amely a bemenetről érkező adatokat átmásolja a kimenetre. (A program lényegében megegyezik az <a href="01.html">1. fejezetben</a> leírt másolóprogrammal.) Ez a program gyakorlatilag bármit bárhová átmásol, mivel a bemenet és a kimenet tetszőleges eszközre vagy állományba átirányítható.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &quot;syscalls.h&quot;
+
+main()<span class="c">/* a bemenetet a kimenetre másolja */</span>
+{
+   <span class="k">char</span> buf[BUFSIZ];
+   <span class="k">int</span> n;
+
+   <span class="k">while</span> (n = read(0, buf, BUFSIZ)) &gt; 0)
+      write (1, buf, n); <span class="k">return</span> 0;
+}
+</pre>
+  A rendszerhívások függvényprototípusait a <span class="m">syscalls.h</span> headerben gyűjtöttük össze, ahonnan a fejezet programjaiba beiktathatók. Ez a header-név természetesen nem szabványban rögzített név.
+  <p> A <span class="m">BUFSIZ</span> paramétert szintén a <span class="m">syscalls.h</span> headerben definiáltuk, értéke a helyi rendszerhez illeszkedően lett megválasztva. Ha az állomány mérete nem a <span class="m">BUFSIZ</span> egész számú többszöröse, akkor a <span class="m">read</span> a <span class="m">write</span> függvénnyel kiírt bájtszámnál kisebb számmal fog visszatérni és a következő read visszatérési értéke nulla lesz (<span class="f">EOF</span>).</p>
+  <p> Érdemes megnézni, hogy hogyan használható a <span class="m">read</span> és a <span class="m">write</span> magasabb szintű (<span class="f">getchar</span> vagy <span class="f">putchar</span> függvényekhez hasonló) függvények előállítására. Példa gyanánt írjuk meg a <span class="m">getchar</span> puffereletlen bemeneti függvényt, amely egy időben egy karaktert olvas a standard bemenetről.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &quot;syscalls.h&quot;
+
+<span class="c">/* getchar: egykarakteres, puffereletlen beolvasóeljárás */</span>
+<span class="k">int</span> <span class="f">getchar</span>(<span class="k">void</span>)
+{
+   <span class="k">char</span> c;
+
+   <span class="k">return</span> (read(0, &amp;c, 1) == 1) ? (<span class="k">unsigned</span> <span class="k">char</span>) c : <span class="f">EOF</span>;
+}
+</pre>
+  A programban <span class="m">c</span> karakteres kell hogy legyen, mivel a <span class="m">read</span> függvény karakteres mutatót igényel. A visszatéréskor <span class="m">c</span>-re rákényszerített <span class="k">unsigned</span> <span class="k">char</span> típus garantáltan kizárja az előjel-kiterjesztésből adódó problémákat.
+  <p> A <span class="m">getchar</span> második változata egyszerre egy nagy adatblokkot olvas be és abból egyenként adja ki a karaktereket.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &quot;syscalls.h&quot;
+
+<span class="c">/* getchar: egyszerű puffereit változat */</span>
+<span class="k">int</span> <span class="f">getchar</span>(<span class="k">void</span>)
+{
+   <span class="k">static</span> <span class="k">char</span> buf[BUFSIZ];
+   <span class="k">static</span> <span class="k">char</span> *bufp = buf;
+   <span class="k">static</span> <span class="k">int</span> n = 0;
+   
+   <span class="k">if</span> (n == 0) { <span class="c">/* a puffer üres */</span>
+      n = read(0, buf, <span class="k">sizeof</span> buf);
+      bufp = buf;
+   }
+   <span class="k">return</span> (--n &gt;= 0) ? (<span class="k">unsigned</span> <span class="k">char</span>) *bufp++ : <span class="f">EOF</span>;
+}
+</pre>
+  Ha a <span class="f">getchar</span> ezen változatát az <span class="m">&lt;stdio.h&gt;</span> header beiktatásával lefordítjuk, akkor a <span class="f">getchar</span> nevet a <span class="d">#undef</span> paranccsal definiálatlanná kell tenni, különben a rendszer a könyvtári makrót szerkesztené be a programba.<br />
+  <br />
+  <h3><a name="8.3." id="8.3."></a>8.3. Az open, creat, close és unlink rendszerhívások<br />
+  </h3>
+  Az alapértelmezés szerinti standard bemenet, kimenet és hibaállomány kivételével az összes többi, írásra vagy olvasásra igénybe vett állományt explicit módon meg kell nyitni. Erre a célra két rendszerhívás, az <span class="m">open</span> és a <span class="m">creat</span> (vigyázat: nem create) használható.
+  <p> Az <span class="m">open</span> hasonló a <a href="07.html">7. fejezetben</a> leírt <span class="f">fopen</span> függvényhez, kivéve, hogy állománymutató helyett egy állományleíróval tér vissza, ami <span class="k">int</span> típusú.</p>
+  <p> Az <span class="m">open</span> visszatérési értéke <span class="m">-1</span>, ha a művelet közben valamilyen hiba történt. Az <span class="m">open</span> használatát mutatja be a következő programrészlet.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;fcntl.h&gt;
+
+<span class="k">int</span> fd;
+<span class="k">int</span> open(<span class="k">char</span> *nev, <span class="k">int</span> jelzo, <span class="k">int</span> eng);
+
+fd = open(nev, jelzo, eng);
+</pre>
+  Csakúgy, mint a <span class="f">fopen</span> esetén, a <span class="m">nev</span> argumentum az állomány nevét tartalmazó karaktersorozat. A második, <span class="m">jelzo</span> argumentum <span class="k">int</span> típusú és azt mondja meg, hogy az állományt milyen célból nyitottuk meg. Gyakrabban előforduló értékei:<br />
+  <pre>
+0_RDONLY    <span class="def">megnyitás csak olvasásra;</span>
+0_WRONLY    <span class="def">megnyitás csak írásra;</span>
+0_RDWR      <span class="def">megnyitás írásra és olvasásra.</span>
+</pre>
+  Ezek az állandók System V UNIX rendszer esetén az <span class="m">&lt;fcntl.h&gt;</span> headerben, a Berkeley (BSD) változat esetén pedig a <span class="m">&lt;sys/file.h&gt;</span> headerben vannak definiálva. Egy létező állomány megnyitása olvasásra:<br />
+  <pre>
+fd = open(nev, 0_RDONLY, 0);
+</pre>
+  Az <span class="m">open</span> harmadik, <span class="m">eng</span> argumentuma ilyen típusú alkalmazások esetén mindig nulla. (Az <span class="m">eng</span> paraméter használatára még visszatérünk.)
+  <p> Ha egy nem létező állományt akarunk megnyitni, akkor hibajelzést kapunk. Egy új állomány létrehozása vagy egy meglévő állomány felülírása a <span class="m">creat</span> rendszerhívással lehetséges. Ennek általános alakja:<br />
+  </p>
+  <pre>
+<span class="k">int</span> creat(<span class="k">char</span> *nev, <span class="k">int</span> eng);
+fd = creat(nev, eng);
+</pre>
+  A <span class="m">creat</span> függvény a hívása után az állományleíróval tér vissza, ha képes volt létrehozni a kívánt állományt, vagy a <span class="m">-1</span> értékkel, ha nem. Ha a <span class="m">creat</span>-nek megadott állomány már létezett, akkor a függvény a hosszúságát nullára állítja, amivel a korábbi tartalmat törli. Nem hiba a <span class="m">creat</span> függvénynek már létező állomány nevét megadni.
+  <p> Ha az állomány még nem létezik, akkor a creat az eng argumentumban megadott védelmi móddal hozza azt létre. A UNIX rendszerben minden állományhoz egy kilenc-bites védelmi kód tartozik, ami az állomány írási, olvasási, végrehajtás-hozzáférési, tulajdonosi és tulajdonoscsoporthoz tartozó engedélyeket tartalmazza. A védelmi kódot legkényelmesebben egy háromjegyű oktális számmal adhatjuk meg. Így pl. a <span class="m">0755</span> kód a tulajdonosnak engedélyezi az írást, olvasást és a végrehajtást, a csoport többi tagjának és mindenki másnak is viszont csak olvasást és végrehajtást enged meg.</p>
+  <p> Az elmondottak illusztrálására ismertetjük a UNIX <span class="m">cp</span> programjának egyszerűsített változatát, amely egy állományt egy másik állományba másol. Az itt közölt változat csak egy állományt másol, és nem engedi meg, hogy a második argumentum egy könyvtár legyen. Ugyancsak egyszerűsíti a feladatot, hogy a program rögzített védelmi kódot használ.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;fcntl.h&gt;
+<span class="d">#include</span> &quot;syscalls.h&quot;
+
+<span class="d">#define</span> ENG 0666 <span class="c">/* olvasás-írás a tulajdonosnak,
+a csoportnak és másoknak */</span>
+
+<span class="k">void</span> error (<span class="k">char</span> *, ...);
+
+<span class="c">/* cp: f1 másolása f2-be */</span>
+main (<span class="k">int</span> argc, <span class="k">char</span> *argv[])
+{
+   <span class="k">int</span> f1, f2, n;
+   <span class="k">char</span> buf[BUFSIZ];
+
+   <span class="k">if</span> (argc != 3)
+      error (&quot;Felhasználás: cp a-ból b-be&quot;);
+   <span class="k">if</span> ((f1 = open (argv[1], 0_RDONLY, 0)) == -1)
+      error (&quot;cp: nem nyitható meg %s&quot;, argv[1]);
+   <span class="k">if</span> ((f2 = creat (argv[2], ENG)) == -1)
+      error (&quot;cp: nem hozható létre %s, mód %03o&quot;,
+            argv[2], ENG);
+   <span class="k">while</span> ((n = read (f1, buf, BUFSIZ)) &gt; 0)
+      <span class="k">if</span> (write (f2, buf, n) != n)
+         error (&quot;cp: írási hiba a %s állományban&quot;,
+            argv[2]);
+   <span class="k">return</span> 0;
+}
+</pre>
+  A program <span class="m">0666</span> védelmi kóddal egy kimeneti állományt hoz létre. A rögzített védelmi kód helyett felhasználhatjuk a bemeneti állomány eredeti védelmi kódját is, amit a <a href="08.html#8.6.">8.6. pontban</a> ismertetendő stat rendszerhívással kérdezhetünk le.
+  <p> Vegyük észre, hogy az <span class="m">error</span> függvényt változó hosszúságú argumentumlistával hívjuk, hasonlóan a korábban ismertetett <span class="f">printf</span> függvényhez. Az <span class="m">error</span> függvény programja egyben példát mutat a <span class="f">printf</span> függvénycsalád egy újabb tagjának használatára. A standard könyvtár <span class="f">vprintf</span> függvénye a <span class="f">printf</span> függvényhez hasonló, annyi eltéréssel, hogy a változó hosszúságú argumentumlistát egyetlen, a <span class="f">va_start</span> makró hívásával inicializált argumentum helyettesíti. A hasonlóan kialakított <span class="f">vfprintf</span> és <span class="f">vsprintf</span> függvények az <span class="f">fprintf</span> és <span class="f">sprintf</span> függvényeknek felelnek meg.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;stdlib.h&gt;
+<span class="d">#include</span> &lt;stdarg.h&gt;
+
+<span class="c">/* error: kiír egy hibaüzenetet és leállítja a program futását */</span>
+<span class="k">void</span> error (<span class="k">char</span> *fmt, ...)
+{
+   <span class="f">va_list</span> args;
+
+   <span class="f">va_start</span> (args, fmt);
+   <span class="f">fprintf</span> (<span class="f">stderr</span>, &quot;Hiba: &quot;);
+   <span class="f">vfprintf</span> (<span class="f">stderr</span>, fmt, args);
+   <span class="f">fprintf</span> (<span class="f">stderr</span>, &quot;<span class="e">\n</span>&quot;);
+   <span class="f">va_end</span> (args);
+   <span class="f">exit</span> (1);
+}
+</pre>
+  A program által egy időben megnyitható állományok száma korlátozott, de ez a korlát gyakran 20 körül van. Ezért minden programot, amely több állományt használ, úgy kell kialakítani, hogy az állományleírók újra felhasználhatók legyenek. Az állományleíró és a megnyitott állomány közötti kapcsolat a <span class="m">close (<span class="k">int</span> fd)</span> függvénnyel szakítható meg, az így felszabaduló állományleíró más állományokhoz használható. A <span class="m">close</span> függvény lényegében megfelel a standard könyvtár <span class="f">fclose</span> függvényének, kivéve, hogy a puffert nem üríti ki. A programot a <span class="m">main</span> függvényében kiadott <span class="f">exit</span> vagy <span class="k">return</span> utasítással leállítva az összes megnyitott állomány automatikusan lezáródik.
+  <p> Az <span class="m">unlink(<span class="k">char</span> *nev)</span> függvény eltávolítja a <span class="m">nev</span> nevű állományt az állománykezelő rendszerből. Az <span class="m">unlink</span> a standard könyvtár <span class="f">remove</span> függvényének felel meg.<br />
+    <br />
+  </p>
+  <p><b>8.1.</b> gyakorlat. Írjuk újra a <a href="07.html">7. fejezetben</a> megismert <span class="m">cat</span> programot úgy, hogy a standard könyvtári függvények helyett a <span class="m">read</span>, <span class="m">write</span>, <span class="m">open</span> és <span class="m">close</span> függvényeket használjuk! Végezzünk kísérleteket a két változat futási idejének meghatározására!<br />
+    <br />
+  </p>
+  <h3><a name="8.4." id="8.4."></a>8.4. A véletlenszerű hozzáférés – az lseek függvény<br />
+  </h3>
+  Normális körülmények között a bemenet és a kimenet szekvenciális: minden egyes <span class="m">read</span> vagy <span class="m">write</span> hívással az állomány következő karakterpozíciójához férünk hozzá. Szükség esetén azonban az állomány tetszőleges sorrendben írható vagy olvasható. Ezt az <span class="m">lseek</span> rendszerhívás teszi lehetővé, amellyel tényleges olvasás vagy írás nélkül tetszőlegesen mozoghatunk az állományban. Az <span class="m">lseek</span> általános alakja:<br />
+  <pre>
+<span class="k">long</span> lseek(<span class="k">int</span> fd, <span class="k">long</span> offset, <span class="k">int</span> bazis);
+</pre>
+  A függvény hívásakor az <span class="m">fd</span> állományleíróval kijelölt állomány aktuális hozzáférési pozícióját az <span class="m">offset</span>-nek megfelelő helyre állítja. Ez a hely egy relatív pozíció a bázis kezdőponthoz képest. Az állomány soron következő írása vagy olvasása az <span class="m">lseek</span> függvénnyel beállított helyen fog kezdődni. A bázis kezdőpont értéke 0, 1 vagy 2 lehet attól függően, hogy az <span class="m">offset</span>-et az állomány elejétől, az aktuális pozíciótól vagy az állomány végétől számoljuk. Például ha egy állományhoz további adatokat akarunk hozzáfűzni (ez a UNIX shell <span class="m">&gt;&gt;</span> átirányítási parancsával vagy az <span class="f">fopen</span> <span class="m">&quot;a&quot;</span> hozzáférési módjával valósítható meg), akkor az írás előtt meg kell keresni az állomány végét, amit az<br />
+  <pre>
+lseek (fd, 0L, 2);
+</pre>
+  utasítással érhetünk el. Hasonló módon az állomány elejére pozicionálás („visszatekercselés”, rewind) az<br />
+  <pre>
+lseek (fd, 0L, 0);
+</pre>
+  utasítás hatására jön létre.
+  <p> A <span class="m">0L</span> értékű argumentumot (<span class="k">long</span>) 0 formában is írhatnánk, vagy megfelelően deklarált <span class="m">lseek</span> esetén akár 0 formában.</p>
+  <p> Az <span class="m">lseek</span> függvény felhasználásával az állományok a nagyméretű tömbökhöz hasonlóan kezelhetők, de az adatokhoz való hozzáférés nagyon lelassul. A következő példaprogram egy állomány tetszőleges helyéről tetszőleges számú bájtot olvas, és visszatér a beolvasott bájtok számával, vagy ha olvasás közben hiba történt, akkor -1 értékkel.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &quot;syscalls.h&quot;
+
+<span class="c">/* get: n db bájtot olvas a pos pozíciótól kezdve */</span>
+<span class="k">int</span> get (<span class="k">int</span> fd, <span class="k">long</span> pos, <span class="k">char</span> -buf, <span class="k">int</span> n)
+{
+   <span class="k">if</span> (lseek (fd, pos, 0) &gt;= 0) <span class="c">/* beáll a pos helyre */</span>
+      <span class="k">return</span> read (fd, buf, n);
+   <span class="k">else</span>
+      <span class="k">return</span> -1;
+}
+</pre>
+  Az <span class="m">lseek</span> visszatérési értéke <span class="k">long</span> típusú és megadja az állományon belüli új pozíciót, vagy ha hiba fordult elő, akkor <span class="m">-1</span> értékű. A standard könyvtár <span class="f">fseek</span> függvénye hasonló az <span class="m">lseek</span> függvényhez, annyi különbséggel, hogy az <span class="f">fseek</span> első argumentuma <span class="f">FILE</span> * típusú és a visszatérési értéke nem nulla, ha hiba jelentkezett.<br />
+  <br />
+  <h3><a name="8.5." id="8.5."></a>8.5. Példa: az fopen és getc függvények megvalósítása<br />
+  </h3>
+  A következőkben az eddigieket megpróbáljuk egységbe foglalni az <span class="f">fopen</span> és <span class="f">getc</span> könyvtári függvények megvalósításával.
+  <p> Emlékezzünk arra, hogy a standard könyvtári függvények az állományokat az állománymutatóval írják le és nem pedig az állományleíróval. Az állománymutató egy struktúrát címez, amelyben az állományra vonatkozó különböző információk (egy puffert címző mutató, amit felhasználva az állomány nagyobb blokkokban kezelhető; a pufferban maradt karakterek száma; a puffer következő karakterét címző mutató; az állományleíró; az írási-olvasási módot megadó jelzők; hibaállapotjelzők stb.) találhatók.</p>
+  <p> Az állományokat leíró adatstruktúra a <span class="m">&lt;stdio.h&gt;</span> headerben van, amit minden olyan forrásállományba be kell építeni (<span class="d">#include</span> utasítással), amely a standard bemeneti-kimeneti könyvtár eljárásait használja. Természetesen a könyvtár függvényeit is be kell építeni a forrásprogramba. A következőkben ismertetjük az <span class="m">&lt;stdio.h&gt;</span> egy részletét. Azok a nevek, amelyeket csak a könyvtár függvényei használhatnak, aláhúzással kezdődnek, ami csökkenti annak esélyét, hogy véletlenül megegyezzen egy, a programban használt névvel. Ezt a jelölésmódot használja az összes standard könyvtári eljárás.<br />
+  </p>
+  <pre>
+<span class="d">#define</span>   NULL     0 
+<span class="d">#define</span>   EOF      (-1)
+<span class="d">#define</span>   BUFSIZ   1024
+<span class="d">#define</span>   OPEN_MAX 20   <span class="c">/* egy időben nyitott
+         állományok száma */</span>
+
+<span class="k">typedef</span> struct_iobuf {
+   <span class="k">int</span> cnt;     <span class="c">/* a pufferban maradt karakterek száma */</span>
+   <span class="k">char</span> *ptr;   <span class="c">/* a következő karakterpozíció */</span>
+   <span class="k">char</span> *base;  <span class="c">/* a puffer kezdőcíme */</span>
+   <span class="k">int</span> flag;    <span class="c">/* az állomány-hozzáférés módja */</span>
+   <span class="k">int</span> fd;      <span class="c">/* az állományleíró */</span>
+} FILE;
+
+<span class="k">extern</span> FILE iob[OPEN_MAX];
+
+<span class="d">#define</span>   stdin    (&amp;_iob[0])
+<span class="d">#define</span>   stdout   (&amp;_iob[1])
+<span class="d">#define</span>   stderr   (&amp;_iob[2])
+
+<span class="k">enum</span> _flags {
+   _READ    = 01,    <span class="c">/* állomány megnyitása olvasásra */</span>
+   _WRITE   = 02,    <span class="c">/* állomány megnyitása írásra */</span>
+   _UNBUF   = 04,    <span class="c">/* az állomány puffereletlen */</span>
+   _EOF     = 010,   <span class="c">/* az állományban EOF található */</span>
+   _ERR     = 020    <span class="c">/* az állományban hiba volt */</span>
+};
+
+<span class="k">int</span> _fillbuf(FILE *);
+<span class="k">int</span> flushbuf(<span class="k">int</span>, FILE *);
+
+<span class="d">#define</span> feop(p)    (((p)-&gt;flag &amp; _EOF) != 0)
+<span class="d">#define</span> ferror(p)  (((p)-&gt;flag &amp; _ERR) != 0)
+<span class="d">#define</span> fileno(p)  ((p)-&gt;fd)
+
+<span class="d">#define</span> getc(p)    (--(p)-&gt;cnt &gt;= 0 ? \
+         (<span class="k">unsigned</span> <span class="k">char</span>) *(p)-&gt;ptr++ : _fillbuf(p))
+
+<span class="d">#define</span> putc(x, p) (--(p)-&gt;cnt &gt;= 0 ? \
+         *(p)-&gt;ptr++ \ = (x) : _flushbuf( (x), p))
+
+<span class="d">#define</span> getchar()  getc(stdin)
+<span class="d">#define</span> putchar(x) putc((x), stdout)
+</pre>
+  A <span class="m">getc</span> makró normális esetben dekrementálja a darabszámot, lépteti a mutatót és visszatér a karakterrel. (Emlékeztetőül: a \ azt jelzi a fordítóprogramnak, hogy a definíció a következő sorban folytatódik!) Ha a pufferban maradt karakterek száma (vagyis adarabszám) negatív lesz, a <span class="m">getc</span> hívja a <span class="m">_fillbuf</span> függvényt, ami újra feltölti a puffert, inicializálja a struktúra tartalmát és visszatér egy karakterrel. A visszatéréskor adott karakter <span class="k">unsigned</span> típusú, ami garantálja, hogy az összes karakter pozitív lesz.
+  <p> Bár részleteiben nem tárgyaljuk, mégis beiktattuk a <span class="m">putc</span> függvény definícióját is, annak bemutatására, hogy lényegében ugyanúgy működik, mint a <span class="m">getc</span> függvény, vagyis ha a puffer megtelt, hívja a <span class="m">_flushbuf</span> függvényt. A közölt részlet a hibaállapotot, az állomány végét és az állományleírót kezelő makrókat is tartalmazza.</p>
+  <p> Ennyi bevezető információ birtokában már megírhatjuk az <span class="m">fopen</span> függvényt! Az <span class="m">fopen</span> legnagyobb része azzal foglalkozik, hogy megnyitja az állományt, a kívánt helyre pozícionál és a helyes állapotnak megfelelően állítja be a jelzőbiteket. Az <span class="m">fopen</span> nem foglalja le a pufferterületet, ezt az első olvasáskor a <span class="m">_fillbuff</span> teszi meg.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;fcntl.h&gt;
+<span class="d">#include</span> &quot;syscalls.h&quot;
+
+<span class="d">#define</span> ENG 0666 <span class="c">/* írás, olvasás a tulajdonosnak,
+a csoportnak és másoknak */</span>
+
+<span class="c">/* fopen: megnyit egy állományt, visszatér az állománymutatóval */</span>
+<span class="f">FILE</span> *fopen(<span class="k">char</span> *nev, <span class="k">char</span> *mod)
+{
+   <span class="k">int</span> fd;
+   <span class="f">FILE</span> *fp;
+
+   <span class="k">if</span> (*mod != 'r' &amp;&amp; *mod != 'w' &amp;&amp; *mod != 'a')
+      <span class="k">return</span> <span class="f">NULL</span>;
+   <span class="k">for</span> (fp = _iob; fp &lt; _iob + OPEN_MAX; fp++)
+      <span class="k">if</span> ((fp-&gt;flag &amp; (_READ | _WRITE)) == 0)
+         <span class="k">break</span>; <span class="c">/* szabad területet talált */</span>
+   <span class="k">if</span> (fp &gt;= _iob + OPEN_MAX) <span class="c">/* nincs szabad hely */</span>
+      <span class="k">return</span> <span class="f">NULL</span>;
+
+   <span class="k">if</span> (*mod == 'w' )
+      fd = creat(nev, ENG);
+   <span class="k">else</span> <span class="k">if</span> (*mod == 'a') {
+      <span class="k">if</span>((fd = open(nev, 0_WRONLY, 0)) == -1)
+         fd = creat(nev, ENG);
+      lseek(fd, 0L, 2);
+   } <span class="k">else</span>
+      fd = open(nev, 0_RDONLY, 0);
+   <span class="k">if</span> (fd == -1) <span class="c">/* a név nem érhető el */</span>
+      <span class="k">return</span> <span class="f">NULL</span>;
+   fp-&gt;fd = fd;
+   fp-&gt;cnt = 0;
+   fp-&gt;base = <span class="f">NULL</span>;
+   fp-&gt;flag = (*mod == 'r') ? _READ : _WRITE;
+   <span class="k">return</span> fp;
+}
+</pre>
+  Az <span class="m">fopen</span> itt ismertetett változata nem kezeli a szabványban megengedett összes hozzáférési módot, de ezek utólag viszonylag könnyen beépíthetők a programba. A program a <span class="m">&quot;b&quot;</span> bináris hozzáférést sem kezeli, de ennek UNIX operációs rendszer esetén nincs is jelentősége. Ezenkívül nem veszi figyelembe az írásra és olvasásra egyaránt igénybe vehető állományt jelző <span class="m">&quot;+&quot;</span> hozzáférési módot sem.
+  <p> A <span class="m">getc</span> adott állományra vonatkozó első hívásakor a darabszám nulla, ami a <span class="m">_fillbuf</span> függvény hívását eredményezi. Ha a <span class="m">_fillbuf</span> úgy találja, hogy az állomány nincs megnyitva olvasásra, akkor azonnal <span class="f">EOF</span> jelzéssel tér vissza. Megnyitott állomány esetén pedig megpróbál a puffer számára tárterületet lefoglalni (ha az olvasás pufferelt). Ha a puffer létrejött (lefoglalta a területet számára), akkor a <span class="m">_fillbuf</span> hívja a <span class="m">read</span> függvényt, amely azt adatokkal tölti fel, beállítja a darabszámot és a mutatókat, majd a puffer elején lévő karakterrel tér vissza. A <span class="m">_fillbuf</span> a további hívásoknál már a meglévő puffert használja.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &quot;syscalls.h&quot;
+
+<span class="c">/* _fillbuf: területet foglal a puffernek és feltölti */</span>
+<span class="k">int</span> fillbuf(<span class="f">FILE</span> *fp)
+{
+   <span class="k">int</span> bufsize;
+
+   <span class="k">if</span> ((fp-&gt;flag&amp;(_READ|_EOF|_ERR)) !=_READ)
+      <span class="k">return</span> <span class="f">EOF</span>;
+   bufsize = (fp-&gt;flag &amp; _UNBUF) ? 1 : BUFSIZ;
+   <span class="k">if</span> (fp-&gt;base == <span class="f">NULL</span>) <span class="c">/* még nincs puffer */</span>
+      <span class="k">if</span> ((fp-&gt;base = (<span class="k">char</span> *) <span class="f">malloc</span>(bufsize)) == <span class="f">NULL</span>)
+         <span class="k">return</span> <span class="f">EOF</span>; <span class="c">/* nincs hely a puffer számára */</span>
+   fp-&gt;ptr = fp-&gt;base;
+   fp-&gt;cnt = read(fp-&gt;fd, fp-&gt;ptr, bufsize);
+   <span class="k">if</span> (--fp-&gt;cnt &lt; 0) {
+      <span class="k">if</span> (fp-&gt;cnt == -1)
+         fp-&gt;flag |= _EOF;
+      <span class="k">else</span>
+         fp-&gt;flag |= _ERR;
+      fp-&gt;cnt = 0;
+      <span class="k">return</span> <span class="f">EOF</span>;
+   }
+   <span class="k">return</span> (<span class="k">unsigned</span> <span class="k">char</span>) *fp-&gt;ptr++;
+}
+</pre>
+  Most már csak az a kérdés, hogy hogyan indul az egész folyamat? Az <span class="f">stdin</span>, <span class="f">stdout</span> és <span class="f">stderr</span> számára definiálni és inicializálni kell az <span class="m">_iob</span> tömböt:<br />
+  <pre>
+<span class="f">FILE</span> _iob[OPEN_MAX] = { <span class="c">/* <span class="f">stdin</span>, <span class="f">stdout</span>, stderr: */</span>
+   { 0, (<span class="k">char</span> *) 0, (<span class="k">char</span> *) 0, _READ, 0 },
+   { 0, (<span class="k">char</span> *) 0, (<span class="k">char</span> *) 0, _WRITE, 1 },
+   { 0, (<span class="k">char</span> *) 0, (<span class="k">char</span> *) 0, WRITE | UNBUF, 2 }
+};
+</pre>
+  A struktúra <span class="m">_flag</span> részének inicializálása mutatja, hogy <span class="f">stdin</span> olvasható, <span class="f">stdout</span> írható és <span class="f">stderr</span> írható, puffereletlen hozzáférésű.<br />
+  <br />
+  <p><b>8.2.</b> gyakorlat. Írjuk át az <span class="m">fopen</span> és <span class="m">_fillbuf</span> függvényeket úgy, hogy az explicit bitműveletek helyett bitmezőket használunk! Hasonlítsuk össze a két változat forrásprogramjának méretét és a futási időket!</p>
+  <p> <b>8.3.</b> gyakorlat. Tervezzük meg és írjuk meg a <span class="m">_flushbuf</span>, <span class="m">_fflush</span> és <span class="m">fclose</span> függvényeket!</p>
+  <p> <b>8.4.</b> gyakorlat. A standard könyvtár<br />
+  </p>
+  <pre>
+<span class="k">int</span> <span class="f">fseek</span>(<span class="f">FILE</span> *fp, <span class="k">long</span> offset, <span class="k">int</span> bazis)
+</pre>
+  függvénye megegyezik az <span class="m">lseek</span> függvénnyel, kivéve, hogy az <span class="m">fp</span> állománymutatót használja az állományleíró helyett és hogy a visszatérési értéke az <span class="k">int</span> típusú állapotjelzés, nem pedig egy pozíció. Írjuk meg az <span class="m">fseek</span> függvényt! Gondoskodjunk arról, hogy az általunk írt <span class="m">fseek</span> pufferkezelése összhangban legyen a könyvtár többi függvényével!<br />
+  <br />
+  <h3><a name="8.6." id="8.6."></a>8.6. Példa: katalógusok kiíratása<br />
+  </h3>
+  Néha az állománykezelő rendszerrel az eddigiektől eltérő párbeszédet kell folytatnunk, pl. ha magának az állománynak a jellemzőire vagyunk kíváncsiak és nem pedig a tartalmára. Erre jó példa a katalóguslistázó program, ami feladatát tekintve megfelel a UNIX <span class="m">ls</span> parancsának. A program kiírja a katalógusban lévő állományok nevét és opcionálisan még több más információt (méret, hozzáférési kód stb.) is. A parancs analóg az MS-DOS <span class="m">dir</span> parancsával.
+  <p> Mivel a UNIX katalógusa maga is egy állomány, az <span class="m">ls</span> parancsnak csak be kell olvasni ezt az állományt és kikeresni belőle az állományok neveit, ill. ha szükséges, akkor egy rendszerhívással már meghatározható az állomány többi jellemzője is, mint pl. a mérete. Más operációs rendszerek (pl. MS-DOS) esetén az állományok nevéhez való hozzáférés is egy rendszerhívást igényel. Mi a programunkkal viszonylag rendszertől függetlenül akarunk az információkhoz hozzáférni, bár maga a megvalósítás nagymértékben függ a rendszertől.</p>
+  <p> Az elmondottakat az <span class="m">fsize</span> program megírásával fogjuk illusztrálni. Az <span class="m">fsize</span> program az <span class="m">ls</span> parancs egy speciális változata, amely kiírja a parancssor-argumentumok listájában megadott állománynevekhez tartozó méretet. Ha az állományok egyike egy (al-)katalógus, akkor az <span class="m">fsize</span> programot rekurzívan alkalmazzuk a katalógusra. Ha a programnak nincs argumentuma, akkor az aktuális katalógust dolgozza fel.</p>
+  <p> A feladat megoldását kezdjük a UNIX állománykezelő rendszerének leírásával! A katalógus egy állomány, amely az állományok neveinek listáját és az állományok helyére utaló információkat tartalmazza. A „hely” valójában egy másik táblázatba, az ún. inode táblázatba mutató index. Az <i>inode</i> táblázat adott állományhoz tartozó bejegyzése az állomány nevén kívül annak összes többi jellemzőjét tartalmazza. Egy katalógusbejegyzés csak két adatból, az állomány nevéből és egy inode számból áll.</p>
+  <p> Sajnos, egy katalógus konkrét formátuma és pontos tartalma az operációs rendszer egyes változatainál más és más, ezért a feladatot két részre bontjuk, amivel megpróbáljuk leválasztani a nem hordozható (rendszertől függő) elemeket. A program külső szintjén definiálunk egy struktúrát, amit <span class="m">Dirent</span>-nek nevezünk és az <span class="m">opendir</span>, <span class="m">readdir</span>, ill. <span class="m">closedir</span> eljárásokkal rendszertől függő módon férünk hozzá a katalógusbejegyzésben lévő névhez és inode számhoz. Ezeket az eljárásokat és a <span class="m">Dirent</span> struktúrát használjuk szoftver-interfészként az <span class="m">fsize</span> megírásánál. A rendszertől független részek megírása után megmutatjuk, hogy a rendszertől függő részek hogyan valósíthatók meg az UNIX Version 7 és System V változatánál használt katalógussal. A további változatokhoz tartozó megoldásokat meghagyjuk gyakorlatnak.</p>
+  <p> A <span class="m">Dirent</span> struktúra az állomány nevét és inode számát tartalmazza. Az állománynév max. hosszát a rendszertől függő <span class="m">NAME_MAX</span> érték határozza meg. Az <span class="m">opendir</span> függvény egy <span class="m">DIR</span> nevű struktúrát címző mutatóval tér vissza, amelyet a <span class="m">readdir</span> és <span class="m">closedir</span> függvények használnak. (A <span class="m">DIR</span> struktúra analóg a <span class="f">FILE</span> struktúrával.) Ezek a definíciók és adatok a <span class="m">dirent.h</span> headerben vannak összegyűjtve.<br />
+  </p>
+  <pre>
+<span class="d">#define</span> NAME_MAX 14 <span class="c">/* a leghosszabb állománynév-komponens,
+az érték a rendszertől függ */</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> { <span class="c">/* a hordozható katalógusbejegyzés */</span>
+   <span class="k">long</span> ino; <span class="c">/* inode szám */</span>
+   <span class="k">char</span> name [NAME_MAX+1]; <span class="c">/* a név és a '\0' vég jel */</span>
+} Dirent;
+
+<span class="k">typedef</span> <span class="k">struct</span> { <span class="c">/* a minimális DIR: nincs pufferelés */</span>
+   <span class="k">int</span> fd; <span class="c">/* a katalógus állományleírója */</span>
+   Dirent d; <span class="c">/* a katalógusbejegyzés */</span>
+} DIR;
+
+DIR *opendir(<span class="k">char</span> *dirname);
+Dirent *readdir(DIR *dfd);
+<span class="k">void</span> closedir(DIR *dfd);
+</pre>
+  A <span class="m">stat</span> rendszerhívás veszi az állomány nevét, és az <span class="m">inode</span>-ban található összes információt adja vissza, vagy -1 értéket, ha hibát érzékelt. A<br />
+  <pre>
+<span class="k">char</span> *nev;
+<span class="k">struct</span> stat stbuf;
+<span class="k">int</span> stat(<span class="k">char</span> *, <span class="k">struct</span> stat *);
+
+stat(nev, &amp;stbuf);
+</pre>
+  programrészlet feltölti az <span class="m">stbuf</span> struktúrát a <span class="m">nev</span> nevű állomány inode-jában szereplő információval. A <span class="m">stat</span> függvény által visszaadott struktúra leírtása a <span class="m">&lt;sys/stat.h&gt;</span> headerben van és tipikusan a következő módon néz ki:<br />
+  <pre>
+<span class="k">struct</span> stat <span class="c">/* a stat által visszaadott inode információk */</span>
+{
+   dev_t  st_dev;   <span class="c">/* az inode eszköze (perifériája) */</span>
+   ino_t  st_ino;   <span class="c">/* az inode száma */</span>
+   <span class="k">short</span>  st_mode;  <span class="c">/* mód-bitek */</span>
+   <span class="k">short</span>  st_nlink; <span class="c">/* az állományhoz tartozó linkek száma */</span>
+   <span class="k">short</span>  st_uid;   <span class="c">/* a tulajdonos azonosítója */</span>
+   <span class="k">short</span>  st_gid;   <span class="c">/* a tulajdonosi csoport azonosítója */</span>
+   dev_t  st_rdev;  <span class="c">/* speciális állományok adata */</span>
+   off_t  st_size;  <span class="c">/* az állomány mérete karakterben */</span>
+   time_t st_atime; <span class="c">/* az utolsó hozzáférés időpontja */</span>
+   time_t st_mtime; <span class="c">/* az utolsó módosítás időpontja */</span>
+   time_t st_ctime; <span class="c">/* az inode utolsó változtatásának
+                    időpontja */</span>
+};
+</pre>
+  A felsorolt adatok többségét a megjegyzésben megmagyaráztuk. Az olyan típusok, mint a <span class="m">dev_t</span> vagy az <span class="m">ino_t</span> a <span class="m">&lt;sys/types.h&gt;</span> headerben vannak definiálva, így a forrásprogramhoz azt is hozzá kell szerkeszteni egy <span class="d">#include</span> utasítással.
+  <p> Az <span class="m">st_mode</span> bejegyzés az állományt leíró jelzőbiteket tartalmazza. A jelzőbitek definíciója szintén a <span class="m">&lt;sys/stat.h&gt;</span> headerben található, itt csak az állomány típusát megadó jelzőkkel foglalkozunk:<br />
+  </p>
+  <pre>
+<span class="d">#define</span> S_IFMT  0160000 <span class="c">/* az állomány típusa */</span>
+<span class="d">#define</span> S_IFDIR 0040000 <span class="c">/* katalógus */</span>
+<span class="d">#define</span> S_IFCHR 0020000 <span class="c">/* speciális karakteres */</span>
+<span class="d">#define</span> S_IFBLK 0060000 <span class="c">/* speciális blokkos */</span>
+<span class="d">#define</span> S IFREG 0100000 <span class="c">/* szabályos */</span>
+
+<span class="c">/* ... */</span>
+
+</pre>
+  Ezek után már megírhatjuk az <span class="m">fsize</span> programot! Ha a <span class="m">stat</span> függvénytől kapott mód azt jelzi, hogy az állomány nem katalógus, akkor a mérete már a rendelkezésünkre áll és közvetlenül kiíratható. Ha az állomány egy katalógus, akkor azt állományonként fel kell dolgoznunk. Mivel egy katalógus további alkatalógusokat is tartalmazhat, a feldolgozás rekurzív lesz.
+  <p> A <span class="m">main</span> eljárás főleg a parancssor-argumentumokkal foglalkozik, előállítva az <span class="m">fsize</span> argumentumait.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;string.h&gt;
+<span class="d">#include</span> &quot;syscalls.h&quot;
+<span class="d">#include</span> &lt;fcntl.h&gt; <span class="c">/* jelzők az olvasáshoz és íráshoz */</span>
+<span class="d">#include</span> &lt;sys/types.h&gt; <span class="c">/* typedef utasítások */</span>
+<span class="d">#include</span> &lt;sys/stat.h&gt; <span class="c">/* stat-ból visszaadott struktúra */</span>
+<span class="d">#include</span> &quot;dirent.h&quot;
+
+<span class="k">void</span> fsize(<span class="k">char</span> *);
+
+<span class="c">/* az állományok méretének kiírása */</span>
+main(<span class="k">int</span> argc, <span class="k">char</span> **argv)
+{
+   <span class="k">if</span> (argc == 1) <span class="c">/* alapfeltételezés szerint az
+         az aktuális katalógus */</span>
+      fsize(&quot;.&quot;);
+   <span class="k">else</span>
+      <span class="k">while</span>(--argc &gt; 0)
+         fsize(*++argv);
+   <span class="k">return</span> 0;
+}
+</pre>
+  Az <span class="m">fsize</span> függvény kiírja az állomány méretét. Ha az állomány katalógus, akkor az <span class="m">fsize</span> hívja a <span class="m">dirwalk</span> függvényt, ami feldolgozza a katalógus összes állományát. Annak eldöntésére, hogy egy állomány katalógus-e vagy sem, a <span class="m">&lt;sys/stat.h&gt;</span> headerben definiált <span class="m">S_IFMT</span> és <span class="m">S_IFDIR</span> jelzőbitek használhatók. A megfelelő programrészben ügyeljünk a zárójelezésre, mert az <span class="m">&amp;</span> precedenciája alacsonyabb, mint az <span class="m">==</span> precedenciája.<br />
+  <pre>
+<span class="k">int</span> stat(<span class="k">char</span> *, <span class="k">struct</span> stat *);
+<span class="k">void</span> dirwalk(<span class="k">char</span> *, <span class="k">void</span> (*fcn) (<span class="k">char</span> *));
+
+<span class="c">/* fsize: kiírja a nev nevű állomány méretét */</span>
+<span class="k">void</span> fsize(<span class="k">char</span> *nev)
+{
+   <span class="k">struct</span> stat stbuf;
+
+   <span class="k">if</span> (stat(nev, sstbuf) == -1) {
+      <span class="f">fprintf</span>(<span class="f">stderr</span>, &quot;fsize: nem hozzáférhető %s<span class="e">\n</span>&quot;, nev)
+      <span class="k">return</span>;
+   }
+   <span class="k">if</span> ((stbuf.st_mode &amp; S_IFMT) == S_IFDIR)
+      dirwalk(nev, fsize);
+   <span class="f">printf</span>(&quot;%81d %s<span class="e">\n</span>&quot;, stbuf.st size, nev);
+}
+</pre>
+  A <span class="m">dirwalk</span> függvény egy olyan általános eljárás, ami az argumentumában megadott függvényt használja fel egy adott katalógusban lévő állományokra. A <span class="m">dirwalk</span> megnyitja a katalógust, ciklusban végigmegy az összes állományon, mindegyikre meghívja az átadott függvényt, majd lezárja a katalógust és visszatér. Mivel az <span class="m">fsize</span> is hívja az egyes katalógusok esetén a <span class="m">dirwalk</span> függvényt, a két függvény rekurzívan hívja egymást.<br />
+  <pre>
+<span class="d">#define</span> MAX_PATH 1024
+
+<span class="c">/* dirwalk: fcn-t alkalmazza
+a dir katalógus összes állományára*/</span>
+<span class="k">void</span> dirwalk(<span class="k">char</span> *dir, <span class="k">void</span> (*fcn) (<span class="k">char</span> *))
+{
+   <span class="k">char</span> nev[MAX_PATH];
+   Dirent *dp;
+   DIR *dfd;
+
+   <span class="k">if</span> ((dfd = opendir(dir)) == <span class="f">NULL</span>) {
+      <span class="f">fprintf</span>(<span class="f">stderr</span>, &quot;dirwalk: nem nyitható meg
+            %s<span class="e">\n</span>&quot;, dir);
+      <span class="k">return</span>;
+   }
+   <span class="k">while</span>((dp = readdir(dfd)) != <span class="f">NULL</span>) {
+      <span class="k">if</span>(<span class="f">strcmp</span>(dp-&gt;nev, &quot;.&quot;) == 0 ||
+               <span class="f">strcmp</span>(dp-&gt;, &quot;..&quot;) == 0)
+         <span class="k">continue</span>; <span class="c">/* átugorja önmagát és a szülőt */</span>
+      <span class="k">if</span> (<span class="f">strlen</span>(dir) + <span class="f">strlen</span>(dp-&gt;nev) + 2 &gt; <span class="k">sizeof</span>(nev))
+         <span class="f">fprintf</span>(<span class="f">stderr</span>, &quot;dirwalk: a név %s/%s túl
+               hosszú<span class="e">\n</span>&quot;, dir, dp-&gt;nev);
+      <span class="k">else</span> {
+         <span class="f">sprintf</span>(nev, &quot;%s/%s&quot;, dir, dp-&gt;nev);
+         (*fcn) (nev);
+      }
+   }
+   closedir(dfd);
+}
+</pre>
+  A <span class="m">readdir</span> függvény a hívása után a következő állományt leíró információk mutatójával tér vissza, vagy <span class="f">NULL</span> értékű mutatóval, ha nincs több állomány. Mindegyik katalógus tartalmaz bejegyzést saját magáról (ennek a neve <span class="m">&quot;.&quot;</span>), valamint a szülőjéről (ennek a neve <span class="m">&quot;..&quot;</span>) és ezeket a programnak át kell lépni, különben rendkívüli mértékben megnőne a futási idő.
+  <p> Az eddigi programok függetlenek voltak a katalógusok fizikai szerkezetétől. A következőkben bemutatjuk a rendszerfüggő <span class="m">opendir</span>, <span class="m">readdir</span> és <span class="m">closedir</span> függvények egyszerűsített változatát. Ezek a programok a UNIX rendszer Version 7 vagy System V változatához használhatók és a katalógusokra vonatkozó információkat a <span class="m">&lt;sys/dir.h&gt;</span> headerből veszik. A katalógusokat leíró információk fontosabb része:<br />
+  </p>
+  <pre>
+<span class="d">#ifndef</span> DIRSIZ
+<span class="d">#define</span> DIRSIZ 14 <span class="c">/* az állománynév hossza */</span>
+<span class="d">#endif</span>
+
+<span class="k">struct</span> direct <span class="c">/* katalógusbejegyzés*/</span>
+{
+   ino_t d_ino; <span class="c">/* inode szám */</span>
+   <span class="k">char</span> d_name[DIRSIZ]; <span class="c">/* hosszú állománynév, */ </span>
+                        <span class="c">/* '\0' végjel nélkül */ </span>
+};
+</pre>
+  Az operációs rendszer néhány változata hosszabb állományneveket is megenged és sokkal bonyolultabb szerkezetű katalógust használ.
+  <p> Az <span class="m">ino_t</span> típus <span class="k">typedef</span> utasítással lett definiálva és az inode táblázat indexét írja le. Ez az operációs rendszer tulajdonságai alapján <span class="k">unsigned</span> <span class="k">short</span> típusú adat lehet, ami szabályosan használható is, de nem célszerű a programban rögzíteni, mert más operációs rendszer esetén más lehet. Így jobb megoldásnak tűnik a <span class="k">typedef</span> utasítással beállított típus. A rendszertől függő adattípusok teljes halmaza a <span class="m">&lt;sys/types.h&gt;</span> headerben található.</p>
+  <p> Az <span class="m">opendir</span> függvény megnyitja a katalógusállományt, ellenőrzi, hogy annak tartalma tényleg katalógus-e (ezt az <span class="m">fstat</span> rendszerhívással teszi, ami lényegében megegyezik a <span class="m">stat</span> rendszerhívással, kivéve, hogy az állományleírót használja az állomány azonosítására), lefoglalja a tárban a katalógus adatait tároló struktúra helyét, majd beleolvassa az információt. Az <span class="m">opendir</span> függvény:<br />
+  </p>
+  <pre>
+<span class="k">int</span> fstat(<span class="k">int</span> fd, <span class="k">struct</span> stat *);
+
+<span class="c">/* opendir: megnyitja a katalógust a readdir hívása előtt */</span>
+DIR *opendir(<span class="k">char</span> *dirname)
+{
+   <span class="k">int</span> fd;
+   <span class="k">struct</span> stat stbuf;
+   DIR *dp;
+
+   <span class="k">if</span> ((fd = open(dirname, 0_RDONLY, 0)) == -1
+         || fstat{fd, &amp;stbuf) == -1
+         || (stbuf.st_mode &amp; S_IFMT) != S_IFDIR
+         || (dp = (DIR *) <span class="f">malloc</span> (<span class="k">sizeof</span> (DIR))) == <span class="f">NULL</span>)
+      <span class="k">return</span> <span class="f">NULL</span>;
+   dp-&gt;fd = fd;
+   <span class="k">return</span> dp;
+}
+</pre>
+  A <span class="m">closedir</span> függvény lezárja a katalógusállományt és felszabadítja a tárban lefoglalt helyet.<br />
+  <pre>
+<span class="c">/* closedir: lezárja az opendir-rel megnyitott katalógust */</span>
+<span class="k">void</span> closedir(DIR *dp)
+{
+   <span class="k">if</span> (dp) {
+      close(dp-&gt;fd);
+      <span class="f">free</span>(dp);
+   }
+}
+</pre>
+  A <span class="m">readdir</span> függvény az egyes katalógusbejegyzések beolvasására a <span class="m">read</span> függvényt használja. Ha egy katalógusbejegyzés aktuálisan nem használt (pl. mert az állományt töröltük), akkor az inode száma nulla és a <span class="m">readdir</span> az ilyen bejegyzést átlépi. Máskülönben az inode számot és az állomány nevét elhelyezi egy <span class="k">static</span> tárolási osztályú struktúrában, majd visszatér a sturktúra mutatójával. Minden <span class="m">readdir</span> hívás felülírja az előző olvasáskor kapott információt.<br />
+  <pre>
+<span class="d">#include</span> &lt;sys/dir.h&gt; <span class="c">/* az adott rendszer katalógusának
+szerkezete itt van leírva */</span>
+
+<span class="c">/* readdir: sorban beolvassa a katalógusbejegyzéseket */</span>
+Dirent *readdir (DIR *dp)
+{
+   <span class="k">struct</span> direct dirbuf; <span class="c">/* a konkrét katalógusszerkezet */</span>
+   <span class="k">static</span> Dirent d; <span class="c">/* visszatérés: hordozható szerkezet */</span>
+   
+   <span class="k">while</span>(read(dp-&gt;fd, (<span class="k">char</span> *)&amp;dirbuf, <span class="k">sizeof</span>(dirbuf)) ==
+            <span class="k">sizeof</span> (dirbuf)) {
+      <span class="k">if</span>(dirbuf.d_ino == 0) <span class="c">/* a bejegyzés helye */</span>
+         <span class="k">continue</span>; <span class="c">/* nem használt */</span>
+      d.ino = dirbuf.d_ino;
+      <span class="f">strncpy</span>(d.name, dirbuf.d_name, DIRSIZ);
+      d.name [DIRSIZ] = '<span class="e">\0</span>'; <span class="c">/* lezárja a */</span>
+      <span class="k">return</span> &amp;d;           <span class="c">/* karaktersorozatot */</span>
+   }
+   <span class="k">return</span> <span class="f">NULL</span>;
+}
+</pre>
+  Bár az <span class="m">fsize</span> program meglehetősen speciális, mégis számos fontos dolgot jól szemléltet. Az első fontos megjegyzés, hogy az <span class="m">fsize</span> nem „rendszerprogram”, csak olyan információt használ, amelynek formáját és tartalmát az operációs rendszer határozza meg. A második lényeges dolog, hogy ilyen programok esetén az információ rendszerfüggő leírása csak a standard headerben jelenjen meg és a program ezeket a header állományokat építse be, ahelyett, hogy saját maga deklarálná a géptől és rendszertől függő adatokat. További fontos programozási szempont, hogy a rendszerfüggő részekhez a lehető legnagyobb gonddal kell megtervezni az interfészeket, hogy a program többi része viszonylag rendszertől független lehessen. Erre a legjobb példát a standard könyvtár függvényeinél láthatunk.<br />
+  <br />
+  <p><b>8.5.</b> gyakorlat. Módosítsuk az <span class="m">fsize</span> programot úgy, hogy más, az inode táblázatban szereplő információt is kiírjon!<br />
+    <br />
+  </p>
+  <h3><a name="8.7." id="8.7."></a>8.7. Példa: tárterület-lefoglaló program<br />
+  </h3>
+  Az <a href="05.html">5. fejezetben</a> bemutattunk egy korlátozott módon használható, veremorientált tárterület-foglaló programot. A most megírt változat nem tartalmaz korlátozásokat, a <span class="m">malloc</span> és a <span class="m">free</span> hívásai tetszőleges sorrendben történhetnek és a <span class="m">malloc</span> szükség esetén az operációs rendszertől további tárterületet igényelhet. A tárterület-foglaló program itt megírt eljárásai jól példázzák, hogy hogyan lehet géptől függő programot viszonylag gépfüggetlen módon megírni. A programban megmutatjuk a struktúrák, unionok és a <span class="k">typedef</span> utasítás gyakorlati alkalmazását is.<br />
+  A <span class="m">malloc</span> program szükség esetén az operációs rendszertől igényel tárterületet, szemben az <a href="05.html">5. fejezetben</a> leírt programmal, amely a fordításkor rögzített méretű tömb elemeivel gazdálkodott. Mivel a program más tevékenységei a <span class="m">malloc</span> hívása nélkül is igényelhetnek tárterületet, ezért a <span class="m">malloc</span> eljárással kezelt tárterület nem összefüggő. Emiatt a szabad tárolóhelyeket a szabad blokkok listájaként tartjuk nyilván. Minden blokk tartalmazza a méretét, a következő blokk mutatóját, valamint magát a tárterületet. A listában a blokkok növekvő tárcímek szerint rendezettek és az utolsó (legnagyobb című) blokk a legelső blokkra mutat. A viszonyokat jól szemlélteti a következő ábra.<br />
+  <br />
+  <br />
+  <div align="center"> <img src="img/17.png" width="573" height="207" border="0" alt="img/17.png" /></div>
+  <br />
+  <br />
+  Ha igény érkezik, akkor a program végignézi a szabad blokkok listáját és az első elegendően nagy blokkot adja vissza. Ezt az algoritmust a „legelső illeszkedés” algoritmusnak nevezzük, szemben a „legjobb illeszkedés” algoritmussal, amely az igényt még kielégítő legkisebb blokkot adja vissza. Ha a blokk mérete pontosan megegyezik az igényelt mérettel, akkor kiemeljük a szabad blokkok listájából és átadjuk a felhasználónak. Ha a talált szabad blokk túl nagy, akkor a program leválasztja belőle a kívánt részt és átadja a felhasználónak, a maradékot pedig meghagyja a szabad blokkok listájában (természetesen módosítva a jellemzőit). Ha a listában nincs elegendően nagy blokk, akkor a program az operációs rendszertől egy nagyobb tárterületet kér és hozzácsatolja a szabad blokkok listájához.
+  <p> A tárterület felszabadításakor szintén végig kell nézni a szabad blokkok listáját és megkeresni azt a helyet, ahová (a címe alapján) a felszabadult blokk beilleszthető. Ha a felszabadult blokk egyik oldalával illeszkedik egy szabad blokkhoz, akkor a program ezeket egybeolvasztja egyetlen nagyobb blokká, így a tárterület nem forgácsolódik szét kis részekre. A szomszédos helyzet meghatározása a címek szerinti rendezettség miatt egyszerű.</p>
+  <p> Az egyik fő probléma, amivel már az <a href="05.html">5. fejezetben</a> is foglalkoztunk, hogy a <span class="m">malloc</span> által visszaadott tárterületnek meghatározott illesztési feltételeket kell kielégíteni ahhoz, hogy az objektumainkat ezen a területen tárolni tudjuk. Bár a számítógépek társzervezése nagymértékben különbözhet, minden gép esetén létezik egy olyan alapvető adattípus, amely ha tárolható az adott címen, akkor minden más adattípus is tárolható ott. Néhány számítógép esetén ez az alapvető adattípus a <span class="k">double</span>, más gépeknél viszont az <span class="k">int</span> vagy a <span class="k">long</span>.</p>
+  <p> Egy szabad blokk tartalmazza a láncban utána következő blokk mutatóját, valamint a blokk méretét és ezután következik maga a szabad tárterület. A blokk elején lévő vezérlő információt fejnek nevezzük. A tárillesztés egyszerűsítése érdekében minden blokk mérete a fej méretének egész számú többszöröse és a fej pedig megfelelően illeszkedik. Ezt az adatszerkezetet egy unionnal érhetjük el, amely tartalmazza a fej struktúráját és kielégíti az illesztés szempontjából alapvető adattípusra vonatkozó igényeket. Ezt az alapvető adattípust a program <span class="k">long</span>-nak tekinti. Az így kialakított adatszerkezet:<br />
+  </p>
+  <pre>
+<span class="k">typedef</span> <span class="k">long</span> Align; <span class="c">/* illesztés long határhoz */</span>
+
+<span class="k">union</span> header { <span class="c">/* a blokk feje */</span>
+   <span class="k">struct</span> {
+      <span class="k">union</span> header *ptr; <span class="c">/* a következő blokk címe */</span>
+      <span class="k">unsigned</span> size; <span class="c">/* a blokk mérete */</span>
+   } s;
+   Align x; <span class="c">/* a blokk kényszerített illesztése */</span>
+}
+<span class="k">typedef</span> <span class="k">union</span> header Header;
+</pre>
+  Az <span class="m">Align</span> mezőt soha nem használjuk, csak azzal kényszerítjük a fejet az illesztési feltételek kielégítésére.
+  <p> A <span class="m">malloc</span> a karakterben igényelt méretet felkerekíti a fejméret egész számú többszörösére. A ténylegesen kiutalt blokk mérete ennél eggyel nagyobb (egy egységnyi hely kell magának a fejnek is) és ezt a méretet írja a program a fej <span class="m">size</span> változójába. A <span class="m">malloc</span> által visszaadott mutató a blokk szabad területének kezdetére és nem a fejre mutat. A felhasználó a kapott tárterülettel bármit csinálhat, de ha a kiutalt területen kívülre ír, akkor valószínűleg adatvesztés és ebből adódó hiba jön létre. A blokk méretét megadó mezőre szükség van, mivel a <span class="m">malloc</span> által kezelt blokkok nem összefüggő, folytonos sorozatot alkotnak, így a méretük nem számítható ki a címaritmetikával.<br />
+    <br />
+    <br />
+  </p>
+  <div align="center"> <img src="img/18.png" width="275" height="89" border="0" alt="img/18.png" /> </div>
+  <br />
+  <br />
+  A <span class="m">base</span> változót használjuk a folyamat indulásakor. Ha a <span class="m">freep</span> (ami a szabad blokkok listájának kezdetét kijelölő mutató) értéke <span class="f">NULL</span>, ami a <span class="m">malloc</span> első hívásakor biztosan igaz, akkor egy elfajult szabad lista alakult ki: ez egyetlen nulla méretű blokkot tartalmaz, amely saját magára mutat. A program minden esetben végigkeresi a szabad listát és a megfelelő méretű szabad blokk keresését a freep blokknál kezdi (ami az utoljára talált szabad blokk helye). Azzal, hogy az üres blokkok listáját nem mindig az első (legkisebb című) blokkal kezdjük végignézni, a lista hosszabb használat után is homogén marad. Ha a program egy túl nagy blokkot talál, akkor annak a végéből levágott megfelelő területtel tér vissza a felhasználóhoz. Ezzel a módszerrel a blokk eredeti fejében csak a méretet kell módosítani. A felhasználónak visszaadott mutató a blokk első szabad helyét címzi (ami közvetlenül a fej utáni első hely). A program:<br />
+  <pre>
+<span class="k">static</span> Header base; <span class="c">/* üres lista az induláshoz */</span>
+<span class="k">static</span> Header *freep = <span class="f">NULL</span>; <span class="c">/* az üres lista kezdete */</span>
+
+<span class="c">/* malloc: általános célú tárterület-foglaló program */</span>
+<span class="k">void</span> *malloc(<span class="k">unsigned</span> nbytes)
+{
+   Header *p, *prevp;
+   Header *morecore(<span class="k">unsigned</span>);
+   <span class="k">unsigned</span> nunits;
+
+   nunits = (nbytes+<span class="k">sizeof</span>(Header)-1/<span class="k">sizeof</span>(Header) + 1;
+   <span class="k">if</span>((prevp = freep) == <span class="f">NULL</span>) { <span class="c">/* nincs még
+                                 szabad lista */</span>
+      base.s.ptr = freep = prevp = &amp;base;
+      base.s.size = 0;
+   }
+   <span class="k">for</span>(p = prevp-&gt;s.ptr; ; prevp = p, p = p-&gt;s.ptr) {
+      <span class="k">if</span>(p-&gt;s.size &gt;= nunits) { <span class="c">/* elég nagy a hely */</span>
+         <span class="k">if</span>(p-&gt;s.size == nunits) <span class="c">/*a méretek egyeznek */</span>
+            prevp-&gt;s.ptr = p-&gt;s.ptr;
+         <span class="k">else</span> { <span class="c">/* kiadja a blokk végét */</span>
+            p-&gt;s.size -= nunits;
+            p += p-&gt;s.size;
+            p-&gt;s.size = nunits;
+         }
+         freep = prevp;
+         <span class="k">return</span> (<span class="k">void</span> *) (p+1);
+      };
+   <span class="k">if</span>(p == freep) <span class="c">/* körbement a listán */</span>
+      <span class="k">if</span>((p = morecore(nunits)) == <span class="f">NULL</span>)
+         <span class="k">return</span> <span class="f">NULL</span>; <span class="c">/* nincs több hely */</span>
+   }
+}
+</pre>
+  A <span class="m">morecore</span> függvény az operációs rendszertől igényel további területet. Az, hogy ezt hogyan csinálja, az alkalmazott operációs rendszertől függ. A tárterület operációs rendszertől való kérése viszonylag „költséges” (főleg időigényes) művelet, ezért ezt nem akarjuk minden <span class="m">malloc</span> híváskor megtenni és a <span class="m">morecore</span> függvénnyel szükség esetén egy nagyobb, legalább <span class="m">NALLOC</span> egységből álló területet kérünk. A terület méretének beállítása után a morecore függvény a <span class="m">free</span> függvényt felhasználva iktatja be ezt a nagyobb területet a szabad blokkok listájába.
+  <p> A UNIX <span class="m">sbrk(n)</span> rendszerhívása egy <span class="m">n</span> bájtos tárterületet címző mutatóval tér vissza. Ha nincs tárterület, akkor a <span class="m">sbrk</span> visszatérési értéke -1 (bár jobb lett volna, ha a visszatérési érték <span class="f">NULL</span>). A -1 értéket a <span class="m"><span class="k">char</span> *</span> kényszerített típuskonverzióval kell átalakítani, hogy az összehasonlítható legyen a függvény visszatérési értékével. A kényszerített típuskonverziók miatt a függvény viszonylag érzéketlen a különböző számítógépek mutatóábrázolásával szemben. Van még egy feltétel, amit a <span class="m">morecore</span> függvénynek ki kell elégíteni: a különböző blokkok <span class="m">sbrk</span> függvény által visszaadott mutatóinak összehasonlíthatóaknak kell lenni. Ez a szabvány szerint nem garantálható, mert az csak az azonos tömbhöz tartozó két mutató összehasonlíthatóságát írja elő. Így a <span class="m">malloc</span> függvény itt közölt változata nem teljesen hordozható, csak olyan rendszerek esetén használható, amelyek lehetővé teszik a mutatók általános összehasonlítását. Az elmondottak alapján kialakított <span class="m">malloc</span> függvény:<br />
+  </p>
+  <pre>
+<span class="d">#define</span> NALLOC 1024 <span class="c">/* a minimális terület */</span>
+<span class="c">/* a <span class="f">malloc</span> által használt egységekben */</span>
+
+<span class="c">/* morecore: az operációs rendszertől tárterületet kér */</span>
+<span class="k">static</span> Header *morecore(<span class="k">unsigned</span> nu)
+{
+   <span class="k">char</span> *cp, *sbrk(<span class="k">int</span>);
+   Header *up;
+
+   <span class="k">if</span> (nu &lt; NALLOC)
+      nu = NALLOC;
+   cp = sbrk(nu * <span class="k">sizeof</span>(Header));
+   <span class="k">if</span> (cp == (<span class="k">char</span> *) -1) <span class="c">/* nincs több terület */</span>
+      <span class="k">return</span> <span class="f">NULL</span>;
+   up = (Header *) cp;
+   up-&gt;s.size = nu;
+   free((<span class="k">void</span> *) (up+1));
+   <span class="k">return</span> freep;
+}
+</pre>
+  A tárkezelő programok közül a <span class="m">free</span> maradt utoljára. A függvény végignézi a szabad blokkok listáját és a megfelelő helyre beiktatja a felszabadult blokkot. A beiktatás két üres blokk közé vagy a lista végére történhet. Bármelyik esetben, ha a felszabadult blokk szomszédos egy szabad blokkal, akkor a <span class="m">free</span> a két blokkot összevonja. Itt csak arra kell ügyelni, hogy a mutató a megfelelő helyet címezze és a méret helyes legyen.<br />
+  <pre>
+<span class="c">/* free: visszarak egy blokkot a szabad blokkok listájába */</span>
+<span class="k">void</span> <span class="f">free</span>(<span class="k">void</span> *ap)
+{
+   Header *bp, *p;
+
+   bp = (Header *)ap - 1; <span class="c">/* a blokk fejére mutat */</span>
+   <span class="k">for</span>(p = freep; !(bp &gt; p &amp;&amp; bp &lt; p-&gt;s.ptr); p = p-&gt;s.ptr)
+      <span class="k">if</span> (p &gt;= p-&gt;s.ptr &amp;&amp; (bp &gt; p || bp &lt; p-&gt;s.ptr))
+         <span class="k">break</span>; <span class="c">/* a felszabadult blokk a lista elejére
+               vagy végére kerül */</span>
+   <span class="k">if</span> (bp + bp-&gt;s.size == p-&gt;s.ptr) {
+   <span class="c">/* a felső szomszédhoz kapcsoljuk */</span>
+      bp-&gt;s.size += p-&gt;s.ptr-&gt;s.size;
+      bp-&gt;s.ptr = p-&gt;s.ptr-&gt;s.ptr;
+   } <span class="k">else</span>
+      bp-&gt;s.ptr = p-&gt;s.ptr;
+   <span class="k">if</span> (p + p-&gt;s.size == bp) {
+   <span class="c">/* az alsó szomszédhoz kapcsoljuk */</span>
+      p-&gt;s.size += bp-&gt;s.size;
+      p-&gt;s.ptr = bp-&gt;s.ptr;
+   } <span class="k">else</span>
+      p-&gt;s.ptr = bp;
+   freep = p;
+}
+</pre>
+  Bár a tárolókezelési műveletek alapvetően gépfüggőek, a programok jól mutatják, hogy a gépfüggés lekezelhető és a program viszonylag kis részére korlátozható. A <span class="k">typedef</span> utasítás és az union felhasználásával a tárilleszkedési feltételek kielégíthetők (feltéve, hogy az <span class="m">sbrk</span> függvény a megfelelő mutatót adja). A kényszerített típusmódosítás explicitté teszi a mutató konverzióját és még a rosszul tervezett rendszercsatlakozás okozta problémát is megoldja. A programban leírt részletek a tárkezelésre vonatkoznak, de az elvek és a megközelítés más esetben is jól használható.<br />
+  <br />
+  <p><b>8.6.</b> gyakorlat. A standard könyvtárban található <span class="m"><span class="f">calloc</span>(n, size)</span> függvény <span class="m">n</span> darab <span class="m">size</span> méretű objektum számára lefoglalt és nulla kezdeti értékkel feltöltött tárolóterület mutatójával tér vissza. Írjuk meg a <span class="m">calloc</span> függvényt úgy, hogy az hívja a <span class="m">malloc</span>-ot, vagy megfelelően módosítsuk a <span class="m">malloc</span> függvényt!</p>
+  <p> <b>8.7.</b> gyakorlat. A <span class="m">malloc</span> a kért méretet ellenőrzés nélkül elfogadja és a <span class="m">free</span> feltételezi, hogy a felszabadítandó blokk mérete érvényes. Javítsuk ki úgy ezeket a programokat, hogy nagyobb gondot fordítsanak a hibaellenőrzésre!</p>
+  <p> <b>8.8.</b> gyakorlat. A <span class="m">malloc</span> és a <span class="m">free</span> függvények felhasználásával írjuk meg a <span class="m">bfree(p, n)</span> függvényt úgy, hogy az felszabadítsa az <span class="m">n</span> karakterből álló tetszőleges <span class="m">p</span> blokkot. Ezt a <span class="m">bfree</span> függvényt alkalmazva a felhasználó bármikor beiktathat a szabad blokkok listájába egy statikus vagy külső tömböt.<br />
+  </p>
+<br>
+<br>
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="07.html">7. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="a.html">A. FÜGGELÉK</a>
+   </td>
+</tr>
+</table>
+
+
+</div>
+</body>
+</html>

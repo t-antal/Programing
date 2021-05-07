@@ -1,0 +1,213 @@
+/*re-defined standard tags*/
+body 
+{
+	background-color: #FFFFDF;
+	
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12pt;
+	font-style: normal;
+	color: #000000;
+	text-align: center;
+}
+
+h1
+{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 32pt;
+	font-weight: bold;
+}
+h2
+{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 24pt;
+	font-weight: bold;
+}
+h3
+{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 18pt;
+	font-weight: bold;
+}
+h4
+{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 14pt;
+	font-weight: bold;
+}
+h5
+{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12pt;
+	font-weight: bold;
+}
+
+p
+{
+	text-indent: 16px;
+	margin: 0px;
+}
+
+pre 
+{
+	font-family: "Courier New", Courier, monospace;
+	font-size: 12pt;
+	position: relative;
+	left: 32px;
+
+}
+table
+{
+	font-family:"Times New Roman", Times, serif;
+	font-size: 12pt;
+	color: #000000;
+	text-indent: 0px;
+}
+
+a:link {
+	color: #2064E3;
+	text-decoration: underline;
+}
+a:visited {
+	color: #2064E3;
+	text-decoration: underline;
+}
+a:hover {
+	color: #E36420;
+	text-decoration: underline;
+}
+
+/*private classes*/
+
+#main
+{
+   margin-right:auto;	/*center*/
+   margin-left:auto;
+   width: 640px;
+   text-align:justify;
+}
+
+.def	/*default font style*/
+{
+	font-family: "Times New Roman", Times, serif;
+	font-style: normal;
+	white-space:pre;
+}
+.defit	/*default font style + italic*/
+{
+	font-family: "Times New Roman", Times, serif;
+	font-style:italic;
+	white-space:pre;
+}
+.m    /*black monospace*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 12pt;
+	font-style: normal;
+	color: #000000;	   
+	white-space:pre;
+}
+.k    /*blue keywords*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 12pt;
+	font-style: normal;
+	color: #0000FF;
+	white-space:pre;
+}
+.d    /*red directives, defines*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 12pt;
+	font-style: normal;
+	color: #FF0000;	   
+	white-space:pre;
+}
+.f    /*brown functions and constants in standard library*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 12pt;
+	font-style: normal;
+	color: #800000;	   
+	white-space:pre;
+}
+.e    /*pink escapes*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 12pt;
+	font-style: normal;
+	color: #FF00FF;	   
+	white-space:pre;
+}
+.c    /*green comments*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 12pt;
+	font-style: normal;
+	color: #008000;	   
+	white-space:pre;
+}
+
+
+
+/***************************************************/
+/*smaller fonts for (foot)notes*/
+
+.note
+{
+	font-family:"Times New Roman", Times, serif;
+	font-size: 10pt;
+	font-style: normal;
+	color: #000000;	   
+	position: relative;
+	left: 32px;
+	width: 608px;  /*640-32=608*/
+}
+.ms    /*black monospace*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 10pt;
+	font-style: normal;
+	color: #000000;	   
+	white-space:pre;
+}
+.ks    /*blue keywords*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 10pt;
+	font-style: normal;
+	color: #0000FF;
+
+	white-space:pre;
+}
+.ds    /*red directives, defines*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 10pt;
+	font-style: normal;
+	color: #FF0000;	   
+	white-space:pre;
+}
+.fs    /*brown functions and constants in standard library*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 10pt;
+	font-style: normal;
+	color: #800000;	   
+	white-space:pre;
+}
+.es    /*pink escapes*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 10pt;
+	font-style: normal;
+	color: #FF00FF;	   
+	white-space:pre;
+}
+.cs    /*green comments*/
+{
+	font-family:"Courier New", Courier, monospace;
+	font-size: 10pt;
+	font-style: normal;
+	color: #008000;	   
+	white-space:pre;
+}

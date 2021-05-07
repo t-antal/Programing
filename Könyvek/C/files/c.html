@@ -1,0 +1,163 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>C. FÜGGELÉK: A C nyelv szabvány bevezetéséből adódó változásai</title>
+<link href="krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="b.html">B. FÜGGELÉK</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href=""></a>
+   </td>
+</tr>
+</table>
+
+
+  <h2><i><a name="C. FÜGGELÉK" id="C. FÜGGELÉK"></a>C. FÜGGELÉK:<br />
+    </i></h2>
+  <h2>A C nyelv szabvány bevezetéséből adódó változásai<br />
+  </h2>
+  A könyv első kiadása óta a C nyelv definíciója nagy változásokon ment keresztül. Majdnem minden változás az eredeti nyelv kiterjesztése volt, és a gondos tervezés következtében az új definíció szerinti C nyelv a meglévő gyakorlati alkalmazásokkal kompatibilis maradt. Az eredeti leírás néhány nem egyértelmű megfogalmazását kijavították és néhány módosítást vezettek be a meglévő gyakorlatnak megfelelően. Sok bejelentett új lehetőség az AT&amp;T rendelkezésre álló fordítóprogramjának velejárója volt, és ezt követően adaptálták más C fordítókba. Ezekután az ANSI megfelelő bizottsága ezeket a változásokat meghagyva szabványosította a nyelvet és további jelentős módosításokat is bevezetett. A szabványban foglaltakat előre látva, még annak megjelenése előtt néhány fordítóprogram is megjelent a piacon.
+  <p> Ez a függelék összefoglalja a könyv első kiadásában és a szabványban definiált C nyelvek közötti különbségeket. Itt csak a nyelvvel magával foglalkozunk, a környezettel (operációs rendszerrel) és a könyvtárral nem. Ez utóbbiak ugyan fontos részét alkotják a szabványnak, de az itteni változások ismertetésének nincs jelentősége, mivel ezekkel a könyv első kiadásában nem foglalkoztunk.<br />
+  </p>
+  <ul>
+    <li>A Szabvány az előfeldolgozó rendszert sokkal gondosabban definiálta, mint a könyv első kiadása. Az előfeldolgozó rendszer explicit módon a szintaktikai egységekre (tokenekre) bontáson alapszik; új operátorok lettek bevezetve a tokenek láncba fűzésére (<span class="m">##</span>) és karaktersorozatok létrehozására (<span class="m">#</span>); új vezérlősorok lettek bevezetve (<span class="d">#elif</span>, <span class="d">#pragma</span>); explicit módon megengedetté vált a makrók azonos token-sorozattal való újradeklarálása; a karaktersorozat belsejében lévő paramétereket a rendszer a továbbiakban már nem helyettesíti. Az előfeldolgozónak szóló sorok <span class="m">\</span> jellel való tördelése mindenhol megengedett, nem csak a karaktersorozatokban vagy a makródefíníciókban. (A részleteket l. az <a href="a.html#A12.">A12. pontban</a>.)<br />
+      <br />
+    </li>
+    <li>Az összes belső azonosító nevének szignifikanciája 31 karakterre növekedett; a külső csatolással rendelkező azonosítók nevének szignifikanciájára adott alsó határ megmaradt 6, csak kis- vagy csak nagybetűs karakter. (Számos gépi megvalósítás több karaktert is megenged.)<br />
+      <br />
+    </li>
+    <li>A <span class="m">??</span> kezdetű trigráf sorozatok bevezetése lehetővé tette a karakterkészletek egy részéből hiányzó karakterek (<span class="m"># \ ^ [ ] { } | ~</span>) ábrázolását (l. az <a href="a.html#A12.">A12. pontot</a>). Ügyeljünk rá, hogy a trigráf sorozatok bevezetése változást okozhat a <span class="m">??</span> karaktereket tartalmazó karaktersorozatok jelentésében.<br />
+      <br />
+    </li>
+    <li>Új kulcsszavakat (<span class="k">void</span>, <span class="k">const</span>, <span class="k">volatile</span>, <span class="k">signed</span>, <span class="k">enum</span>) vezettek be, a sikertelen kísérletet jelentő <span class="m">entry</span> kulcsszót viszont törölték a szabványból.<br />
+      <br />
+    </li>
+    <li>A karaktersorozatokban és karaktersorozat-állandókban használható új escape-sorozatokat definiáltak. A <span class="m">\</span> utáni, a megadott escape-sorozatok között nem szereplő karakterek hatását nem definiálták (l. az <a href="a.html#A2.5.">A2.5.2. pontot</a>).<br />
+      <br />
+    </li>
+    <li>Mindenki számára kedvező, triviális változás, hogy a 8 és 9 nem oktális számjegy.<br />
+      <br />
+    </li>
+    <li>A Szabvány az állandók típusának explicit kijelölésére utótagokat vezetett be: az <span class="m">U</span> és <span class="m">L</span> az egészek, <span class="m">F</span> és <span class="m">L</span> a lebegőpontos állandók esetén használható. Az utótag nélküli állandók típusára vonatkozó szabályok szintén finomodtak (l. az <a href="a.html#A2.5.">A2.5. pontot</a>).<br />
+      <br />
+    </li>
+    <li>A szomszédos karaktersorozat-állandók összefűződnek (konkatenálódnak).<br />
+      <br />
+    </li>
+    <li>A Szabvány lehetővé teszi a széles karakterekből álló karakteres és karaktersorozatállandók használatát (l. A2.6.).<br />
+      <br />
+    </li>
+    <li>A karakterek, csakúgy mint más egész adattípusok is, explicit módon deklarálhatók előjeles vagy előjel nélküli számábrázolással. Ez a <span class="k">signed</span> vagy <span class="k">unsigned</span> kulcsszóval valósítható meg. A <span class="k">double</span> adattípus szinonimájaként használt <span class="k">long</span> <span class="k">float</span> típusjelzést a Szabvány megszüntette, de bevezette a <span class="k">long</span> <span class="k">double</span> típust, amellyel extra pontosságú lebegőpontos adatok deklarálhatók.<br />
+      <br />
+    </li>
+    <li>Korábban csak az <span class="k">unsigned</span> <span class="k">char</span> típus létezett. A Szabvány bevezette a <span class="k">signed</span> kulcsszót, amivel a <span class="k">char</span> és más egész típusok explicit módon előjelessé tehetők.<br />
+      <br />
+    </li>
+    <li>A <span class="k">void</span> típus számos gépi megvalósításban évek óta létezett. A Szabvány bevezette a <span class="m"><span class="k">void</span> *</span> típust, mint generikus (általános) mutató típust. Ezt a szerepet korábban a <span class="m"><span class="k">char</span> *</span> töltötte be. Ugyanakkor explicit szabályokat hoztak a mutatók és az egészek, ill. a különböző típusú mutatók kényszerített típuskonverzió nélküli keveredésének megakadályozására.<br />
+      <br />
+    </li>
+    <li>A Szabvány tételesen megadja az aritmetikai adattípusok minimális nagyságát és a megfelelő headerek (<span class="m">&lt;limits.h&gt;</span> és <span class="m">&lt;float.h&gt;</span>) tartalmazzák az egyes gépi megvalósítások adattípusokra vonatkozó előírásait.<br />
+      <br />
+    </li>
+    <li>A felsorolások alkalmazása új a könyv első kiadásához képest.<br />
+      <br />
+    </li>
+    <li>A Szabvány a C++ nyelvből átvette a típusminősítő fogalmát, pl. a <span class="k">const</span> típusminősítőt (l. az <a href="a.html#A8.2.">A8.2. pontot</a>).<br />
+      <br />
+    </li>
+    <li>A Szabvány szerinti C nyelvben a karaktersorozatok már nem módosíthatók, így csak olvasható tárolóban is elhelyezhetők.<br />
+      <br />
+    </li>
+    <li>A könyv első kiadásában alkalmazott „szokásos aritmetikai konverziók&quot; szabálya megváltozott, különösen alapvető a változás, hogy az „egészek esetén mindig az <span class="k">unsigned</span> típusnak, lebegőpontos adatok esetén pedig a <span class="k">double</span> típusnak van elsősége&quot;, valamint a „legkisebb, elegendően nagy típusra való előlépés&quot; szabály módosult (l. az <a href="a.html#A6.5.">A6.5. pontot</a>).<br />
+      - A régi értékadó operátorok, mint pl. az <span class="m">=+</span>, eltűntek a Szabványból. Változás még, hogy az értékadó operátorok egyetlen szintaktikai egységet alkotnak, szemben a könyv első kiadásával, ahol üres hellyel elválasztott párt alkottak.<br />
+      <br />
+    </li>
+    <li>A fordítóprogramok korábban megengedték a matematikailag asszociatív operátorok számítási szempontból asszociatív kezelését. Ez a szabály a Szabvány bevezetésével megszűnt.<br />
+      <br />
+    </li>
+    <li>A Szabvány az unáris <span class="m">-</span> operátor mintájára, szimmetria okokból bevezette az unáris <span class="m">+</span> operátort.<br />
+      <br />
+    </li>
+    <li>Egy függvényhez tartozó mutató az explicit <span class="m">*</span> operátor nélkül használható függvény-megnevezésként (l. az <a href="a.html#A7.3.">A7.3.2. pontot</a>).<br />
+      <br />
+    </li>
+    <li>A struktúrák szerepelhetnek értékadásban, átadhatók függvénynek paraméterként és lehetnek függvény visszatérési értékei.<br />
+      <br />
+    </li>
+    <li>Az <span class="m">&amp;</span> címoperátor alkalmazása tömbökre is megengedett és az eredménye a tömböt címző mutató.<br />
+      <br />
+    </li>
+    <li>A könyv első kiadásában a <span class="k">sizeof</span> operátor <span class="k">int</span> típusú eredményt adott, ami számos gépi megvalósításban <span class="k">unsigned</span> minősítésű volt. A Szabvány a <span class="k">sizeof</span> eredményének típusát gépi megvalósítástól függővé tette, és ehhez bevezetett egy speciális, <span class="k">size_t</span> adattípust, ami az <span class="m">&lt;stddef.h&gt;</span> standard headerben van definiálva. Hasonló módon kezeli a Szabvány a mutatók különbségének típusát, amelyhez a <span class="k">ptrdiff_t</span> adattípus lett bevezetve (l. az <a href="a.html#A7.4.">A7.4.8.</a> és <a href="a.html#A7.7.">A7.7.</a> pontokat).<br />
+      <br />
+    </li>
+    <li>Az <span class="m">&amp;</span> címoperátor nem alkalmazható <span class="k">register</span> tárolási osztályúnak deklarált objektumokra, még akkor sem, ha a gépi megvalósítás szerint az objektum nem regiszterben tárolódik.<br />
+      <br />
+    </li>
+    <li>A léptető kifejezések típusa a bal oldali operandus típusának felel meg, a jobb oldali operandus nem lép elő az eredmény típusának megfelelően (l. az <a href="a.html#A7.8.">A7.8. pontot</a>).<br />
+      <br />
+    </li>
+    <li>A Szabvány megengedi egy tömb utolsó utáni elemét címző mutató létrehozását és annak aritmetikai, ill. relációs kifejezésekben való szerepeltetését (l. az <a href="a.html#A7.7.">A7.7. pontot</a>).<br />
+      <br />
+    </li>
+    <li>A Szabvány – a C++ nyelvből átvéve – bevezette a függvényprototípus deklarációt, ami a paraméterek típusát is tartalmazza, valamint a változó hosszúságú paraméterlista explicit jelölési módját, egyben megadva annak feldolgozási lehetőségét is (l. az <a href="a.html#A7.3.">A7.3.2.</a>, <a href="a.html#A8.6.">A8.6.3.</a> és <a href="b.html#B7.">B7.</a> pontokat). A régi stílusú függvénydeklaráció továbbra is érvényben maradt, de megszorításokkal.<br />
+      <br />
+    </li>
+    <li>Az üres deklarációkat, amelyekben nincs deklarátor és nem deklarálnak legalább egy struktúrát, uniont vagy felsorolást, a Szabvány tiltja. Másrészről egy struktúra vagy union címkéjét újra deklaráló deklaráció megengedett, ha az újra deklarálás egy külső érvényességi tartományban történik.<br />
+      <br />
+    </li>
+    <li>A valamilyen specifikátort vagy minősítőt nem tartalmazó külső adatdeklarációk (vagyis a puszta deklarátorból álló deklaráció) alkalmazása tilos.<br />
+      <br />
+    </li>
+    <li>Néhány gépi megvalósításban a belső blokkban található <span class="k">extern</span> deklaráció érvényességi tartománya kiterjedt a forrásállomány további részére is. A Szabvány világosan rögzíti, hogy az ilyen deklarációk érvényességi tartománya csak az a blokk, amelyben szerepelnek.<br />
+      <br />
+    </li>
+    <li>A paraméterek érvényességi tartománya a függvényt alkotó összetett utasítás, így a függvény törzsének tetején lévő változódeklarációk nem rejthetik el a paramétereket.<br />
+      <br />
+    </li>
+    <li>Az azonosítók névterekbe osztása a könyv első kiadásában szereplő felosztáshoz képest megváltozott. A Szabvány a struktúrák, unionok és felsorolások címkéit egyetlen névtérbe helyezi, és bevezet egy önálló névteret az utasításcímkék számára (l. az <a href="a.html#A11.1.">A11.1. pontot</a>). A struktúra- vagy uniontagok nevei annak a struktúrának vagy unionnak a névteréhez kapcsolódnak, amelynek részét alkotják. (Ez megfelel a régóta fennálló gyakorlatnak.)<br />
+      <br />
+    </li>
+    <li>Az unionok inicializálhatók, a kezdeti értéket az union első tagjához rendelik.<br />
+      <br />
+    </li>
+    <li>Az automatikus struktúrák, unionok és tömbök inicializálhatók, bár van néhány megkötés.<br />
+      <br />
+    </li>
+    <li>Az explicit módon megadott méretű karakteres tömbök pontosan ugyanannyi karaktert tartalmazó karaktersorozat-állandóval inicializálhatók (ilyenkor a <span class="m">'<span class="e">\0</span>'</span> végjelet egyszerűen kilépteti a rendszer).<br />
+      <br />
+    </li>
+    <li>A <span class="k">switch</span> utasítás vezérlő kifejezése és <span class="k">case</span> címkéje bármilyen egész típusú lehet.<br />
+    </li>
+  </ul>
+  <br>
+  <br>
+
+  <table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="b.html">B. FÜGGELÉK</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href=""></a>
+   </td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>

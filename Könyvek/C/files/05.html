@@ -1,0 +1,1286 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mutatók és tömbök</title>
+<link href="krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<div id="main">
+
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="04.html">4. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="06.html">6. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+  <h2><a name="5. FEJEZET" id="5. FEJEZET"></a><i>5. FEJEZET:</i></h2>
+  <h2>Mutatók és tömbök<br />
+  </h2>
+  A mutató vagy pointer olyan változó, amely egy másik változó címét tartalmazza. A C nyelvű programokban gyakran használják a mutatókat, egyrészt mert bizonyos feladatokat csak velük lehet megoldani, másrészt mert alkalmazásukkal sokkal tömörebb és hatékonyabb program hozható létre. A mutatók és a tömbök szoros kapcsolatban vannak egymással és ebben a fejezetben ezt a kapcsolatot vizsgáljuk, ill. megmutatjuk, hogy ez a kapcsolat hogyan használható ki.
+  <p> Gyakran a mutatót összekapcsolják a <span class="k">goto</span> utasítással, mondván, hogy mindkettő csodálatos lehetőséget teremt az érthetetlen programok írásához. Ez biztosan így is van, ha nem kellő gondossággal használjuk, hiszen könnyű olyan mutatót létrehozni, amely valamilyen nem várt helyre mutat. Kellő fegyelemmel viszont elérhető, hogy a mutatókat használó program világos és áttekinthető legyen. A következőkben ezt próbáljuk meg bemutatni.</p>
+  <p> Az ANSI C egyik legfontosabb új eleme, hogy explicit szabályokat tartalmaz a mutatók használatára, amelyeket a jó programozók a gyakorlatban kihasználnak és a jó fordítóprogramok érvényre juttatnak. A korábbi C változathoz képest változás még, hogy a <span class="m"><span class="k">char</span> *</span> általános mutató helyett bevezették a <span class="m"><span class="k">void</span> *</span> mutatótípust.<br />
+    <br />
+  </p>
+  <h3><a name="5.1." id="5.1."></a>5.1. Mutatók és címek<br />
+  </h3>
+  A vizsgálatainkat kezdjük a számítógép tárolójának szervezését leíró egyszerű képpel! A tipikus számítógép tárolója egymást követő, folyamatosan számozott vagy címezett tárhelyekből áll, amelyekkel egyenként vagy folytonos csoportokban végezhetünk műveleteket. Elég gyakori, hogy a tároló bármelyik bájtja egy karakter, bájt-párja egy <span class="k">short</span> típusú egész szám és négy szomszédos bájtja egy <span class="k">long</span> típusú egész szám tárolására alkalmas. Egy mutató a tárolóelemek egy csoportja (gyakran két vagy négy bájt), amely egy címet tartalmazhat. Ezért, ha <span class="m">c</span> egy <span class="k">char</span> típusú változó és <span class="m">p</span> egy rá mutató (azt címző) mutató, akkor a helyzet a következő vázlatnak megfelelően alakul.<br />
+  <br />
+  <br />
+  <div align="center"> <img src="img/01.png" width="600" height="89" border="0" alt="img/01.png" /></div>
+  <br />
+  <br />
+  <br />
+  Az <span class="m">&amp;</span> unáris (egyoperandusú) operátor megadja egy operandus címét, ezért a<br />
+  <pre>
+p = &amp;c;
+</pre>
+  utasítás <span class="m">c</span> címét hozzárendeli a <span class="m">p</span> változóhoz és ilyenkor azt mondjuk, hogy <span class="m">p</span> <span class="m">c</span>-re „mutat”. Az <span class="m">&amp;</span> operátor csak változókra és tömbelemekre alkalmazható és nem használhatjuk kifejezésekre, állandókra, vagy regiszterváltozókra.
+  <p> A <span class="m">*</span> unáris operátor neve <i>indirekció</i>, és ha egy mutatóra alkalmazzuk, akkor a mutató által megcímzett változóhoz férhetünk hozzá. Tegyük fel, hogy <span class="m">x</span> és <span class="m">y</span> egésztípusúak és <span class="m">ip</span> egy <span class="k">int</span> típushoz tartozó mutató. A következő, elég mesterkélt példán bemutatjuk a mutatók deklarálását, valamint az <span class="m">&amp;</span> és <span class="m">*</span> operátorok használatát.<br />
+  </p>
+  <pre>
+<span class="k">int</span> x = 1, y = 2, z[10];
+<span class="k">int</span> *ip;       <span class="c">/* ip az int tipushoz tartozó mutató */</span>
+
+ip = &amp;x;       <span class="c">/* ip x-re mutat */</span>
+y = *ip;       <span class="c">/* y most 1 lesz */</span>
+*ip = 0;       <span class="c">/* most x nulla lesz */</span>
+ip = &amp;z[0];    <span class="c">/* ip most z[0]-ra mutat */</span>
+</pre>
+  <span class="m">x</span>, <span class="m">y</span> és <span class="m">z</span> deklarációja az eddig látott módon történik, az <span class="m">ip</span> mutatót<br />
+  <pre>
+<span class="k">int</span> *ip;
+</pre>
+  módon deklaráljuk, és azt mondjuk <span class="m">*ip</span> egy <span class="k">int</span>. A változók deklarációjának szintaxisa annak a kifejezésnek a szintaxisát követi, amelyben a változót használjuk. Ezt a meggondolást már eddig is alkalmaztuk a függvények deklarációjánál. Ennek mintájára pl.<br />
+  <pre>
+<span class="k">double</span> *dp, atof(<span class="k">char</span> *);
+</pre>
+  azt jelenti, hogy egy kifejezésben <span class="m">*dp</span> (a <span class="m">dp</span> mutatóval kijelölt változó értéke) és <span class="m">atof</span> értéke <span class="k">double</span> típusú, ill. az <span class="m">atof</span> argumentuma <span class="k">char</span> típushoz tartozó mutató.
+  <p> Az indirekció alapján látható, hogy egy mutató mindig meghatározott objektumra mutat, azaz minden mutató meghatározott adattípust jelöl ki. (Ez alól csak egy kivétel van, a <span class="k">void</span> típushoz tartozó mutató, ami egy olyan adat, amely bármilyen mutatót tartalmazhat. Erre az a megszorítás érvényes, hogy önmagára nem alkalmazhatja az indirekciót. A kérdésre az <a href="05.html#5.11.">5.11. pontban</a> még visszatérünk.)</p>
+  <p> Ha <span class="m">ip</span> egy <span class="m">x</span> egészre mutat, akkor <span class="m">*ip</span> minden olyan programkörnyezetben előfordulhat, ahol <span class="m">x</span> használata megengedett. Így pl. megengedett a<br />
+  </p>
+  <pre>
+*ip = *ip + 10;
+</pre>
+  értékadás is, amely <span class="m">*ip</span>-et tízzel növeli.
+  <p> Az <span class="m">&amp;</span> és <span class="m">*</span> unáris operátorok szorosabban kötnek, mint az aritmetikai operátorok, ezért az<br />
+  </p>
+  <pre>
+y = *ip + 1
+</pre>
+  kifejezés kiértékelésekor a gép először veszi azt az adatot, amire <span class="m">ip</span> mutat, hozzáad egyet, majd az eredményt hozzárendeli <span class="m">y</span>-hoz. Az<br />
+  <pre>
+*ip += 1
+</pre>
+  inkrementálja azt a változót, amire <span class="m">ip</span> mutat, csakúgy, mint a<br />
+  <pre>
+++*ip
+</pre>
+  vagy az<br />
+  <pre>
+(*ip)++
+</pre>
+  Az utolsó esetben a zárójelre szükség van, mert hiányában az <span class="m">ip</span> inkrementálódna az <span class="m">ip</span> által kijelölt adat helyett, mivel a <span class="m">*</span>-hoz és <span class="m">++</span>-hoz hasonló unáris operátorok jobbról balra hajtódnak végre.
+  <p> Mivel a mutatók is változók, ezért indirekció nélkül is használhatók kifejezésekben. Ha pl. <span class="m">iq</span> egy <span class="k">int</span> adatot címző mutató, akkor<br />
+  </p>
+  <pre>
+iq = ip
+</pre>
+  értékadás hatására <span class="m">ip</span> tartalma <span class="m">iq</span>-ba másolódik, függetlenül attól, hogy <span class="m">ip</span> mire mutat.<br />
+  <br />
+  <h3><a name="5.2." id="5.2."></a>5.2. Mutatók és függvényargumentumok<br />
+  </h3>
+  Mivel a C nyelv a függvényeknek érték szerint adja át az argumentumokat, így a hívott függvény nem tudja megváltoztatni a hívó függvény változóit. Például a rendező programban használtuk a swap függvényt a rossz sorrendben lévő adatok felcserélésére. Itt nem elegendő, ha azt írjuk, hogy<br />
+  <pre>
+swap(a, b);
+</pre>
+  ahol a <span class="m">swap</span> függvényt úgy definiálnánk, hogy<br />
+  <pre>
+<span class="k">void</span> swap(<span class="k">int</span> x, <span class="k">int</span> y) <span class="c">/* Hibás!!! */</span>
+{
+   <span class="k">int</span> temp;
+
+   temp = x;
+   x = y;
+   y = temp;
+}
+</pre>
+  Mivel a függvényt érték szerint hívjuk, a <span class="m">swap</span> nem képes a hívásában szereplő <span class="m">a</span> és <span class="m">b</span> argumentumokat befolyásolni (azoknak csak egy helyi másolatával dolgozik, ezek cseréje pedig nem befolyásolná az eredeti argumentumok sorrendjét).
+  <p> A kívánt hatás csak úgy érhető el, ha a hívó függvény mutatókat ad át a hívott függvénynek.<br />
+  </p>
+  <pre>
+swap(&amp;a, &amp;b);
+</pre>
+  Mivel az <span class="m">&amp;</span> operátor a változó címét állítja elő, ezért az <span class="m">&amp;a</span> az <span class="m">a</span>-hoz tartozó mutató. Ha a <span class="m">swap</span> függvényben a paramétereket mutatóként deklaráljuk, akkor indirekt módon hozzáfér az operandusokhoz és így közvetlenül felcserélheti azokat. Az így megírt <span class="m">swap</span> függvény:<br />
+  <pre>
+<span class="k">void</span> swap(<span class="k">int</span> *px, <span class="k">int</span> *py) <span class="c">/* *px és *py cseréje */</span>
+{
+   <span class="k">int</span> temp;
+
+   temp=*px;
+   *px = *py;
+   *py = temp;
+}
+</pre>
+  <br />
+  <br />
+  <div align="center"> <img src="img/02.png" width="300" height="402" border="0" alt="img/02.png" /> </div>
+  <br />
+  <br />
+  <br />
+  A folyamatot egyszerű ábrával is szemléltethetjük. Egy függvény a mutató típusú argumentumokon keresztül képes hozzáférni és megváltoztatni a hívó eljárás objektumait. Példaként írjuk meg a <span class="m">getint</span> függvényt, amely egy szabad formátumú bemeneti konvertáló eljárás. A <span class="m">getint</span> a bemeneti karakteráramból hívásonként egy egész típusú értéket emel ki és visszaadja azt a hívó függvénynek, ill. jelzi a bemeneti állomány végét. A kapott egész számot és az <span class="f">EOF</span> jelzését két külön csatornán kell megoldani, mivel az <span class="f">EOF</span> jelzése maga is egy egész szám lehet, ami a beolvasott értékkel keveredve zavart okozhatna.
+  <p> Azt a megoldást választottuk, hogy az <span class="f">EOF</span>-ra utaló állapotjelzést a függvény visszatérési értékével adjuk át a hívó programnak, a beolvasott egész számot pedig mutató típusú argumentumon keresztül. (A <a href="07.html#7.4.">7.4. pontban</a> ismertetésre kerülő <span class="f">scanf</span> függvény ugyanilyen módon működik.) Az<br />
+  </p>
+  <pre>
+<span class="k">int</span> n, tomb[MERET], getint(<span class="k">int</span> *);
+<span class="k">for</span> (n = 0; n &lt; MERET &amp;&amp; getint(&amp;tomb[n]) != <span class="f">EOF</span>; n++)
+   ;
+</pre>
+  ciklus <span class="m">getint</span> hívásokkal feltölti a tömböt. A <span class="m">getint</span> minden hívásakor a beolvasott egész számot elhelyezi a <span class="m">tomb[n]</span> pozícióra, majd a hívó ciklus inkrementálja <span class="m">n</span> értékét. A helyes működéshez a híváskor a <span class="m">tomb[n]</span> tömbelem címét kell a <span class="m">getint</span> függvénynek átadni, mert az csak ennek felhasználásával tudja a talált számot visszaadni a hívó eljárásnak.
+  <p> A <span class="m">getint</span> függvény itt közölt változatának visszatérési függvényértéke <span class="f">EOF</span>, ha elérte az állomány végét, nulla, ha a következő bemeneti adat nem szám és pozitív érték, ha az eredmény érvényes egész szám (ami a <span class="m">tomb[n]</span> helyen van). A program:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;ctype.h&gt;
+
+<span class="k">int</span> getch(<span class="k">void</span>);
+<span class="k">void</span> ungetch(<span class="k">int</span>);
+<span class="c">/* getint: a bemenetről beolvas egy egész számot és a *pn
+helyre teszi */</span>
+<span class="k">int</span> getint(<span class="k">int</span> *pn){
+   <span class="k">int</span> c, sign;
+
+   <span class="k">while</span>(<span class="f">isspace</span>(c = getch())) <span class="c">/* átlépi az üres helyeket */</span>
+      ;
+   <span class="k">if</span>(!<span class="f">isdigit</span>(c) &amp;&amp; c != <span class="f">EOF</span> &amp;&amp; c != '+' &amp;&amp; c!= '-') {
+      ungetch (c); <span class="c">/* ez nem szám */</span>
+      <span class="k">return</span> 0;
+   }
+   sign = (c == '-') ? -1 : 1;
+   <span class="k">if</span>(c == '+' || c == '-')
+      c = getch();
+   <span class="k">for</span>(*pn = 0; <span class="f">isdigit</span>(c); c = getch())
+      *pn = 10 * *pn + (c - '0');
+   *pn *= sign;
+   <span class="k">if</span>(c != <span class="f">EOF</span>)
+      ungetch(c);
+   <span class="k">return</span> c;
+}
+</pre>
+  A <span class="m">*pn</span>-t a teljes <span class="m">getint</span> függvényben úgy használjuk, mint egy közönséges <span class="k">int</span> típusú változót. A <span class="m">getint</span> szintén használja a <a href="04.html#4.3.">4.3. pontban</a> leírt <span class="m">getch</span> és <span class="m">ungetch</span> függvényeket, mivel a feleslegesen beolvasott karaktert most is vissza kell írni a bemenetre.<br />
+  <br />
+  <p><b>5.1.</b> gyakorlat. Ahogy ezt a példaprogramban láttuk, a <span class="m">getint</span> az olyan <span class="m">+</span> vagy <span class="m">-</span> előjelet, ami után nem következik számjegy, érvényes, nulla értékű adatként kezeli. Szüntessük meg ezt a problémát úgy, hogy egy nullát visszaírunk a bemenetre!</p>
+  <p> <b>5.2.</b> gyakorlat. Írjuk meg a <span class="m">getfloat</span> függvényt, ami a <span class="m">getint</span> lebegőpontos megfelelője! Milyen típusú függvényértékekkel tér vissza a getfloat?<br />
+    <br />
+  </p>
+  <h3><a name="5.3." id="5.3."></a>5.3. Mutatók és tömbök<br />
+  </h3>
+  A C nyelvben a mutatók és a tömbök között szoros kapcsolat van, ami indokolja, hogy a két dolgot közösen tárgyaljuk. Bármilyen művelet, amit egy tömb indexelésével elvégezhetünk, megoldható mutatókkal is. A mutatót használó programváltozat általában gyorsabb, de legalábbis a kezdők számára nehezebben érthető. Az<br />
+  <pre>
+<span class="k">int</span> a[10];
+</pre>
+  deklaráció egy tízelemű tömböt jelöl ki, azaz tíz egymást követő, <span class="m">a[0]...a[9]</span> névvel ellátott objektumot.<br />
+  <br />
+  <br />
+  <div align="center"> <img src="img/03.png" width="586" height="72" border="0" alt="img/03.png" /> </div>
+  <br />
+  <br />
+  <br />
+  Az <span class="m">a[i]</span> jelölés a tömb <span class="m">i</span>-edik elemére hivatkozik. Ha <span class="m">pa</span> egy egész típushoz tartozó mutató, amit<br />
+  <pre>
+<span class="k">int</span> *pa;
+</pre>
+  módon deklaráltunk, akkor a<br />
+  <pre>
+pa = &amp;a[0];
+</pre>
+  értékadás hatására <span class="m">pa</span> az <span class="m">a</span> tömb nulladik elemére fog mutatni, vagyis <span class="m">pa</span> az <span class="m">a[0]</span> címét fogja tartalmazni.<br />
+  <br />
+  <br />
+  <div align="center"> <img src="img/04.png" width="575" height="150" border="0" alt="img/04.png" /> </div>
+  <br />
+  <br />
+  <br />
+  Most nézzük az<br />
+  <pre>
+x=*pa;
+</pre>
+  értékadást! Ez az <span class="m">a[0]</span> tartalmát fogja az <span class="m">x</span>-be másolni.
+  <p> Ha <span class="m">pa</span> egy tömb adott elemére mutat, akkor definíció szerint <span class="m">pa+1</span> a következő elemre, <span class="m">pa+i</span> a <span class="m">pa</span> utáni <span class="m">i</span>-edik elemre és <span class="m">pa-i</span> a <span class="m">pa</span> előtti <span class="m">i</span>-edik elemre fog mutatni. Így ha <span class="m">pa</span> az <span class="m">a[0]</span> elemre mutat, akkor<br />
+  </p>
+  <pre>
+*(pa + 1)
+</pre>
+  a tömb <span class="m">a[1]</span> elemének tartalmára hivatkozik, és <span class="m">pa+i</span> az <span class="m">a[i]</span> címét adja, így <span class="m">*(pa+i)</span> az <span class="m">a[i]</span> tartalmát jelenti.<br />
+  <br />
+  <br />
+  <div align="center"> <img src="img/05.png" width="569" height="151" border="0" alt="img/05.png" /> </div>
+  <br />
+  <br />
+  <br />
+  Ezek a megállapítások a tömböt alkotó változók típusától vagy méretétől függetlenül igazak. Az a kijelentés, hogy „adj 1-et a mutatóhoz” azt jelenti, hogy <span class="m">pa+1</span> a következő objektumra, hasonlóan <span class="m">pa+i</span> pedig a <span class="m">pa</span> utáni <span class="m">i</span>-edik objektumra mutat. A teljes mutatóaritmetikára igaz, hogy a növekmény mértékegysége annak az objektumnak a térbeli mérete, amire a mutató mutat.
+  <p> Az indexelés és a mutatóaritmetikai műveletek közötti összefüggés nagyon szoros. Definíció szerint a tömbre való hivatkozás a tömb első (nulladik indexű) elemét kijelölő mutató létrehozását jelenti. Vagyis a<br />
+  </p>
+  <pre>
+pa = &amp;a[0];
+</pre>
+  értékadás hatására <span class="m">pa</span> és <span class="m">a</span> (mint a tömbre való hivatkozás) azonos értékű lesz. Mivel a tömb neve és a nulladik indexű elemének címe szinonimák, ezért a <span class="m">pa=&amp;a[0]</span> értékadás úgy is írható, hogy<br />
+  <pre>
+pa = a;<br />
+</pre>
+  A fenti megállapítás első látásra nagyon meglepő és azt jelenti, hogy az <span class="m">a[i]</span>-re való hivatkozás <span class="m">*(a+i)</span> formában is írható. Az <span class="m">a[i]</span> hivatkozás kiértékelésekor a C fordító azonnal átalakítja a hivatkozást <span class="m">*(a+i)</span> alakra, és a két alak egymással teljesen egyenértékű. A fenti egyenlőség mindkét oldalára alkalmazva az <span class="m">&amp;</span> operátort az következik, hogy <span class="m">&amp;a[i]</span> és <span class="m">a+i</span> szintén azonosak, vagyis <span class="m">a+i</span> az <span class="m">a</span> utáni <span class="m">i</span>-edik elem címe. Más oldalról nézve viszont ha <span class="m">pa</span> egy mutató, akkor az a kifejezésekben indexelhető, vagyis <span class="m">pa[i]</span> megfelel a <span class="m">*(pa+i)</span>-nek. Röviden összefoglalva: bármely tömböt és indexet tartalmazó kifejezés egyenértékű egy mutatót és egy eltolást (ofszetet) tartalmazó kifejezéssel. A kétféle írásmód egyetlen utasításon belül is megengedett.
+  <p> A tömb neve és a mutató között csak egyetlen különbség van, amiről nem szabad elfelejtkeznünk: a mutató egy változó, tehát <span class="m">pa = a</span> vagy <span class="m">pa++</span> érvényes kifejezések, a tömb neve viszont nem változó, ezért az <span class="m">a = pa</span> vagy <span class="m">a++</span> alakú konstrukciók nem megengedettek!</p>
+  <p> Amikor egy tömb nevét átadjuk egy függvénynek, akkor valójában a tömb kezdetének címét adjuk át. A hívott függvényben ez az argumentum egy helyi változó lesz, így egy paraméterként megadott tömbnév lényegében egy mutató, vagyis egy címet tartalmazó változó. Ezt a tényt kihasználva írjuk meg egy tetszőleges karaktersorozat hosszát meghatározó <span class="m">strlen</span> függvény egy másik változatát.<br />
+  </p>
+  <pre>
+<span class="c">/* strlen: megadja a karaktersorozat hosszát */</span>
+<span class="k">int</span> strlen(<span class="k">char</span> *s)
+{
+   <span class="k">int</span> n;
+   <span class="k">for</span> (n = 0; *s != '<span class="e">\0</span>'; s++)
+      n++;
+   <span class="k">return</span> n;
+}
+</pre>
+  Mivel <span class="m">s</span> egy mutató, az inkrementálása megengedett, de az <span class="m">s++</span> nincs semmilyen hatással sem az <span class="f">strlen</span> függvényt hívó függvényben a karaktersorozatra, mivel csak a mutató helyi másolata inkrementálódik. Ez azt jelenti, hogy az <span class="m">strlen</span> függvényt a<br />
+  <pre>
+strlen(&quot;Halló mindenki!&quot;);    <span class="c">/* karakteres állandó */</span>
+strlen(tomb);                 <span class="c">/* char tomb[100]; */</span>
+strlen(ptr);                  <span class="c">/* char *ptr; */</span>
+</pre>
+  formában és argumentumokkal híva jól működik.
+  <p> Egy függvény definíciójában a formális paraméterek között szereplő<br />
+  </p>
+  <pre>
+<span class="k">char</span> s[ ];
+<span class="k">char</span> *s;
+</pre>
+  megadási formák egyenértékűek, de a továbbiakban a másodikat részesítjük előnyben, mert sokkal egyértelműbben mutatja, hogy a paraméter egy mutató. Amikor egy tömb nevét adjuk át a függvénynek, a függvény szabadon dönthet, hogy tömbként vagy mutatóként kezeli (akár mindkét értelmezést is használhatja, ha az célszerű és világos).
+  <p> Arra is van lehetőség, hogy a tömbnek csak egy részét adjuk át a függvény hívásakor, ha a résztömb kezdetének mutatóját adjuk át. Például, ha <span class="m">a</span> egy tömb, akkor<br />
+  </p>
+  <pre>
+f(&amp;a[2])
+</pre>
+  vagy<br />
+  <pre>
+f(a+2)<br />
+</pre>
+  átadja az <span class="m">f</span> függvénynek azt a résztömböt, amely az <span class="m">a[2]</span> elemmel kezdődik. Az <span class="m">f</span> függvényen belül a paraméterdeklaráció<br />
+  <pre>
+f(<span class="k">int</span> rtomb[]) {...}
+</pre>
+  vagy<br />
+  <pre>
+f(<span class="k">int</span> *rtomb) {...}
+</pre>
+  alakú lehet. Ami az <span class="m">f</span> függvényt illeti, arra semmiféle következménnyel nem jár, hogy a paraméter egy nagyobb tömb része.
+  <p> Ha biztosak vagyunk benne, hogy a megfelelő tömbelem létezik, akkor megengedett a tömb visszafele indexelése is. A <span class="m">p[-1]</span>, <span class="m">p[-2]</span> stb. szintaktikailag helyes és a tömb <span class="m">p[0]</span> elemét közvetlenül megelőző elemekre való hivatkozást jelent. Természetesen nem hivatkozhatunk olyan objektumra, ami nincs a tömb határain belül.<br />
+    <br />
+  </p>
+  <h3><a name="5.4." id="5.4."></a>5.4. A címaritmetika<br />
+  </h3>
+  Ha <span class="m">p</span> egy tömb valamelyik elemének mutatója, akkor <span class="m">p++</span> inkrementálja a <span class="m">p</span> mutatót, hogy az a tömb következő elemére mutasson és <span class="m">p+=i</span> pedig úgy növeli <span class="m">p</span>-t, hogy az az aktuális elem utáni <span class="m">i</span>-edik elemre mutasson. Ezek, ill. az ehhez hasonló konstrukciók a mutató- vagy címaritmetika legegyszerűbb esetei.
+  <p> A C nyelv következetesen és szisztematikusan közelít a címaritmetikához: a mutatók, tömbök és a címaritmetika egységes kezelése a nyelv egyik pozitívuma. Ennek szemléltetésére írjunk egy primitív tárolóhely-kiosztó eljárást. Az eljárás két függvényből fog állni. Az első, <span class="m">alloc(n)</span> függvény az <span class="m">n</span> darab egymást követő karakterpozícióhoz tartozó mutatóval tér vissza, és ezt az <span class="m">alloc</span> függvény hívója a karakterek eltárolásához fogja felhasználni. A második, <span class="m">afree(p)</span> függvény felszabadítja a tárterületet, ami így később újra felhasználható lesz. Az eljárást azért neveztük primitívnek, mert az <span class="m">afree</span> hívásai az <span class="m">alloc</span> hívásaival ellentétes sorrendben kell hogy történjenek. Így az <span class="m">alloc</span> és az <span class="m">afree</span> által kezelt tárterület lényegében egy veremtár, vagyis egy „utolsó be, első ki” típusú lista. A standard könyvtár hasonló feladatot ellátó <span class="f">malloc</span> és <span class="f">free</span> függvényeire nincs ilyen megszorítás (ezekről részletesebben majd a <a href="08.html#8.7.">8.7. pontban</a> olvashatunk).</p>
+  <p> A legegyszerűbb megoldás, ha az <span class="m">alloc</span> egy nagy karakteres tömb, az <span class="m">allocbuf</span> részeit szolgáltatja. Ez a tömb az <span class="m">alloc</span> és <span class="m">afree</span> függvényekre nézve saját és közös. Mivel a függvények a feladatot mutatókkal és nem indexekkel oldják meg, ezért egyetlen más eljárásnak sem kell ismerni a tömb nevét, amit az <span class="m">alloc</span> és <span class="m">afree</span> függvényeket tartalmazó forrásállományban <span class="k">static</span> tárolási osztályúnak deklaráltunk (ezért más függvényekből nem látható). A gyakorlati megvalósításban nem is fontos, hogy a tömbnek neve legyen, megoldható a feladat úgy is, hogy a <span class="f">malloc</span> függvénnyel vagy más módon az operációs rendszertől kérünk egy név nélküli tárterület elejét kijelölő mutatót.</p>
+  <p> Az <span class="m">allocbuf</span> használatához további információk kellenek. A programban egy <span class="m">allocp</span> mutatót fogunk használni, ami kijelöli az <span class="m">allocbuf</span> következő szabad helyét. Ha az <span class="m">alloc</span>-tól <span class="m">n</span> karakternyi helyet kérünk, akkor az ellenőrzi, hogy van-e még ennyi szabad hely az <span class="m">allocbuf</span>-ban. Ha igen, akkor az <span class="m">alloc</span> visszatér az <span class="m">allocp</span> aktuális értékével (azaz a szabad terület kezdetével), majd ezután <span class="m">n</span> értékével megnöveli, hogy a következő szabad helyre mutasson. Ha az <span class="m">allocbuf</span>-ban nincs elegendő hely, akkor az <span class="m">alloc</span> nulla értékkel tér vissza. Az <span class="m">afree</span> függvény egyszerűen <span class="m">p</span> értékre állítja az <span class="m">allocp</span> mutatót, ha <span class="m">p</span> az <span class="m">allocbuff</span>-ba mutat. A puffer kezelését a következő egyszerű ábra mutatja.<br />
+    <br />
+    <br />
+  </p>
+  <div align="center"> <img src="img/06.png" width="551" height="248" border="0" alt="img/06.png" /> </div>
+  <br />
+  <br />
+  <br />
+  A program:<br />
+  <pre>
+<span class="d">#define</span> ALLOCSIZE 10000 <span class="c">/* a rendelkezésre álló hely */</span>
+
+<span class="c">/* az alloc tárolója */</span>
+<span class="k">static</span> <span class="k">char</span> allocbuf[ALLOCSIZE];
+<span class="c">/* a következő szabad hely */</span>
+<span class="k">static</span> <span class="k">char</span> *allocp = allocbuf;
+
+<span class="c">/* visszatér az n karakterhez tartozó mutatóval */</span> 
+<span class="k">char</span> *alloc(<span class="k">int</span> n)
+{
+   <span class="k">if</span> (allocbuf + ALLOCSIZE - allocp &gt;= n) {
+   <span class="c">/* van elég hely */</span>
+      allocp += n;
+      <span class="k">return</span> allocp - n; <span class="c">/* a régi mutató */</span>
+   } <span class="k">else</span> <span class="c">/* nincs elég hely */</span>
+      <span class="k">return</span> 0;
+}
+
+<span class="c">/* a p-ig terjedő részt felszabadítja */</span>
+<span class="k">void</span> afree(<span class="k">char</span> *p)  {
+   <span class="k">if</span> (p &gt;= allocbuf &amp;&amp; p &lt; allocbuf + ALLOCSIZE)
+      allocp = p;
+}
+</pre>
+  A mutatót ugyanúgy lehet inicializálni, mint bármelyik más változót, de normális esetben csak a nullát vagy korábban definiált megfelelő típusú adatok címeit tartalmazó kifejezést rendelhetünk hozzá kezdeti értékül. A<br />
+  <pre>
+<span class="k">static</span> <span class="k">char</span> *allocp = allocbuf;
+</pre>
+  deklaráció definiálja az <span class="m">allocp</span> karakteres adathoz tartozó mutatót és egyben inicializálja is, hogy az az <span class="m">allocbuf</span> kezdetére mutasson, ami a program indulásakor az első szabad hely. Helyette azt is írhattuk volna, hogy<br />
+  <pre>
+<span class="k">static</span> <span class="k">char</span> *allocp = &amp;allocbuf[0];
+</pre>
+  mivel <i>a tömb neve</i> egyben <i>a nulladik indexű elemének a címe</i>. A program vizsgáló része<br />
+  <pre>
+<span class="k">if</span>(allocbuf + ALLOCSIZE - allocp &gt;= n)
+</pre>
+  ellenőrzi, hogy a tömbben van-e elegendő hely <span class="m">n</span> karakter számára. Ha igen, akkor az <span class="m">allocp</span> legfeljebb eggyel mutat túl az <span class="m">allocbuf</span> végén. Ha a helyigény kielégíthető, akkor az <span class="m">alloc</span> az <span class="m">n</span> karakteres blokk kezdetét kijelölő mutatóval tér vissza (figyeljük meg a függvény deklarációját). Ha nem, akkor az <span class="m">alloc</span> egy jelzést ad vissza. A C nyelv garantálja, hogy egy adat címe soha nem nulla, így a visszatéréskor érzékelt nulla függvényérték a normálistól eltérő működést, azaz a szükséges hely hiányát jelzi.
+  <p> A mutatók és az egész számok nem felcserélhetők. Ez alól egyetlen kivétel van, a nulla: a nulla, mint állandó, hozzárendelhető egy mutatóhoz és egy mutató összehasonlítható a nulla állandóval. A nulla számkonstans helyett gyakran használják a <span class="f">NULL</span> szimbolikus állandót, amivel a mutató speciális értékét jelzik. Ezek után a mutatókkal kapcsolatban mi is a <span class="f">NULL</span> szimbolikus állandót fogjuk használni. A <span class="f">NULL</span> az <span class="m">&lt;stdio.h&gt;</span> headerben van definiálva.</p>
+  <p> Az<br />
+  </p>
+  <pre>
+<span class="k">if</span>(allocbuf + ALLOCSIZE - allocp &gt;= n)
+</pre>
+  és<br />
+  <pre>
+<span class="k">if</span>(p &gt;= allocbuf &amp;&amp; p &lt; allocbuf + ALLOCSIZE)
+</pre>
+  formájú vizsgálatok a címaritmetika számos fontos tulajdonságára mutatnak rá. Ha <span class="m">p</span> és <span class="m">q</span> ugyanazon tömb elemeire mutatnak, akkor az <span class="m">==</span>, <span class="m">!=</span>, <span class="m">&lt;</span>, <span class="m">&gt;</span>, <span class="m">&lt;=</span> stb. relációk helyesen működnek. Például a<br />
+  <pre>
+p &lt; q
+</pre>
+  reláció igaz, ha <span class="m">p</span> a tömb egy korábbi (kisebb indexű) elemére mutat, mint <span class="m">q</span>. Bármely mutató értelmes módon egyenlőségre vagy nem egyenlőségre összehasonlítható nullával. Ha viszont nem ugyanazon tömb mutatóit használjuk aritmetikai kifejezésekben vagy relációkban, akkor az eredmény értelmetlen (amit vagy azonnal észreveszünk, vagy nem). A szabály alól csak egyetlen kivétel van: egy tömb vége utáni első elem címét a címaritmetika még képes feldolgozni.
+  <p> Mint már láttuk, egy mutatót és egy egész számot szabad összeadni vagy kivonni. A<br />
+  </p>
+  <pre>
+p + n
+</pre>
+  konstrukció a <span class="m">p</span> mutatóval aktuálisan kijelölt utáni <span class="m">n</span>-edik objektumot jelenti. Ez attól függetlenül igaz, hogy <span class="m">p</span> milyen típusú objektumot címez meg, mivel a fordítóprogram <span class="m">n</span>-t olyan egységekben számolja, mint a <span class="m">p</span>-vel megcímzett objektum mérete (és ezt a <span class="m">p</span> deklarációja határozza meg). Ha pl. az adott számítógépen az <span class="k">int</span> típusú adat négy bájtos, akkor <span class="k">int</span> adatok esetén a mérték négy.
+  <p> A mutatók kivonása szintén megengedett: ha <span class="m">p</span> és <span class="m">q</span> ugyanazon tömb elemeit címzik, és <span class="m">p &lt; q</span>, akkor <span class="m">q - p + 1</span> a <span class="m">p</span> és <span class="m">q</span> közötti elemek száma (a határokat is beleértve). Ezt a tényt kihasználva írjuk meg a karaktersorozat hosszát megadó <span class="m">strlen</span> függvény egy újabb változatát!<br />
+  </p>
+  <pre>
+<span class="c">/* strlen: az s karaktersorozat hossza */</span>
+<span class="k">int</span> strlen (<span class="k">char</span> *s)
+{
+   <span class="k">char</span> *p = s;
+
+   <span class="k">while</span> (*p != '<span class="e">\0</span>')
+      p++;
+   <span class="k">return</span> p - s;
+}
+</pre>
+  A deklarációban a <span class="m">p</span> kezdeti értékeként <span class="m">s</span>-t adtuk meg, így <span class="m">p</span> a karaktersorozat első elemére mutat. A <span class="k">while</span> ciklusban egyenként vizsgáljuk a karaktereket, amíg el nem érünk a <span class="m">'<span class="e">\0</span>'</span> végértékig. Mivel <span class="m">p</span> karakterekre mutat, <span class="m">p++</span> mindig a következő karakterre lépteti <span class="m">p</span>-t, és a vizsgálat végén <span class="m">p - s</span> a megvizsgált karakterek számát adja. (A karaktersorozatban lévő karakterek száma túl nagy lehet ahhoz, hogy <span class="k">int</span> típusú adatként kezeljük. Az <span class="m">&lt;stddef.h&gt;</span> headerben definiálva van egy <span class="k">ptrdiff_t</span> típus, ami elegendően nagy ahhoz, hogy két mutató előjeles különbségét tárolja. Ha nagyon gondosak akarunk lenni, akkor az <span class="m">strlen</span> visszatérési típusát a standard könyvtári változatnak megfelelően <span class="k">size_t</span> típusnak választjuk. A <span class="k">size_t</span> egy előjel nélküli egész adattípus, amelyet a <span class="k">sizeof</span> operátor ad visszatérési értékként.)
+  <p> A címaritmetika működése következetes: ha <span class="k">float</span> típusú adatokkal dolgozunk, amelyek több helyet igényelnek, mint a <span class="k">char</span> típusúak, és <span class="m">p</span> egy <span class="k">float</span> típusú adatot címző mutató, akkor <span class="m">p++</span> a következő <span class="k">float</span> típusú adatot jelöli ki. Így minden további nélkül megírhatjuk az <span class="m">alloc</span> függvény egy másik változatát, amelyben a <span class="k">char</span> adattípus helyett <span class="k">float</span> adattípust tárolunk. Ehhez mindössze az <span class="m">alloc</span> és a <span class="m">free</span> függvényekben a <span class="k">char</span> szót <span class="k">float</span>-ra kell átírni. Minden mutatókkal végzett művelet automatikusan figyelembe veszi a megcímzett objektum méretét.</p>
+  <p> A mutatók esetén megengedett műveletek az azonos típusú mutatók közötti értékadás, mutatók és egészek közötti összeadás vagy kivonás, két azonos tömbre értelmezett mutató kivonása vagy összehasonlítása, valamint mutató értékadása vagy összehasonlítása nullával. Minden más mutatókra vonatkozó aritmetikai művelet tilos. Nem lehet két mutatót összeadni, szorozni, osztani, léptetni vagy maszkolni, és ugyancsak tilos mutatóhoz <span class="k">float</span> vagy <span class="k">double</span> típusú értéket hozzáadni. A szabályok alól csak a <span class="k">void</span>* a kivétel, amely rákényszerített típusmegadás (<span class="m">cast</span>) nélkül egy adott típusú mutatóhoz egy másik típusú mutatót rendel.<br />
+    <br />
+  </p>
+  <h3><a name="5.5." id="5.5."></a>5.5. Karaktermutatók és függvények<br />
+  </h3>
+  Az<br />
+  <pre>
+&quot;Ez egy karaktersorozat&quot;
+</pre>
+  alakban írt karaktersorozat állandók valójában karakterekből álló tömbök, amelyeket a belső ábrázolásban egy null-karakter (<span class="m">'<span class="e">\0</span>'</span>) zár. A program a karaktersorozat végét a null-karakter keresésével találja meg. Ezt a belső ábrázolást használva a karaktersorozat tárolásához szükséges hely csak egy karakterrel több, mint az idézőjelek közötti karakterek száma. A karaktersorozat állandók a leggyakrabban függvények argumentumaként fordulnak elő, mint pl. a<br />
+  <pre>
+<span class="f">printf</span>(&quot;Halló mindenki!<span class="e">\n</span>&quot;);
+</pre>
+  függvényben. Az ehhez hasonló karaktersorozatokhoz a program karakteres mutatón keresztül fér hozzá, azaz a <span class="f">printf</span> függvény megkapja a karaktersorozat kezdetének mutatóját. Általánosan igaz, hogy a program a karaktersorozathoz az első elemét kijelölő mutatón keresztül fér hozzá.
+  <p> A karaktersorozat természetesen nem csak függvények argumentumaként fordulhat elő. Ha a <span class="m">puzenet</span> változót úgy deklaráltuk, hogy<br />
+  </p>
+  <pre>
+<span class="k">char</span> *puzenet;
+</pre>
+  akkor a<br />
+  <pre>
+puzenet = &quot;Itt az idő!&quot;
+</pre>
+  utasítás a <span class="m">puzenet</span>-hez a karaktersorozatot tartalmazó tömb mutatóját rendeli. Ez valójában nem karaktersorozat-másolás, csak a mutatók rendelődnek egymáshoz. A C nyelvben nincs olyan operátor, amellyel egy karaktersorozat, mint egyetlen objektum, feldolgozható lenne.
+  <p> A következő két definíció között lényeges különbség van:<br />
+  </p>
+  <pre>
+<span class="k">char</span> auzenet = &quot;Itt az idő!&quot;;  <span class="c">/* ez egy tömb */</span>
+<span class="k">char</span> *puzenet = &quot;Itt az idő!&quot;; <span class="c">/* ez egy mutató */</span>
+</pre>
+  Az <span class="m">auzenet</span> egy tömb, ami elegendően nagy ahhoz, hogy a karaktersorozatot és a <span class="m">'<span class="e">\0</span>'</span> végjelzést tárolni tudja, és a tömbnek az <span class="m">&quot;Itt az idő!&quot;</span> karaktersorozatot adjuk kezdeti értékül. Másrészt a <span class="m">puzenet</span> egy mutató, amelyhez egy karaktersorozat állandót megcímző kezdőértéket rendelünk. Ez a mutató természetesen módosítható, és akkor más objektumot fog megcímezni, viszont a karaktersorozat módosítása definiálatlan eredményt ad. A kétféle definíció térbeli elhelyezkedését a következő vázlat mutatja:<br />
+  <br />
+  <br />
+  <div align="center"> <img src="img/07.png" width="556" height="136" border="0" alt="img/07.png" /> </div>
+  <br />
+  <br />
+  <br />
+  A mutatók és tömbök használatának néhány kérdését két hasznos függvényen keresztül mutatjuk be. A függvények a standard könyvtárban megtalálhatók. Az első, <span class="m">strcpy(s, t)</span> függvény a <span class="m">t</span> karaktersorozatot az <span class="m">s</span> karaktersorozatba másolja át. Jó lenne, ha azt írhatnánk, hogy <span class="m">s = t</span>, de ez csak a mutatót másolja át, magát a karaktersorozatot nem. A karaktersorozat átmásolásához egy ciklus szükséges. A karaktersorozatot átmásoló <span class="m">strcpy</span> függvény karakteres tömbökkel megvalósított változata:<br />
+  <pre>
+<span class="c">/* strcpy: a t karaktersorozatot s-be másolja – tömb
+indexelésével megvalósított változat */</span>
+<span class="k">void</span> strcpy(<span class="k">char</span> *s, <span class="k">char</span> *t)
+{
+   <span class="k">int</span> i;
+
+   i = 0;
+   <span class="k">while</span> ((s[i] = t[i]) != '<span class="e">\0</span>')
+      i++;
+}
+</pre>
+  A következőkben bemutatjuk az <span class="m">strcpy</span> függvény mutatókkal megvalósított változatát:<br />
+  <pre>
+<span class="c">/* strcpy: a t karaktersorozatot s-be másolja
+1. mutatókkal megvalósított változat */</span>
+<span class="k">void</span> strcpy(<span class="k">char</span> *s, <span class="k">char</span> *t)
+{
+   <span class="k">while</span> ((*s = *t) != '<span class="e">\0</span>') {
+      s++;
+      t++;
+   }
+}
+</pre>
+  Mivel a C nyelv az argumentumokat érték szerint adja át, így az <span class="m">strcpy</span> tetszés szerint használhatja az <span class="m">s</span> és <span class="m">t</span> paramétereket (ill. azok helyi másolatait). A program a szokásos módon inicializálja a mutatókat, majd ezek karakterenként végighaladnak a tömbökön, mindaddig, amíg a <span class="m">t</span> karaktersorozatot lezáró <span class="m">'<span class="e">\0</span>'</span> át nem másolódik <span class="m">s</span>-be.
+  <p> A gyakorlatban az <span class="m">strcpy</span> függvényt nem az előző módon írnánk meg. Egy gyakorlott C programozó inkább a következő változatot részesítené előnyben:<br />
+  </p>
+  <pre>
+<span class="c">/* strcpy: a t karaktersorozat s-be másolja
+2. mutatókkal megvalósított változat */</span>
+<span class="k">void</span> strcpy(<span class="k">char</span> *s, <span class="k">char</span> *t)
+{
+   <span class="k">while</span>((*s++ = *t++) != '<span class="e">\0</span>')
+      ;
+}
+</pre>
+  Ez a változat az <span class="m">s</span> és <span class="m">t</span> mutatók inkrementálását a ciklus vizsgáló részébe építi be. A <span class="m">*t++</span> értéke az a karakter, amelyre <span class="m">t</span> az inkrementálás előtt mutat. A postfix inkrementálás a karakter feldolgozásának befejeztéig nem változtatja meg <span class="m">t</span>-t. Ugyanígy a karakter a régi <span class="m">s</span> által kijelölt pozícióba tárolódik, még <span class="m">s</span> inkrementálása előtt. Az átmásolt karaktereket a program a <span class="m">'<span class="e">\0</span>'</span> végjelzéssel hasonlítja össze és ez vezérli a ciklust. Mindezek hatására <span class="m">t</span> összes karaktere, a lezáró <span class="m">'<span class="e">\0</span>'</span> végjelet is beleértve átkerül <span class="m">s</span>-be.
+  <p> A programot vizsgálva megfigyelhető, hogy a <span class="m">'<span class="e">\0</span>'</span> végjelzéssel való összehasonlítás redundáns, ezért a függvény még tovább rövidített változata úgy írható be, hogy<br />
+  </p>
+  <pre>
+<span class="c">/* strcpy: a t karaktersorozatot s-be másolja
+3. mutatókkal megvalósított változat */</span>
+<span class="k">void</span> strcpy(<span class="k">char</span> *s, <span class="k">char</span> *t)
+{
+   <span class="k">while</span> (*s++ = *t++)
+      ;
+}
+</pre>
+  Ez a változat első ránézésre nagyon titokzatosnak tűnik, de a jelölés nagyon kényelmes, ezért célszerű elsajátítani. Különböző programokban gyakran találkozhatunk vele.<br />
+  Az <span class="f">strcpy</span> függvény a standard könyvtárban (a <span class="m">&lt;string.h&gt;</span> headerben) található, és visszatérési értéke az átmásolt karaktersorozat.
+  <p> A példaként megírt második függvény az <span class="m">strcmp(s, t)</span>, amely az <span class="m">s</span> és <span class="m">t</span> karaktersorozatokat hasonlítja össze, és visszatérési értéke negatív, nulla vagy pozitív attól függően, hogy az <span class="m">s</span> lexikografikusan kisebb, egyenlő vagy nagyobb t-nél. (A lexikografikus sorrendet úgy kapjuk, hogy a karaktersorozatokat a gép belső karakterkészletének megfelelően – tágabb értelemben, a különböző jeleket is beleértve – ábécésorrendbe rendezzük. A kisebb, egyenlő vagy nagyobb reláció ekkor az ábécében elfoglalt helyek viszonyát jelzi.) Ezt az értéket úgy kapjuk meg, hogy az első olyan helyen, ahol <span class="m">s</span> és <span class="m">t</span> különbözik, kivonjuk egymásból a két karaktert. A program tömbindexeléssel megvalósított változata:<br />
+  </p>
+  <pre>
+<span class="c">/* strcmp: visszatérési érték &lt;0, ha s&lt;t, 
+=0, ha s=t és &gt;0, ha s&gt;t */</span>
+<span class="k">int</span> strcmp(<span class="k">char</span>*s, <span class="k">char</span> *t)
+{
+   <span class="k">int</span> i;
+
+   <span class="k">for</span> (i = 0; s[i] == t[i]; i++)
+      <span class="k">if</span> (s[i] == '<span class="e">\0</span>') 
+         <span class="k">return</span> 0; 
+   <span class="k">return</span> s[i] - t[i];
+}
+</pre>
+  A függvény mutatókkal megvalósított változata:<br />
+  <pre>
+<span class="c">/* strcmp: visszatérési érték &lt;0, ha s&lt;t, 
+=0, ha s=t és &gt;0, s&gt;t */</span>
+<span class="k">int</span> strcmp(<span class="k">char</span> *s, <span class="k">char</span> *t)
+{
+   <span class="k">for</span> ( ; *s == *t; s++, t++)
+      <span class="k">if</span> (*s == '<span class="e">\0</span>')
+         <span class="k">return</span> 0;
+   <span class="k">return</span> *s - *t;
+}
+</pre>
+  Mivel a <span class="m">++</span> és <span class="m">--</span> prefix és postfix formában egyaránt használhatók, ezért a <span class="m">*</span> , ill. a <span class="m">++</span> és <span class="m">--</span> operátorok, ritkán, de más kombinációban is előfordulhatnak. Például a<br />
+  <pre>
+*--p
+</pre>
+  a <span class="m">p</span>-vel megcímzett karakter elővétele előtt dekrementálja <span class="m">p</span>-t. Még néhány fontosabb kombináció:<br />
+  <pre>
+*p++ = val; <span class="c">/* val értékét a verembe teszi */</span>
+val = *--p; <span class="c">/* a verem tetején lévő elemet val-ba teszi */</span>
+</pre>
+  Az előző két példát érdemes megjegyezni, mivel a verem kezelésének alapműveletei.
+  <p> Az <span class="f">strcpy</span> és <span class="f">strcmp</span> függvények deklarációit a standard könyvtár tartalmazza, és több más karaktersorozat-kezelő függvény deklarációjával együtt a <span class="m">&lt;string.h&gt;</span> headerben találhatók.<br />
+    <br />
+  </p>
+  <p><b>5.3.</b> gyakorlat. Írja meg a <a href="02.html">2. fejezetben</a> bemutatott <span class="m">strcat(s, t)</span> függvény mutatóval megvalósított változatát! Az <span class="m">strcat(s, t)</span> függvény a <span class="m">t</span> karaktersorozatot az <span class="m">s</span> karaktersorozat végéhez másolja.</p>
+  <p> <b>5.4.</b> gyakorlat. Írjon <span class="m">strend(s, t)</span> néven függvényt, amely <span class="m">1</span> értékkel tér vissza, ha a <span class="m">t</span> karaktersorozat megtalálható az <span class="m">s</span> karaktersorozat végén, és <span class="m">0</span> értékkel, ha nem!</p>
+  <p> <b>5.5.</b> gyakorlat. Írja meg az <span class="f">strncpy</span>, <span class="f">strncat</span> és <span class="f">strncmp</span> könyvtári függvények saját változatát! Ezek a függvények az argumentumként megadott karaktersorozat legfeljebb első <span class="m">n</span> karakterével végeznek műveletet, pl. az <span class="m"><span class="f">strncpy</span>(s, t, n)</span> a <span class="m">t</span> karaktersorozat legfeljebb első <span class="m">n</span> karakterét másolja <span class="m">s</span>-be. (A könyvtári függvények leírása a <a href="b.html">B. Függelékben</a> található.)</p>
+  <p> <b>5.6.</b> gyakorlat. Írjuk át a korábbi fejezetek erre alkalmas példaprogramjait úgy, hogy indexelt tömbök helyett mutatókat használjunk! Erre kiválóan alkalmas az <a href="01.html">1.</a> és <a href="04.html">4. fejezetben</a> megírt <span class="m">getline</span>, a <a href="02.html">2.</a>, <a href="03.html">3.</a> és <a href="04.html">4. fejezetben</a> megírt <span class="m">atoi</span>, <span class="m">itoa</span> és minden változata, a <a href="03.html">3. fejezetben</a> használt <span class="m">reverse</span>, valamint a <a href="04.html">4. fejezetben</a> használt <span class="m">strindex</span> és <span class="m">getop</span> függvény.<br />
+    <br />
+  </p>
+  <h3><a name="5.6." id="5.6."></a>5.6. Mutatótömbök és mutatókat megcímző mutatók<br />
+  </h3>
+  Mivel a mutatók maguk is változók, ezért minden további nélkül tárolhatók tömbökben, csakúgy, mint bármely más változó. Ennek bemutatása céljából írjunk programot, amely szövegsorokat ábécésorrendbe rendez. (Ez a UNIX sort rendezőprogramjának egyszerűsített változata lesz.)
+  <p> A <a href="03.html">3. fejezetben</a> már bemutattuk a Shell-féle algoritmus alapján működő rendezőprogramot és a <a href="04.html">4. fejezetben</a> annak javított változatát, a <span class="m">quicksort</span> programot. A példában ugyanezeket az algoritmusokat fogjuk használni, azzal az eltéréssel, hogy most változó hosszúságú szövegsorokat rendezünk az egész számok helyett. Ez lényeges különbség, mivel a szövegsorokat nem hasonlíthatjuk össze vagy mozgathatjuk egyetlen művelettel. Olyan adatábrázolásra van szükség, ami lehetővé teszi a változó hosszúságú szövegsorok hatékony és kényelmes kezelését.</p>
+  <p> Ez a mutatókból álló tömbökkel valósítható meg legegyszerűbben. Ha a rendezendő sorokat egy hosszú karakteres tömbben, egymáshoz illesztve tároljuk, akkor az egyes sorok az első karakterüket megcímző mutatón keresztül érhetők el. Ezek a mutatók egy tömbben tárolhatók. Két sor úgy hasonlítható össze, hogy átadjuk a mutatóikat az <span class="f">strcmp</span> függvénynek. Ha két sor rossz sorrendben van és fel kell cserélni őket, akkor csak a mutatóikat cseréljük a mutatótömbben, és nem pedig magukat a sorokat. Az elvet a következő ábra szemlélteti:<br />
+    <br />
+    <br />
+  </p>
+  <div align="center"> <img src="img/08.png" width="560" height="92" border="0" alt="img/08.png" /> </div>
+  <br />
+  <br />
+  <br />
+  Ezzel a szervezéssel elkerülhetjük azt a kettős problémát, amit a bonyolult tárolókezelés és a szövegsorok tényleges mozgatásából adódó nagy műveletigény jelent. A rendezési folyamat három lépésből áll:<br />
+  <pre class="defit">
+az összes sor beolvasása
+a sorok rendezése
+a rendezett sorok kiíratása
+</pre>
+  A szokásoknak megfelelően a programot a feladat természetes felosztása szerint tagoljuk, és a <span class="m">main</span> csak az egyes programrészeket vezérli. Pillanatnyilag ne foglalkozzunk magával a rendezéssel, hanem koncentráljunk az adatszerkezetre, valamint az adatok bevitelére és kiírására.
+  <p> Az adatbeviteli programrész beolvassa és eltárolja az egyes sorok karaktereit, valamint ezzel egy időben létrehozza a sorok mutatóit tartalmazó tömböt. Ugyancsak ennek a programrésznek a feladata a sorok számlálása, mivel a sorok számára szükség lesz a rendezés és a kinyomtatás során. Mivel az adatbeviteli programrész csak véges sok sort képes beolvasni, ezért egy adott korlátnál több sor beérkezése esetén <span class="m">-1</span> értékkel tér vissza (illegális számú sor jelzése).</p>
+  <p> A sorokat kiíró programrész olyan sorrendben fogja kiírni a szövegsorokat, amilyen sorrendben a mutatóik előfordulnak a mutatótömbben. A program eddig tárgyalt részei:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;string.h&gt;
+
+<span class="d">#define</span> MAXSOR 5000
+<span class="c">/* max. ennyi sor rendezhető */</span>
+<span class="k">char</span> *sorptr[MAXSOR]; <span class="c">/* mutatótömb a sorokhoz */</span>
+
+<span class="k">int</span> readlines(<span class="k">char</span> *sorptr[], <span class="k">int</span> nsor);
+<span class="k">void</span> writelines(<span class="k">char</span> *sorptr[], <span class="k">int</span> nsor);
+<span class="k">void</span> qsort(<span class="k">char</span> *sorptr[], <span class="k">int</span> bal, <span class="k">int</span> jobb);
+<span class="c">/* beolvasott sorok rendezése */</span>
+main()
+{
+   <span class="k">int</span> nsor; <span class="c">/* a beolvasott sorok száma */</span>
+
+   <span class="k">if</span> ((nsor = readlines(sorptr, MAXSOR)) &gt;=0) {
+      qsort (sorptr, 0, nsor-1);
+      writelines(sorptr, nsor);
+      <span class="k">return</span> 0;
+   } <span class="k">else</span> {
+      <span class="f">printf</span> (&quot;Hiba: túl sok rendezendő sor<span class="e">\n</span>&quot;);
+      <span class="k">return</span> 1;
+   }
+}
+
+<span class="d">#define</span> MAXHOSSZ 1000 <span class="c">/* a sor max. hossza */</span>
+<span class="k">int</span> getline(char *, <span class="k">int</span>);
+<span class="k">char</span> *alloc(<span class="k">int</span>);
+
+<span class="c">/* readlines: sorokat beolvas */</span>
+<span class="k">int</span> readlines(<span class="k">char</span> *sorptr[], <span class="k">int</span> maxsor)
+{
+   <span class="k">int</span> hossz, nsor;
+   <span class="k">char</span> *p, sor[MAXHOSSZ];
+
+   nsor = 0;
+   <span class="k">while</span> ((hossz = getline(sor, MAXHOSSZ)) &gt; 0)
+      <span class="k">if</span> (nsor &gt;= maxsor || (p = alloc(hossz)) == <span class="f">NULL</span>)
+         <span class="k">return</span> -1;
+      <span class="k">else</span> {
+         sor[hossz-1] = '<span class="e">\0</span>'; <span class="c">/* törli az újsor-karaktert */</span>
+         <span class="f">strcpy</span>(p, sor);
+         sorptr[nsor++] = p;
+      }
+   <span class="k">return</span> nsor;
+}
+
+<span class="c">/* writelines: kiírja a rendezett sorokat */</span>
+<span class="k">void</span> writelines(<span class="k">char</span> *sorptr[], <span class="k">int</span> nsor)
+{
+   <span class="k">int</span> i;
+   <span class="k">for</span> (i =0; i &lt; nsor; i++)
+      <span class="f">printf</span> (&quot;%s<span class="e">\n</span>&quot;, sorptr[i]);
+}
+</pre>
+  A program használja az <a href="01.html#1.9.">1.9. pontban</a> leírt <span class="m">getline</span> függvényt.
+  <p> A legfontosabb újdonsággal a sorptr deklarációjában találkozunk. A<br />
+  </p>
+  <pre>
+<span class="k">char</span> *sorptr[MAXSOR]
+</pre>
+  azt mondja, hogy a <span class="m">sorptr</span> egy tömb, amelynek <span class="m">MAXSOR</span> számú eleme van és minden elem egy <span class="k">char</span> típushoz tartozó mutató. Így a <span class="m">sorptr[i]</span> egy karakterhez tartozó mutató és <span class="m">*sorptr[i]</span> pedig az <span class="m">i</span>-ediknek eltárolt szövegsor első karakterének mutatója.
+  <p> Mivel <span class="m">sorptr</span> maga is egy tömb neve, mutatóként kezelhető ugyanúgy, mint a korábbi példákban a tömbnevek, ezért a <span class="m">writelines</span> függvényt úgy is megírhatjuk, hogy<br />
+  </p>
+  <pre>
+<span class="c">/* writelines: kiírja a rendezett sorokat */</span>
+<span class="k">void</span> writelines(<span class="k">char</span> *sorptr[], <span class="k">int</span> nsor)
+{
+   <span class="k">while</span> (nsor-- &gt; 0)
+      <span class="f">printf</span> (&quot;%s<span class="e">\n</span>&quot;, *sorptr++);
+}
+</pre>
+  Kezdetben <span class="m">*sorptr</span> az első sorra mutat, majd az inkrementálás hatására a következő sorra lép, amíg csak <span class="m">n</span> sor le nem számlálódik.
+  <p> Miután a sorok beolvasását, ill. kiíratását elintéztük, rátérhetünk a rendezésre. A <a href="04.html">4. fejezetben</a> bemutatott <span class="m">quicksort</span> programot kissé meg kell változtatnunk: módosítani kell a deklarációkat és az összehasonlítást az <span class="f">strcmp</span> függvény hívásával kell elvégeznünk. Az algoritmus változatlan marad, ezért bízhatunk benne, hogy továbbra is működni fog.<br />
+  </p>
+  <pre>
+<span class="c">/* qsort: a v[bal] ... v[jobb] tömb rendezése növekvő
+sorrendbe */</span>
+<span class="k">void</span> qsort(<span class="k">char</span> *v[], <span class="k">int</span> bal, <span class="k">int</span> jobb)
+{
+   <span class="k">int</span> i, utolso;
+   <span class="k">void</span>
+   swap(<span class="k">char</span> *v[], <span class="k">int</span> i, <span class="k">int</span> j);
+
+   <span class="k">if</span> (bal &gt;= jobb) <span class="c">/* semmit nem csinál, ha */</span>
+      <span class="k">return</span>; <span class="c">/* kettőnél kevesebb elemből áll */</span>
+   swap(v, bal, (bal + jobb)/2);
+   utolso = bal;
+   <span class="k">for</span> (i = bal + 1; i &lt;= jobb; i++)
+      <span class="k">if</span> (<span class="f">strcmp</span>(v[i], v[bal]) &lt; 0)
+         swap(v, ++utolso, i);
+   swap(v, bal, utolso);
+   qsort(v, bal, utolso-1);
+   qsort(v, utolso+1, jobb);
+}
+</pre>
+  A <span class="m">swap</span> függvényt is csak triviális módon kell megváltoztatni, a deklaráció értelemszerű módosításával:<br />
+  <pre>
+<span class="c">/* swap: v[i] és v[j] felcserélése */</span>
+<span class="k">void</span> swap(char *v[], <span class="k">int</span> i, <span class="k">int</span> j)
+{
+   <span class="k">char</span> *temp;
+
+   temp =	v[i];
+   v[i]	=	v[j];
+   v[j]	=	temp;
+}
+</pre>
+  Mivel <span class="m">v</span> (a <span class="m">sorptr</span>) bármelyik egyedi eleme egy karakteres mutató, így <span class="m">temp</span> is az kell, hogy legyen az értékadás miatt.<br />
+  <br />
+  <p><b>5.7.</b> gyakorlat. Módosítsuk a <span class="m">readlines</span> függvényt úgy, hogy a beolvasott sorokat a <span class="m">main</span> által létrehozott tömbben tárolja, és ne az <span class="m">alloc</span> függvényen keresztül kérjen mindig helyet a sor számára! A program mennyivel lesz gyorsabb, ha elmarad az <span class="m">alloc</span> hívása?<br />
+    <br />
+  </p>
+  <h3><a name="5.7." id="5.7."></a>5.7. Többdimenziós tömbök<br />
+  </h3>
+  A C nyelv lehetővé teszi a derékszögű többdimenziós tömbök alkalmazását, bár ezeket sokkal ritkábban használják, mint a mutatótömböket. Ebben a pontban bemutatjuk a többdimenziós tömbök tulajdonságait.
+  <p> Vizsgáljuk meg a hónap napjairól az év napjaira vagy fordítva történő adatátalakítás feladatát! Például március 1. egy nem szökőév 60. napja, szökőévben pedig a 61. nap. Az átalakításhoz definiáljunk két függvényt: a <span class="m">day_of_year</span> függvény a hónap napjait az év napjaivá alakítja, a <span class="m">month_day</span> függvény pedig az év napjait a hónap napjaivá. Mivel a <span class="m">month_day</span> függvény két értéket (hónap és nap) számol, így a hónap és nap argumentum mutató lesz. A<br />
+  </p>
+  <pre>
+month day(1988, &amp;h, &amp;n)
+</pre>
+  függvényhívás <span class="m">h</span> értékét 2-re, <span class="m">n</span> értékét 29-re állítja be (1988. február 29.).
+  <p> Mindkét függvénynek azonos információra van szüksége: egy táblázatra, ami tartalmazza az egyes hónapokban lévő napok számát. Mivel a hónapok napjainak száma más és más szökőévben és nem szökőévben, ezért egyszerűbb a szökőév és nem szökőév adatait egy kétdimenziós tömb két sorában tárolni, mint mindig vizsgálni, hogy februárban milyen adattal kell dolgozni. Az adatátalakítást végző függvények és az átalakításhoz szükséges tömb:<br />
+  </p>
+  <pre>
+<span class="k">static</span> <span class="k">char</span> naptab[2][13] = {
+{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+{0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+};
+
+<span class="c">/* day_of_year: a hónap és nap értékéből kiszámítja
+az év napját */</span>
+<span class="k">int</span> day_of_year(<span class="k">int</span> ev, <span class="k">int</span> ho, <span class="k">int</span> nap)
+{
+   <span class="k">int</span> i, szoko;
+
+   szoko = ev%4 == 0 &amp;&amp; ev%100 != 0 ||
+               ev%400 == 0;
+   <span class="k">for</span> (i = 1; i &lt; ho; i++)
+      nap += naptab[szoko][i];
+   <span class="k">return</span> nap;
+}
+
+<span class="c">/* month_day: az éven belüli napból megadja a hónapot
+és a napot*/</span>
+<span class="k">void</span> month_day(<span class="k">int</span> ev, <span class="k">int</span> evnap, <span class="k">int</span> *pho, <span class="k">int</span> *pnap)
+{
+   <span class="k">int</span> i, szoko;
+   szoko = ev%4 == 0 &amp;&amp; ev%100 != 0 ||
+               ev%400 == 0;
+   <span class="k">for</span> (i = 1; evnap &gt;naptab[szoko][i]; i++)
+      evnap -= naptab[szoko][i];
+   *pho = i;
+   *pnap = evnap;
+}
+</pre>
+  Emlékezzünk vissza a logikai kifejezések számértékéről mondottakra: az nulla, ha a kifejezés hamis, és egy, ha igaz. Ezt használtuk ki a <span class="m">szoko</span> meghatározásánál, és az így kapott 0 vagy 1 érték felhasználható a <span class="m">naptab</span> indexelésére.
+  <p> A <span class="m">naptab</span> tömb a <span class="m">day_of_year</span> és <span class="m">month_day</span> függvények számára külső változó, így mindkettő használhatja. A <span class="m">naptab</span> tömb elemeit <span class="k">char</span>-ként adtuk meg, hogy ezzel is megmutassuk a <span class="k">char</span> típusú adat nemcsak karakterek, hanem kis egész számok tárolására is alkalmas.</p>
+  <p> A <span class="m">naptab</span> az első kétdimenziós tömb, amivel eddig találkoztunk. A C nyelvben a kétdimenziós tömb valójában egy egydimenziós tömb, amelynek mindegyik eleme szintén egy tömb. Ezért kell az indexeket<br />
+  </p>
+  <pre>
+naptab[i][j] <span class="c">/* [sor][oszlop] */</span>
+</pre>
+  alakba írni a más nyelvekben megszokott<br />
+  <pre>
+naptab[i, j] <span class="c">/* HIBÁS!!! */</span>
+</pre>
+  alak helyett. A kétdimenziós tömbben az elemek sorfolytonosan tárolódnak, ezért a jobbra az utolsó index (oszlopindex) változik a leggyorsabban, ha az elemeket a tárolás sorrendjében címezzük.
+  <p> A tömböt kapcsos zárójelek között elhelyezett kezdeti értékekkel inicializáljuk, és a kétdimenziós tömb egyes sorait a megfelelő allisták inicializálják. A <span class="m">naptab</span> tömböt egy nulla tartalmú oszloppal kezdtük, hogy az 1-től 12-ig terjedő hónapszámmal természetes módon indexelhessük a 0...11 indexek helyett. Mivel a példában a felesleges oszlop nem növeli számottevően a program helyfoglalását, ezért inkább ezt a megoldást választottuk, mint az indexek átkódolását.</p>
+  <p> Ha egy kétdimenziós tömböt átadunk egy függvénynek, akkor a függvényben lévő paraméterdeklarációban meg kell mondani az oszlopok számát. A sorok száma közömbös, mivel (az egydimenziós tömbökhöz hasonlóan) itt is a sorok alkotta tömb mutatóját adjuk át (ami jelen esetben 13 <span class="k">int</span> típusú adatot tartalmazó tömbre mutat). Ezért ha a <span class="m">naptab</span> tömböt pl. egy <span class="m">f</span> függvénynek adnánk át, akkor az <span class="m">f</span> deklarációja<br />
+  </p>
+  <pre>
+f(<span class="k">int</span> naptab[2][13]) {...}
+</pre>
+  alakú, amit úgy is írhatnánk, hogy<br />
+  <pre>
+f(<span class="k">int</span> naptab[][13]) {...}
+</pre>
+  mivel a sorok száma közömbös, vagy<br />
+  <pre>
+f(<span class="k">int</span> (*naptab)[13]){...}
+</pre>
+  alakban, ami azt fejezi ki, hogy a paraméter egy mutató, ami 13 egész adatból álló tömbre mutat. A kerek zárójel szükséges, mivel a <span class="m">[ ]</span> szögletes zárójelek nagyobb precedenciájúak, mint a <span class="m">*</span>. A zárójel nélküli<br />
+  <pre>
+<span class="k">int</span> *naptab[13]
+</pre>
+  deklaráció 13 mutatóból álló tömböt deklarálna, amelynek mindegyik eleme egy egész típusú adatra mutat. Az ehhez hasonló összetett deklarációk kérdésével az <a href="05.html#5.12.">5.12. pontban</a> még foglalkozunk.<br />
+  <br />
+  <p><b>5.8.</b> gyakorlat. A <span class="m">day_of_year</span> és <span class="m">month_day</span> függvényekben nincs hibaellenőrzés. Küszöböljük ki ezt a hiányosságot!<br />
+    <br />
+  </p>
+  <h3><a name="5.8." id="5.8."></a>5.8. Mutatótömbök inicializálása<br />
+  </h3>
+  Írjunk egy <span class="m">month_name(n)</span> függvényt, amely egy, az <span class="m">n</span>-edik hónap nevét tartalmazó karaktersorozatot címző mutatót ad visszatérési értékként. Ez a belső <span class="k">static</span> tárolási osztályú tömb ideális alkalmazási lehetősége! A <span class="m">month_name</span> függvény karaktersorozatokból álló saját tömböt tartalmaz, és hívásakor a megfelelő mutatóval tér vissza. A feladat megoldása kapcsán megmutatjuk, hogy hogyan inicializálható a nevekből álló tömb.
+  <p> A szintaxis hasonló a korábban használt inicializálások szintaxisához:<br />
+  </p>
+  <pre>
+<span class="c">/* month_name: visszatér az n-edik hónap nevével */</span>
+<span class="k">char</span> *month_name(<span class="k">int</span> n)
+{
+   <span class="k">static</span> <span class="k">char</span> *nev[] = {
+      &quot;Illegális hónapnév&quot;,
+      &quot;Január&quot;, &quot;Február&quot;, &quot;Március&quot;,
+      &quot;Április&quot;, &quot;Május&quot;, &quot;Június&quot;,
+      &quot;Július&quot;, &quot;Augusztus&quot;, &quot;Szeptember&quot;,
+      &quot;Október&quot;, &quot;November&quot;, &quot;December&quot;
+   };
+
+   <span class="k">return</span> (n &lt; 1 || n &gt; 12) ? nev[0] : nev[n];
+}
+</pre>
+  A karakteres mutatók tömbjét alkotó nev deklarációja ugyanolyan, mint a <span class="m">sorptr</span> deklarációja volt a rendezőprogramban. Az eltérés csak az, hogy a kezdeti értékek most karaktersorozatok, amelyek hozzá vannak rendelve a tömb megfelelő eleméhez. Az <span class="m">i</span>-edik karaktersorozat valahol a tárolóban helyezkedik el (nem tudjuk, hogy pontosan hol, de ez nem is érdekes) és a mutatója van a <span class="m">nev[i]</span> helyen. Mivel a <span class="m">nev</span> tömb méretét nem specifikáltuk, a fordítóprogram megszámolja a kezdeti értékeket és a kívánt helyre beírja a helyes számot.<br />
+  <br />
+  <h3><a name="5.9." id="5.9."></a>5.9. Mutatók és többdimenziós tömbök<br />
+  </h3>
+  A kezdő C programozókat gyakran megzavarja a kétdimenziós tömb és a mutatókból álló tömb (mint pl. a <span class="m">nev</span> az előző példában) közötti különbség. Ha pl. adott a következő két definíció:<br />
+  <pre>
+<span class="k">int</span> a[10][20];
+<span class="k">int</span> *b[10];
+</pre>
+  akkor az <span class="m">a[3][4]</span> és <span class="m">b[3][4]</span> mindegyike szintaktikailag helyes hivatkozás egy <span class="k">int</span> típusú adatra. De a valójában egy kétdimenziós tömb: a definíció szerint 200 <span class="k">int</span> méretű tárolóhelyet foglalunk le a számára, és egy elemének tényleges helyét mátrixos indexeléssel, mint 20*<i>sor</i>+<i>oszlop</i> határozzuk meg az <span class="m">a[<i>sor</i>][<i>oszlop</i>]</span> logikai indexelés alapján. A <span class="m">b</span>-re vonatkozó definíció csak 10 mutató számára foglal helyet és nem rendel hozzájuk kezdeti értéket. Az inicializálást explicit módon, statikusan vagy a programban kell elvégeznünk. Feltételezve, hogy <span class="m">b</span> minden eleme egy 20 elemű tömbre mutat, akkor ez a tárolóban 200 <span class="k">int</span> változónyi helyet igényel, amihez még hozzájön a 10 mutató helyigénye. A mutatótömbnek van egy lényeges előnye: az általa címzett tömb sorai különböző hosszúságúak lehetnek. Így a <span class="m">b</span> egyes elemei nem szükségképpen mutatnak egy 20 elemű vektorra, lehet olyan, amelyik 2 elemre, a másik 5 elemre, sőt olyan is, amelyik 0 elemre mutat.
+  <p> Bár az előbbi fejtegetésben mi mindig egész típusú adatokról beszéltünk, a mutatótömbök leggyakoribb alkalmazása mégis az, amikor elemeik különböző hosszúságú karaktersorozatokra mutatnak (mint pl. a <span class="m">month_name</span> függvényben). Az elmondottak jól láthatók az alábbi deklarációk és a hozzájuk tartozó, tárbeli elhelyezkedést szemléltető ábrák alapján. A mutatótömb:<br />
+  </p>
+  <pre>
+<span class="k">char</span> *nev[] = { &quot;Illegális hónap&quot;, &quot;Jan&quot;,
+&quot;Febr&quot;, &quot;Márc&quot; };
+</pre>
+  <br />
+  <br />
+  <div align="center"> <img src="img/09.png" width="270" height="133" border="0" alt="img/09.png" /> </div>
+  <br />
+  <br />
+  <br />
+  A kétdimenziós, karaktersorozatokat tároló tömb:<br />
+  <pre>
+<span class="k">char</span> anev[][15] = { &quot;Illegális hónap&quot;, &quot;Jan&quot;,
+&quot;Febr&quot;, &quot;Márc&quot; } ;
+</pre>
+  <br />
+  <br />
+  <div align="center"> <img src="img/10.png" width="563" height="56" border="0" alt="img/10.png" /> </div>
+  <br />
+  <br />
+  <br />
+  <p><b>5.9.</b> gyakorlat. Módosítsuk a <span class="m">day_of_year</span> és <span class="m">month_day</span> függvényeket úgy, hogy indexelés helyett mutatókat használjanak!<br />
+    <br />
+  </p>
+  <h3><a name="5.10." id="5.10."></a>5.10. Parancssor-argumentumok<br />
+  </h3>
+  A C nyelvet támogató környezetben lehetőségünk van a programnak parancssor-argumentumokat vagy paramétereket átadni a végrehajtás megkezdésekor. Amikor a végrehajtás kezdetekor a rendszer a <span class="m">main</span>-t hívja, akkor a hívásban két argumentum szerepel. Az első (amit <span class="m">argc</span>-nek szokás nevezni) megadja a parancssor-argumentumok számát, amellyel a programot hívtuk. A második (amit <span class="m">argv</span>-nek szokás nevezni) egy karaktersorozatokat tartalmazó tömböt címző mutató. A tömb tartalmazza a program hívásakor átadandó parancssor-argumentumokat (minden argumentum egy karaktersorozat). Ezeket a karaktersorozatokat általában többszintű mutatóhasználattal kezeljük.
+  <p> Az elmondottakat a legegyszerűbben az <span class="m">echo</span> program mutatja, amely egyszerűen visszaírja az egy sorban megjelenő, egymástól szóközzel elválasztott parancssor-argumentumokat. Az a parancs, hogy<br />
+  </p>
+  <pre>
+echo Halló mindenki!
+</pre>
+  egyszerűen kiírja a kimenetre, hogy<br />
+  <pre>
+Halló mindenki!
+</pre>
+  Megállapodás szerint az <span class="m">argv[0]</span> az a név, amellyel a programot hívták, így <span class="m">argc</span> legalább 1. Ha <span class="m">argc</span> egy, akkor a program neve után nincs parancssor-argumentum. A mi példánkban <span class="m">argc</span> értéke három, és az <span class="m">argv[0]</span>, <span class="m">argc[1]</span>, ill. <span class="m">argv[2]</span> rendre az <span class="m">&quot;echo&quot;</span>, <span class="m">&quot;Halló&quot;</span>, ill. <span class="m">&quot;mindenki!&quot;</span> karaktersorozatokat tartalmazza. A sorban az első opcionális argumentum az <span class="m">argv[1]</span> és az utolsó az <span class="m">argv[argc-1]</span>. Mindezeken kívül a szabvány megköveteli, hogy <span class="m">argv[argv]</span> <span class="f">NULL</span> értékű mutató legyen. Az elmondottakat az alábbi ábra szemlélteti.<br />
+  <br />
+  <br />
+  <div align="center"> <img src="img/11.png" width="279" height="121" border="0" alt="img/11.png" /> </div>
+  <br />
+  <br />
+  <br />
+  Az <span class="m">echo</span> program első változata az <span class="m">argv</span>-t karakteres mutatók tömbjeként kezeli.<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="c">/* parancssor-argumentumok visszaírása – 1. változat */</span>
+main (<span class="k">int</span> argc, <span class="k">char</span> *argv[])
+{
+   <span class="k">int</span> i;
+   <span class="k">for</span> (i = 1; i &lt; argc; i++)
+      <span class="f">printf</span>(&quot;%s%s&quot;, argv[i], (i &lt; argc-1) ? &quot; &quot; : &quot;&quot;);
+   <span class="f">printf</span>(&quot;<span class="e">\n</span>&quot;);
+   <span class="k">return</span> 0;
+}
+</pre>
+  Mivel <span class="m">argv</span> egy mutatótömb mutatója, ezért célszerűbb minden műveletet mutatókkal és nem indexelt tömbökkel végezni. A program következő változata ezért <span class="k">char</span> típusú adatokat címző mutatók mutatóját, az <span class="m">argv</span>-t inkrementálja, a <span class="m">argc</span>-t pedig lefelé számlálja.<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="c">/* parancssor-argumentumok visszaírása – 2. változat */</span>
+main (<span class="k">int</span> argc, <span class="k">char</span> *argv [])
+{
+   <span class="k">while</span>(--argc &gt; 0)
+      <span class="f">printf</span>(&quot;%s%s&quot;, *++argv, (argc &gt; 1) ? &quot; &quot; : &quot;&quot;);
+   <span class="f">printf</span>(&quot;<span class="e">\n</span>&quot;);
+   <span class="k">return</span> 0;
+}
+</pre>
+  Mivel <span class="m">argv</span> az argumentumok karaktersorozataiból álló tömb kezdetét kijelölő mutatók mutatója, inkrementálása (<span class="m">++argv</span>) után az eredeti <span class="m">argv[0]</span> helyett az <span class="m">argv[1]</span>-re fog mutatni, <span class="m">argv</span> az egymást követő inkrementálások hatására mindig a következő argumentumot fogja megcímezni és <span class="m">*argv</span> ekkor az argumentum mutatója lesz. Ugyanakkor <span class="m">argc</span> dekrementálódik, és ha értéke nulla lesz, akkor már nincs további kiírandó argumentum.
+  <p> A <span class="f">printf</span> utasítást úgy is írhattuk volna, hogy<br />
+  </p>
+  <pre>
+<span class="f">printf</span>((argc &gt; 1) ? &quot;%s &quot; : &quot;%s&quot;, *++argv);
+</pre>
+  Ez szintén azt példázza, hogy a <span class="f">printf</span> argumentuma kifejezés is lehet.
+  <p> A második példánk a <a href="04.html#4.1.">4.1. pontban</a> ismertetett mintakereső program bővített változata. Ha visszagondolunk a programra, akkor emlékezhetünk rá, hogy a keresett minta mélyen a programba van beágyazva (karakteres állandóként), ami nem túl szerencsés megoldás. A következőkben a UNIX rendszer <span class="m">grep</span> segédprogramjának elvét követve a programot úgy változtattuk meg, hogy a keresendő mintát a parancssor első argumentumaként adhassuk meg. A módosított <span class="m">find</span> program:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;string.h&gt;
+<span class="d">#define</span> MAXSOR 1000
+<span class="k">int</span> getline(<span class="k">char</span> *sor, <span class="k">int</span> max);
+
+<span class="c">/* find: az 1. argumentumában megadott mintát tartalmazó
+sorokat megkeresi és kiírja */</span>
+main(<span class="k">int</span> argc, <span class="k">char</span> *argv[])
+{
+   <span class="k">char</span> sor[MAXSOR];
+   <span class="k">int</span> talalt = 0;
+
+   <span class="k">if</span> (argc != 2)
+      <span class="f">printf</span>(&quot;Mintakeresés<span class="e">\n</span>&quot;);
+   <span class="k">else</span>
+      <span class="k">while</span> (getline(sor, MAXSOR) &gt; 0)
+         <span class="k">if</span> (<span class="f">strstr</span>(sor, argv[1])!= <span class="f">NULL</span>) {
+            <span class="f">printf</span>(&quot;%s&quot;, sor);
+            talalt++;
+         }
+}
+</pre>
+  A standard könyvtár <span class="m"><span class="f">strstr</span>(s, t)</span> függvénye egy mutatóval tér vissza, amely a <span class="m">t</span> karaktersorozat <span class="m">s</span>-beli első előfordulásának helyére mutat, vagy a <span class="f">NULL</span> értékkel, ha <span class="m">t</span> nem fordul elő <span class="m">s</span>-ben. Az <span class="f">strstr</span> függvény a <span class="m">&lt;string.h&gt;</span> headerben van deklarálva.
+  <p> Most a programot finomítsuk tovább, hogy újabb mutatókkal kapcsolatos példákat készíthessünk. Tegyük fel, hogy a program hívásakor két argumentumot engedünk meg. Az egyik jelentse azt, hogy „írj ki minden sort, kivéve azokat, amelyekben a keresett minta megtalálható”, a másik pedig azt, hogy „írd ki minden sor elé a sorszámot”.</p>
+  <p> A UNIX rendszer alatt futó C nyelvű programok esetén a programnév után opcionálisan megadható paraméterek vagy jelzők (flagek) megállapodás szerint a mínusz jellel kezdődnek. Ha a <span class="m">-x</span> paramétert választjuk az inverz kiírási feltétel jelzésére (ne írja ki azokat a sorokat, amiben megtalálható a minta) és <span class="m">-n</span> paramétert a sorszámozás jelzésére, akkor a teljes parancs:<br />
+  </p>
+  <pre>
+find -x -n minta
+</pre>
+  alakú lesz, és hatására kiíródik minden olyan sor, amelyben a keresett minta nem található meg és a sorok előtt megjelenik a sorszám.
+  <p> Az opcionális argumentumok sorrendje tetszőleges kell legyen, és a program további (nem a paramétereket feldolgozó) részének működése nem függhet a megadott argumentumok számától. A felhasználók számára kényelmes lehet, hogy az argumentumok kombinálhatók a<br />
+  </p>
+  <pre>
+find -xn minta
+</pre>
+  alakban. A továbbfejlesztett program:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;string.h&gt;
+<span class="d">#define</span> MAXSOR 1000
+
+<span class="k">int</span> getline(<span class="k">char</span> *sor, <span class="k">int</span> max);
+
+<span class="c">/* find: kiírja azokat a sorokat, amelyekben
+az 1. argumentumban megadott minta megtalálható */</span>
+main(<span class="k">int</span> argc, <span class="k">char</span> *argv[]) 
+{
+   <span class="k">char</span> sor[MAXSOR];
+   <span class="k">long</span> sorszam = 0;
+   <span class="k">int</span> c, kiveve = 0, szam = 0, talalt = 0;
+
+   <span class="k">while</span> (--argc &gt; 0 &amp;&amp; (*++argv)[0] == '-')
+      <span class="k">while</span> (c = *++argv[0])
+         <span class="k">switch</span> (c) {
+            <span class="k">case</span> 'x':
+               kiveve = 1;
+               <span class="k">break</span>;
+            <span class="k">case</span> 'n':
+               szam = 1;
+               <span class="k">break</span>;
+            <span class="k">default</span>:
+               <span class="f">printf</span>(&quot;find: illegális opció %c<span class="e">\n</span>&quot;, c);
+               argc = 0; talalt = -1;
+               <span class="k">break</span>;
+         }
+   <span class="k">if</span> (argc != 1)
+      <span class="f">printf</span>(&quot;find -x -n minta <span class="e">\n</span>&quot;);
+   <span class="k">else</span>
+      <span class="k">while</span> (getline(sor, MAXSOR) &gt; 0) {
+         sorszam++;
+         <span class="k">if</span> ((<span class="f">strstr</span>(sor, *argv) != <span class="f">NULL</span>)!= kiveve) {
+            <span class="k">if</span>(szam)
+               <span class="f">printf</span>(&quot;%1d:&quot;, sorszam);
+            <span class="f">printf</span>(&quot;%s&quot;, sor);
+            talalt++;
+         } 
+      }
+   <span class="k">return</span> talalt;
+}
+</pre>
+  Minden egyes opcionális argumentum elővétele előtt az <span class="m">argc</span> dekrementálódik és az <span class="m">argv</span> inkrementálódik. A ciklus végén – ha nem volt hiba – az <span class="m">argc</span> tartalma megmondja, hogy hány argumentum maradt feldolgozatlanul és <span class="m">argv</span> ezek közül az elsőre mutat, így <span class="m">argc</span> akár <span class="m">1</span> is lehet, és ekkor <span class="m">*argv</span> a keresendő mintára fog mutatni. Mivel <span class="m">*++argv</span> a karaktersorozatként megadott argumentum mutatója, ezért a <span class="m">(*++argv)[0]</span> a karaktersorozat első karaktere. (Egy másik, szintaktikailag helyes forma az első karakter kijelölésére a <span class="m">**++argv</span>.) Mint már említettük, a <span class="m">[]</span> szorosabban kötődik, mint a <span class="m">*</span> és a <span class="m">++</span>, ezért a zárójelekre szükség van. Elhagyva azokat a kifejezés <span class="m">*++(argv[0])</span> formában értékelődne ki, ami mást jelent. Más a helyzet, amikor a belső ciklust használjuk, aminek az a feladata, hogy végighaladjon egy kiválasztott argumentum karaktersorozatán! Itt a <span class="m">*++argv[0]</span> az <span class="m">argv[0]</span> mutatót inkrementálja!
+  <p> Az itt bemutatottaknál ritkán használunk bonyolultabb mutatós kifejezéseket. Ha mégis szükség lenne ilyenekre, akkor célszerű azokat két vagy három egyszerűbb lépésre bontani.<br />
+    <br />
+  </p>
+  <p><b>5.10.</b> gyakorlat. Írjuk meg az <span class="m">expr</span> programot, amely kiértékeli a parancssor-argumentumban megadott fordított lengyel jelölésmódú kifejezést! A parancssorban az egyes operátorokat és operandusokat szóköz választja el egymástól, pl. az<br />
+  </p>
+  <pre>
+expr 2 3 4 + *
+</pre>
+  formában, ami a <span class="m">2*(3+4)</span> kifejezésnek felel meg.
+  <p> <b>5.11.</b> gyakorlat. Módosítsuk az <a href="01.html">1. fejezetben</a> megírt <span class="m">entab</span> és <span class="m">detab</span> programot úgy, hogy a tabulátorbeállítási pozíciók listáját a parancssor-argumentumból vegye! Használjuk az alapesetnek megfelelő működést, ha nincs argumentum!</p>
+  <p> <b>5.12.</b> gyakorlat. Bővítsük az <span class="m">entab</span> és <span class="m">detab</span> programokat úgy, hogy értelmezni tudják az<br />
+  </p>
+  <pre>
+entab -m +n
+</pre>
+  rövidített jelölést! A bővített forma jelentése, hogy az <span class="m">m</span>-edik oszloptól kezdve iktasson be tabulátorokat minden <span class="m">n</span>-edik oszlophoz. A program a felhasználó szempontjából kényelmes módon működjön, ha nem adunk meg argumentumot!
+  <p> <b>5.13.</b> gyakorlat. Írjuk meg a <span class="m">tail</span> programot, amely kinyomtatja az utolsó <span class="m">n</span> bemeneti sort! Alapfeltételezés szerint legyen <span class="m">n=10</span>, de tegyük lehetővé <span class="m">n</span> változtatását egy opcionális argumentummal pl. a<br />
+  </p>
+  <pre>
+tail -n
+</pre>
+  formában. (Ennek hatására az utolsón sor íródjon ki.) A program viselkedjen ésszerűen akkor is, ha a bemenet vagy az <span class="m">n</span> értéke ésszerűtlen. A programot úgy írjuk meg, hogy a lehető legjobban használja a rendelkezésére álló tárterületet: a szövegsorokat a rendezőprogramnál leírt módon tároljuk és ne rögzített méretű kétdimenziós tömbként.<br />
+  <br />
+  <h3><a name="5.11." id="5.11."></a>5.11. Függvényeket megcímző mutatók<br />
+  </h3>
+  A C nyelvben a függvények ugyan nem változók, de azért lehetséges hozzájuk mutatót definiálni, amivel minden, a mutatókra megengedett művelet elvégezhető (szerepelhet értékadásban, elhelyezhető egy tömbben, átadható egy függvénynek argumentumként, lehet a függvény visszatérési értéke stb.). A függvényekhez rendelt mutatók használatát a korábban megírt rendezőprogram módosított változatán mutatjuk be. A rendezőprogramot alakítsuk át úgy, hogy a <span class="m">-n</span> opcionális argumentum hatására a bemeneti sorokat ne lexikografikusan, hanem numerikusan rendezze.
+  <p> A rendezés általában három részből áll: összehasonlításból, ami meghatározza bármely objektumpár sorrendjét; cseréből, ami megfordítja az objektumok sorrendjét, valamint a rendező algoritmusból, ami mindaddig végzi az összehasonlítást és cserét, amíg minden objektum nem kerül a megfelelő sorrendbe. A rendező algoritmus független az összehasonlítás és a cserélés működésétől, így különböző összehasonlító és cserélő függvényeket használva különböző kritériumok szerint rendezhetünk. Ezt a lehetőséget használjuk ki az új rendezőprogram kialakításánál.</p>
+  <p> Két szövegsor lexikografikus összehasonlítását eredetileg a <span class="m">strcmp</span> végezte. Most szükségünk lesz a <span class="m">numcmp</span> függvényre, amely két sort a numerikus értéke alapján hasonlít össze és ugyanolyan módon tér vissza, mint a <span class="m">strcmp</span>. Az összehasonlító függvényeket a <span class="m">main</span> előtt deklaráljuk, és a megfelelő függvény mutatóját adjuk át a <span class="m">qsort</span> függvénynek (ami a rendező algoritmust valósítja meg). Nem foglalkozunk a hibás argumentumok kezelésével, csak a fő feladatra, a mutatók átadására koncentrálunk.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;string.h&gt;
+<span class="d">#define</span> MAXSOR 5000 <span class="c">/* a rendezhető sorok max. száma */</span>
+<span class="k">char</span> *sorptr[MAXSOR]; <span class="c">/* a szövegsorok mutatói */</span>
+
+<span class="k">int</span> readlines(<span class="k">char</span> *sorptr[], <span class="k">int</span> nsor);
+<span class="k">void</span> writelines(<span class="k">char</span> *sorptr[], <span class="k">int</span> nsor);
+
+<span class="k">void</span> qsort(<span class="k">void</span> *sorptr[], <span class="k">int</span> bal, <span class="k">int</span> jobb,
+            <span class="k">int</span> (*comp) (<span class="k">void</span> *, <span class="k">void</span> *));
+<span class="k">int</span> numcmp(<span class="k">char</span> *, <span class="k">char</span> *);
+
+<span class="c">/* a bevitt sorok rendezése */</span>
+main(<span class="k">int</span> argc, <span class="k">char</span> *argv[])
+{
+   <span class="k">int</span> nsor; <span class="c">/* a beolvasott sorok száma */</span>
+   <span class="k">int</span> numeric = 0; <span class="c">/* 1, ha numerikus a rendezés */</span>
+
+   <span class="k">if</span> (argc &gt; 1 &amp;&amp; strcmp(argv[1], &quot;-n&quot;) == 0)
+      numeric = 1;
+   <span class="k">if</span> ((nsor = readlines(sorptr, MAXSOR)) &gt;= 0) {
+      qsort ((<span class="k">void</span> **) sorptr, 0, nsor-1,
+         (<span class="k">int</span> (*)(<span class="k">void</span>*, <span class="k">void</span>*)) (numeric ? numcmp : strcmp));
+      writelines(sorptr, nsor);
+      <span class="k">return</span> 0;
+   } <span class="k">else</span> {
+      <span class="f">printf</span>(&quot;Túl sok rendezendő sor<span class="e">\n</span>&quot;);
+      <span class="k">return</span> 1;
+   }
+}
+</pre>
+  A <span class="m">qsort</span> hívásában a <span class="m">strcmp</span> és <span class="m">numcmp</span> függvények címei szerepelnek. Mivel ezek a nevek biztosan függvények nevei, ezért nincs szükség az <span class="m">&amp;</span> operátorra, ugyanúgy, ahogy a tömbök nevei előtt sem.
+  <p> Úgy módosítottuk a <span class="m">qsort</span> programot, hogy képes legyen bármilyen adattípus feldolgozására, ne csak karaktersorozatokéra. Amint ezt a függvényprototípusban jeleztük, a <span class="m">qsort</span> egy mutatókból álló tömböt, két egész típusú adatot és egy függvényt (két mutató típusú argumentummal) vár. A mutató típusú argumentumok megadásához a <span class="m"><span class="k">void</span> *</span> általános (generikus) mutatótípust használtuk. Bármely mutató átalakítható <span class="m"><span class="k">void</span> *</span> típusúvá, ill. abból visszaalakítható bármiféle információvesztés nélkül, ezért használtunk a <span class="m">qsort</span> hívásánál <span class="m"><span class="k">void</span> *</span> típusú argumentumokat. A megfelelően kialakított típusmegadások garantálják a mutatók típusegyeztetését. Ez a program tényleges megvalósítására semmilyen hatással sincs, de biztosítja a fordítóprogram helyes működését.</p>
+  <p> Ezután nézzük a <span class="m">qsort</span> függvény módosított változatát!<br />
+  </p>
+  <pre>
+<span class="c">/* qsort: a v[bal] ... v[jobb] rendezése növekvő sorrendbe */</span>
+<span class="k">void</span> qsort(<span class="k">void</span> *v[], <span class="k">int</span> bal, <span class="k">int</span> jobb,
+            <span class="k">int</span> (*comp)(<span class="k">void</span> *, <span class="k">void</span> *))
+{
+   <span class="k">int</span> i, utolso;
+   <span class="k">void</span> swap(<span class="k">void</span> *v[], <span class="k">int</span>, <span class="k">int</span>);
+   <span class="k">if</span> (bal &gt;= jobb) <span class="c">/* nem csinál semmit, ha a tömb */</span>
+      <span class="k">return</span>; <span class="c">/* kettőnél kevesebb elemből áll */</span>
+   swap(v, bal, (bal + jobb)/2);
+   utolso = bal;
+   <span class="k">for</span> (i = bal+1; i &lt;= jobb; i++)
+      <span class="k">if</span> ((*comp) (v[i], v[bal]) &lt; 0)
+         swap(v, ++utolso, i);
+   swap(v, bal, utolso);
+   qsort(v, bal, utolso-1, comp);
+   qsort(v, utolso+1, jobb, comp);
+}
+</pre>
+  A deklarációkat különös gonddal kell tanulmányozni! A <span class="m">qsort</span> negyedik paramétere, az<br />
+  <pre>
+<span class="k">int</span> (*comp)(<span class="k">void</span> *, <span class="k">void</span> *)
+</pre>
+  azt mondja ki, hogy a <span class="m">comp</span> egy függvényt címző mutató, amelynek két <span class="k">void</span> * típusú argumentuma van és <span class="k">int</span> típusú értékkel tér vissza. A <span class="m">comp</span> függvény használata az<br />
+  <pre>
+<span class="k">if</span> ((*comp) (v[i], v[bal] &lt; 0)
+</pre>
+  sorban összhangban van a deklarációval: <span class="m">comp</span> egy függvényhez tartozó mutató, így <span class="m">*comp</span> maga a függvény, és<br />
+  <pre>
+(*comp)(v[i], v[bal])
+</pre>
+  pedig annak hívása. A zárójelek feltétlenül szükségesek a helyes végrehajtási sorrend céljából. Ha elhagynánk őket, akkor az<br />
+  <pre>
+<span class="k">int</span> *comp(<span class="k">void</span> *, <span class="k">void</span> *) <span class="c">/* HIBÁS!!! */</span>
+</pre>
+  definícióhoz jutnánk, ami azt mondja ki, hogy <span class="m">comp</span> egy függvény, amely egy <span class="k">int</span> típusú adatot megcímző mutatót ad vissza. Ez nyilvánvalóan mást jelent, mint az eredeti értelmezés.
+  <p> Korábban már bemutattuk a két karaktersorozatot összehasonlító <span class="m">strcmp</span> függvényt, így most csak a <span class="m">numcmp</span> függvénnyel foglalkozunk. A <span class="m">numcmp</span> az első jegytől indulva számérték szerint hasonlít össze két karaktersorozatot. A <span class="m">numcmp</span> az összehasonlításhoz a számokat tartalmazó karaktersorozatot az <span class="f">atof</span> függvénnyel alakítja numerikus változóvá.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdlib.h&gt;
+
+<span class="c">/* numcmp: s1 és s2 karaktersorozat összehasonlitása
+numerikusan */</span>
+<span class="k">int</span> numcmp(<span class="k">char</span> *s1, <span class="k">char</span> *s2)
+{
+   <span class="k">double</span> v1, v2;
+
+   v1 = <span class="f">atof</span>(s1);
+   v2 = <span class="f">atof</span>(s2);
+   <span class="k">if</span> (v1 &lt; v2)
+      <span class="k">return</span> -1;
+   <span class="k">else</span> <span class="k">if</span> (v1 &gt; v2)
+      <span class="k">return</span> 1;
+   <span class="k">else</span>
+      <span class="k">return</span> 0;
+}
+</pre>
+  A két adatot a mutatóik felcserésével megcserélő <span class="m">swap</span> függvény azonos a fejezet elején leírttal, kivéve, hogy a deklarációk <span class="k">void</span> * típusra változtak.<br />
+  <pre>
+<span class="k">void</span> swap(void *v[], <span class="k">int</span> i, <span class="k">int</span> j)
+{
+   <span class="k">void</span> *temp;
+
+   temp = v[i];
+   v[i] = v[j];
+   v[j] = temp;
+}
+</pre>
+  Az itt bemutatotton kívül még számtalan más opció is illeszthető a rendezőprogramhoz, ezek közül néhány jó gyakorló feladat lesz.<br />
+  <br />
+  <p><b>5.14.</b> gyakorlat. Módosítsuk a rendezőprogramot úgy, hogy kezelni tudja a <span class="m">-r</span> jelzést, amivel a fordított (csökkenő) irányú rendezést írjuk elő! Biztosítsuk, hogy a <span class="m">-r</span> működjön a <span class="m">-n</span> opcióval együtt is!</p>
+  <p> <b>5.15.</b> gyakorlat. A rendezőprogramot egészítsük ki a <span class="m">-f</span> opcióval, ami egyesíti a nagy- és kisbetűket úgy, hogy a rendezésnél nem tesz különbséget közöttük! (Például <span class="m">A</span> és <span class="m">a</span> összehasonlítva legyen egyenlő.)</p>
+  <p> <b>5.16.</b> gyakorlat. A rendezőprogramot egészítsük ki a <span class="m">-d</span> opcióval, aminek hatására csak a betűk, számjegyek és szóközök kerülnek összehasonlításra! Gondoskodjunk róla, hogy a <span class="m">-d</span> opció működjön a <span class="m">-f</span> opcióval együtt is!</p>
+  <p> <b>5.17.</b> gyakorlat. Egészítsük ki a rendezőprogramot mezőkezelési funkcióval, ami lehetővé teszi, hogy a rendezést sorokon belül kijelölt mezőkön hajtsuk végre! Engedjünk meg az egyes mezőkhöz egymástól független opciókészletet. (A könyv eredeti kiadásának tárgymutatóját kulcsszavakra a <span class="m">-df</span>, oldalszámokra a <span class="m">-n</span> opcióval rendezte egy hasonló rendezőprogram.)<br />
+    <br />
+  </p>
+  <h3><a name="5.12." id="5.12."></a>5.12. Bonyolultabb deklarációk<br />
+  </h3>
+  A C nyelvet gyakran bírálják a deklarációinak szintaxisa miatt, különösen a függvényekhez tartozó mutatók használata esetén. A szintaxis megkísérli összeegyeztetni a deklarációt a gyakorlati alkalmazással, ami az egyszerűbb esetekben jól megoldható, viszont a bonyolultabb esetekben zavarokhoz vezethet. Ennek főleg az az oka, hogy egy deklaráció nem olvasható egyszerűen balról jobbra és túl sok a zárójel is. Az<br />
+  <pre>
+<span class="k">int</span> *f();    <span class="c">/* egy int típusú adatot címző mutatóval
+             visszatérő függvény */</span>
+</pre>
+  és<br />
+  <pre>
+<span class="k">int</span> (*pf)(); <span class="c">/* pf: egy int típusú értékkel visszatérő
+             függvény mutatója */</span>
+</pre>
+  deklarációk közötti különbség jól mutatja a problémát. A <span class="m">*</span> egy prefix operátor, ami alacsonyabb precedenciájú, mint a <span class="m">()</span>, ezért zárójeleket kell alkalmazni a megfelelő végrehajtási sorrend érdekében. Bár a valóban bonyolult deklarációk csak ritkán fordulnak elő a gyakorlatban, fontos, hogy értelmezni tudjuk őket és ha szükséges, képesek legyünk létrehozni ilyen deklarációkat. Jó módszer a deklarációk kis lépésekben történő felépítésére a <span class="k">typedef</span> parancs, amelyen majd a <a href="06.html#6.7.">6.7. pontban</a> foglalkozunk. Egy másik lehetőség, amivel most fogunk megismerkedni, egy programpár, amelyek egyike az érvényes C nyelvű deklarációt szöveges leírássá alakítja, ill. a másik a szöveges leírásból C nyelvű deklarációt hoz létre. A programmal kapott szöveges leírás már balról jobbra olvasható.
+  <p> Az első, <span class="m">dcl</span> nevű program a bonyolultabb, és ennek feladata a C-beli deklarációk szavakra fordítása úgy, ahogy ez az alábbi példákban* látható:<br />
+    <br />
+  </p>
+  <div class="note">*[Itt a példát meghagytuk az eredeti formájában, mivel a magyarítás (fordítás) teljes átírást igényelt volna a deklarációk szóbeli megfogalmazásának magyar mondatszerkezetre való átalakítása miatt. Magyar mondatszerkezet esetén a kiírt deklarációk sokkal bonyolultabban kombinálhatók össze értelmes mondatokká. Reméljük, az angol változat senkinek nem fog gondot okozni. (A fordító)]<br />
+  </div>
+  <br />
+  <pre>
+<span class="k">char</span> **argv
+   argv: pointer to pointer to <span class="k">char</span>
+<span class="k">int</span> (*daytab)[13]
+   daytab: pointer to array[13] of <span class="k">int</span>
+<span class="k">int</span> *daytab[13]
+   daytab: array[13] of pointer to <span class="k">int</span>
+<span class="k">void</span> *comp
+   comp: function returning pointer to <span class="k">void</span>
+<span class="k">void</span> (*comp)()
+   comp: pointer to function returning <span class="k">void</span>
+<span class="k">char</span>(*(*x())[])()
+   x: function returning pointer to array[] of
+   pointer to function returning <span class="k">char</span> 
+<span class="k">char</span>(*(*x[3])())[5]
+   x: array[3] of pointer to function returning
+   pointer to array[5] of <span class="k">char</span>
+</pre>
+  A <span class="m">dcl</span> program az <a href="a.html#A8.5.">A. Függelék 8.5. pontjában</a> részletesen leírt deklarátor által specifikált grammatikán alapszik. A deklarátor (rövidítve <span class="m">dcl</span>) egyszerűsített alakja:<br />
+  <pre class="defit">
+dcl:                   opcionális_*direkt-dcl
+
+direkt-dcl:        név
+                        (dcl)
+                        direkt-dcl()
+                        direkt-dcl[opcionális_méret]
+</pre>
+  Szavakba foglalva, a <i>dcl</i> <i>direkt-dcl</i>, ha (esetleg) megelőzi egy <i>*</i>. Egy <i>direkt-dcl</i> egy <i>név</i>, vagy egy zárójelezett <i>dcl</i>, vagy egy <i>direkt-dcl</i>, amit zárójel követ, vagy egy <i>direkt-dcl</i>, amit szögletes zárójel és opcionális méretmegadás követ.
+  <p> Ez a grammatika a deklarációk elemzésére használható. Példaképpen nézzük a következő deklarátort:<br />
+  </p>
+  <pre>
+(*pfa[])()
+</pre>
+  Ebben <span class="m">pfa</span>-t, mint egy nevet azonosíthatjuk és így <i>direkt-dcl</i> típusú. Ekkor <span class="m">pfa[]</span> szintén <i>direkt-dcl</i>. Ezután a <span class="m">*pfa[]</span>-ról felismerjük, hogy <i>dcl</i> típusú, ezért <span class="m">(*pfa[])</span> <i>direkt-dcl</i>. Ekkor <span class="m">(*pfa[])()</span> egy <i>direkt-dcl</i> és így a definíció szerint az egész kifejezés <i>dcl</i> típusú. Az elemzés menetét az alábbi elemzőfával szemléltethetjük (a <i>direkt-dcl</i> helyett a <i>dir-dcl</i> rövidítést használva):<br />
+  <br />
+  <br />
+  <div align="center"> <img src="img/12.png" width="563" height="477" border="0" alt="img/12.png" /> </div>
+  <br />
+  <br />
+  <br />
+  A <span class="m">dcl</span> program legfontosabb része a <span class="m">dirdcl</span> és <span class="m">dcl</span> függvénypár, amelyek a vázlatosan ismertetett grammatika szerint elemzik a deklarációt. Mivel a grammatika rekurzívan van definiálva, ezért az egyes függvények is rekurzívan hívják egymást mindaddig, amíg fel nem ismerik a deklaráció egy darabját. Ennek megfelelően ez egy rekurzívan leszálló elemző program.<br />
+  <pre>
+<span class="c">/* dcl: egy deklarátor elemzése */</span>
+<span class="k">void</span> dcl(<span class="k">void</span>)
+{
+   <span class="k">int</span> ns;
+
+   <span class="k">for</span> (ns = 0; gettoken() == '*';)
+      ns++; <span class="c">/* a *-ok számolása */</span>
+   dirdcl();
+   <span class="k">while</span> (ns-- &gt; 0)
+      <span class="f">strcat</span>(out, &quot; pointer to&quot;) ;
+}
+
+<span class="c">/* dirdcl: egy direkt deklarátor elemzése */</span>
+<span class="k">void</span> dirdcl(<span class="k">void</span>)
+{
+   <span class="k">int</span> type;
+
+   <span class="k">if</span>(tokentype == '(') { <span class="c">/* (dcl) */</span>
+      dcl();
+      <span class="k">if</span> (tokentype != ')')
+         <span class="f">printf</span>(&quot;error: missing )<span class="e">\n</span>&quot;);
+      } <span class="k">else</span> <span class="k">if</span> (tokentype == NAME) <span class="c">/* változó név */</span>
+         <span class="f">strcpy</span> (name, token);
+      <span class="k">else</span>
+         <span class="f">printf</span>(&quot;error: expected name or (dcl)<span class="e">\n</span>&quot;);
+      <span class="k">while</span>((type=gettoken()) == PARENS || type == BRACKETS)
+         <span class="k">if</span> (type == PARENS)
+            <span class="f">strcat</span>(out, &quot; function returning&quot;);
+         <span class="k">else</span> {
+            <span class="f">strcat</span>(out, &quot; array&quot;);
+            <span class="f">strcat</span>(out, token);
+            <span class="f">strcat</span>(out, &quot; of&quot;);
+         } 
+}
+</pre>
+  Mivel a programot csak példának szántuk, nem igazán „bombabiztos”, a <span class="m">dcl</span> programban van néhány jelentős megszorítás: csak az egyszerű adattípusokat (mint <span class="k">char</span> vagy <span class="k">int</span>) képes kezelni és a rosszul elhelyezett szóközök is megzavarhatják a működését. Mivel a programban nincs hibaállapot-helyreállítás, így az érvénytelen deklarációk is hibás működéshez vezetnek. Ezeknek a hibáknak a kijavítását a gyakorlott programozókra bízzuk.
+  <p> A program globális változói és a <span class="m">main</span> eljárás:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;string.h&gt;
+<span class="d">#include</span> &lt;ctype.h&gt;
+
+<span class="d">#define</span> MAXTOKEN 100
+
+<span class="k">enum</span> { NAME, PARENS, BRACKETS };
+
+<span class="k">void</span> dcl(<span class="k">void</span>);
+<span class="k">void</span> dirdcl(<span class="k">void</span>);
+
+<span class="k">int</span> gettoken(<span class="k">void</span>);
+<span class="k">int</span> tokentype; <span class="c">/* az utolsó jel típusa */</span>
+<span class="k">char</span> token[MAXTOKEN]; <span class="c">/* az utolsó jel karaktersorozata */</span>
+<span class="k">char</span> name[MAXTOKEN]; <span class="c">/* az azonosító neve */</span>
+<span class="k">char</span> datatype[MAXTOKEN]; <span class="c">/* adattípus = char, int stb. */</span>
+<span class="k">char</span> out[1000]; <span class="c">/* a kimenetet tartalmazó karaktersorozat */</span>
+
+main() <span class="c">/* deklarációk megfogalmazása szavakban */</span> 
+{
+   <span class="k">while</span> (gettoken() != <span class="f">EOF</span>) { <span class="c">/* 1. jel a sorban */</span>
+      <span class="f">strcpy</span>(datatype, token); <span class="c">/* ez az adattípus */</span>
+      out[0] = '<span class="e">\0</span>';
+      dcl(); <span class="c">/* a sor további részeinek elemzése */</span>
+      <span class="k">if</span> (tokentype != '<span class="e">\n</span>')
+         <span class="f">printf</span>(&quot;syntax error<span class="e">\n</span>&quot;);
+      <span class="f">printf</span>(&quot;%s: %s %s<span class="e">\n</span>&quot;, name, out, datatype);
+   }
+   <span class="k">return</span> 0; 
+}
+</pre>
+  A <span class="m">gettoken</span> függvény átlépi a szóközöket és tabulátorokat, majd megkeresi a következő szintaktikai elemet (tokent) a bemeneti karaktersorozatban. Egy token lehet egy név, egy kerek zárójelpár, egy szögletes zárójelpár (amiben esetleg egy szám áll) vagy bármilyen egymagában álló karakter.<br />
+  <pre>
+<span class="k">int</span> gettoken(<span class="k">void</span>) <span class="c">/* visszatér a következő jellel */</span>
+{
+   <span class="k">int</span> c, getch(<span class="k">void</span>);
+   <span class="k">void</span> ungetch(<span class="k">int</span>);
+   <span class="k">char</span> *p = token;
+   <span class="k">while</span> ((c = getch()) == ' ' || c == '<span class="e">\t</span>')
+      ;
+   <span class="k">if</span> (c == '(') {
+      <span class="k">if</span> ( (c = getch ()) == ')') {
+         <span class="f">strcpy</span> (token, &quot;()&quot;);
+         <span class="k">return</span> tokentype = PARENS;
+      } <span class="k">else</span> {
+         ungetch(c);
+         <span class="k">return</span> tokentype = '(';
+      }
+   } <span class="k">else</span> <span class="k">if</span> (c == '[') {
+      <span class="k">for</span> (*p++ = c; (*p++ = getch()) != ']' ; )
+         ;
+      *p = '<span class="e">\0</span>';
+      <span class="k">return</span> tokentype = BRACKETS;
+   } <span class="k">else</span> <span class="k">if</span> (<span class="f">isalpha</span>(c)) {
+      <span class="k">for</span> (*p++ = c; isalnum(c = getch ());)
+         *p++ = c;
+   *p = '<span class="e">\0</span>';
+   ungetch(c);
+   <span class="k">return</span> tokentype = NAME;
+   } <span class="k">else</span>
+      <span class="k">return</span> tokentype = c;
+}
+</pre>
+  A <span class="m">getch</span> és <span class="m">ungetch</span> függvényeket a <a href="04.html">4. fejezetben</a> már ismertettük.
+  <p> A feladat megfordítása viszonylag egyszerű, főleg ha nem törődünk a feleslegesen generált zárójelekkel. Az <span class="m">undcl</span> program az „x is a function returning a pointer to an array of pointers to functions returning <span class="k">char</span>” (x <span class="k">char</span> típusú adatokkal visszatérő függvények mutatóiból alkotott tömb mutatójával visszatérő függvény) alakú szóbeli leírásból, ami az<br />
+  </p>
+  <pre>
+x () * [] * () <span class="k">char</span>
+</pre>
+  karaktersorozattal fejezhető ki, előállítja a<br />
+  <pre>
+<span class="k">char</span> (*(*x())[])()
+</pre>
+  deklarációt. A rövidített bemeneti szintaxis lehetővé teszi, hogy újra a <span class="m">gettoken</span> függvényt használjuk. Az <span class="m">undcl</span> függvény ugyanazokat a külső változókat használja, mint a <span class="m">dcl</span>.<br />
+  <pre>
+<span class="c">/* undcl: a szóbeli megfogalmazást deklarációvá alakítja */</span>
+main()
+{
+   <span class="k">int</span> type;
+   <span class="k">char</span> temp[MAXTOKEN];
+
+   <span class="k">while</span> (gettoken() != <span class="f">EOF</span>) {
+      <span class="f">strcpy</span>(out, token);
+      <span class="k">while</span> ((type = gettoken()) != '<span class="e">\n</span>')
+         <span class="k">if</span> (type == PARENS || type == BRACKETS)
+            <span class="f">strcat</span>(out, token);
+         <span class="k">else</span> <span class="k">if</span> (type =='*') {
+            <span class="f">sprintf</span>(temp, &quot;(*%s)&quot;, out);
+            <span class="f">strcpy</span>(out, temp);
+         } <span class="k">else</span> <span class="k">if</span> (type == NAME) {
+            <span class="f">sprintf</span> (temp, &quot;%s %s&quot;, token, out);
+            <span class="f">strcpy</span>(out, temp);
+         } <span class="k">else</span>
+            <span class="f">printf</span>(&quot;invalid input at %s<span class="e">\n</span>&quot;, token);
+         <span class="f">printf</span> (&quot;%s<span class="e">\n</span>&quot;, out);
+   }
+   <span class="k">return</span> 0;
+}
+</pre>
+  A programban használt <span class="f">sprintf</span> függvény a <span class="f">printf</span>-hez hasonló könyvtári függvény, a <span class="f">printf</span>-nek megfelelően formátumozza a kiírandó adatokat, de kiírás helyett az első argumentumában (aminek karaktersorozatnak kell lenni) tárolja. Bővebb leírása a <a href="07.html#7.2.">7.2. pontban</a>, ill. a <a href="b.html">B. Függelékben</a> található.<br />
+  <br />
+  <p><b>5.18.</b> gyakorlat. Egészítse ki a <span class="m">dcl</span> programot a bemeneti hibákat megszüntető hibahelyreállító eljárással!</p>
+  <p> <b>5.19.</b> gyakorlat. Módosítsa az <span class="m">undcl</span> programot úgy, hogy ne írjon ki felesleges zárójeleket a deklarációkban!</p>
+  <p> <b>5.20.</b> gyakorlat. Bővítse ki a <span class="m">dcl</span> programot úgy, hogy kezelni tudja a függvényargumentum típusú és <span class="k">const</span>-hoz hasonló minősítőket tartalmazó deklarációkat is!<br />
+    <br />
+    <br />
+  </p>
+
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="04.html">4. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="06.html">6. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+</div>
+</body>
+</html>

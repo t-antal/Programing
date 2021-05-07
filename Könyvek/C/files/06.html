@@ -1,0 +1,926 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Struktúrák</title>
+<link href="krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<div id="main">
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="05.html">5. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="07.html">7. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+  <h2><a name="6. FEJEZET" id="6. FEJEZET"></a><i>6. FEJEZET:<br />
+    </i></h2>
+  <h2>Struktúrák<br />
+  </h2>
+  A struktúra egy vagy több, esetleg különböző típusú változó együttese, amelyet a kényelmes kezelhetőség céljából önálló névvel látunk el. Néhány nyelvben az így értelmezett struktúrát rekordnak nevezik (pl. a Pascal rekordja hasonló tulajdonságú adatfajta). A struktúra bevezetése segíti az összetett adathalmazok szervezését, ami különösen nagy programok esetén előnyös, mivel lehetővé teszi, hogy az egymással kapcsolatban lévő változók egy csoportját egyetlen egységként kezeljük, szemben az egyedi adatkezeléssel.
+  <p> A struktúrára az egyik hagyományos példa a bérszámfejtési lista: ez az alkalmazottakat attribútumok halmazával (név, lakcím, társadalombiztosítási szám, bér stb.) írja le. Ezen attribútumok némelyike maga is lehet struktúra, pl. a név is több részből áll, csakúgy mint a cím vagy a bér. A másik, C nyelvre jellemzőbb példát a számítógépes grafika adja: a pont egy koordinátapárral írható le, a négyzet egy pontpárral adható meg stb.</p>
+  <p> A struktúrákat érintő, az ANSI szabványból adódó legfontosabb változás, hogy a szabvány értelmezi a struktúrák értékadását. A struktúrák átmásolhatók egymásba, értékül adhatók más struktúráknak, átadhatók függvénynek és a függvények visszatérési értékei is lehetnek. Ezt évek óta a legtöbb fordítóprogram támogatja, de ezeket a tulajdonságokat most pontosan definiáljuk. A szabvány lehetővé teszi az automatikus tárolási osztályú struktúrák és tömbök inicializálását, amivel szintén ebben a fejezetben foglalkozunk.<br />
+    <br />
+  </p>
+  <h3><a name="6.1." id="6.1."></a>6.1. Alapfogalmak<br />
+  </h3>
+  Hozzunk létre néhány struktúrát, amelyek a grafikus ábrázoláshoz használhatók. Az alapobjektum a pont, amely egy <span class="m">x</span> és egy <span class="m">y</span> koordinátával adható meg. Tételezzük fel, hogy a koordináták egész számok. A két komponens (koordináta) egy struktúrában helyezhető el a<br />
+  <pre>
+<span class="k">struct</span> pont {
+   <span class="k">int</span> x; 
+   <span class="k">int</span> y;
+};
+</pre>
+  deklarációval.<br />
+  <br />
+  <br />
+  <div align="center"> <img src="img/13.png" width="257" height="198" border="0" alt="img/13.png" /></div>
+  <br />
+  <br />
+  <br />
+  A struktúra deklarációját a <span class="k">struct</span> kulcsszó vezeti be, amelyet kapcsos zárójelek között a deklarációk listája követ. A <span class="k">struct</span> kulcsszót opcionálisan egy név, az ún. <i>struktúracímke</i> követheti (mint a példánkban a <span class="m">pont</span>). Ez a címke vagy név azonosítja a struktúrát és a későbbiekben egy rövidítésként használható a kapcsos zárójelek közötti deklarációs lista helyett.
+  <p> A struktúrában felsorolt változóneveket a struktúra <i>tagjainak</i> nevezzük. Egy struktúra címkéje (neve), ill. egy tagjának a neve és egy közönséges (tehát nem struktúratag) változó neve lehet azonos, mivel a programkörnyezet alapján egyértelműen megkülönböztethetők. Továbbá ugyanaz a tagnév előfordulhat különböző struktúrákban, bár célszerű azonos neveket csak egymással szoros kapcsolatban lévő adatokhoz használni.</p>
+  <p> Egy <span class="k">struct</span> deklaráció egy típust is definiál. A jobb oldali, záró kapcsos zárójel után következhet a változók listája, hasonlóan az alapadattípusok megadásához. Így pl. a<br />
+  </p>
+  <pre>
+<span class="k">struct</span> {...} x, y, z;
+</pre>
+  szintaktikailag analóg az<br />
+  <pre>
+<span class="k">int</span> x, y, z;
+</pre>
+  deklarációval, mivel mindkét szerkezet a megadott típusú változóként deklarálja <span class="m">x</span>, <span class="m">y</span> és <span class="m">z</span> változót és helyet foglal számukra a tárolóban.
+  <p> Az olyan struktúradeklaráció, amelyet nem követ a változók listája, nem foglal helyet a tárolóban, csak a struktúra alakját írja le. Ha a struktúra címkézett volt, akkor a címke a későbbi definíciókban a struktúra konkrét előfordulása helyett használható. Például felhasználva a <span class="m">pont</span> korábbi deklarációját a<br />
+  </p>
+  <pre>
+<span class="k">struct</span> pont pt;
+</pre>
+  definíció egy <span class="m">pt</span> változót definiál, ami a <span class="k">struct</span> <span class="m">pont</span>-nak megfelelő típusú struktúra. Egy struktúra úgy inicializálható, hogy a definíciót az egyes tagok kezdeti értékének listája követi. A kezdeti értékeknek állandó kifejezéseknek kell lenni. Például:<br />
+  <pre>
+<span class="k">struct</span> pont maxpt = { 320, 200 };
+</pre>
+  Egy automatikus struktúra értékadással vagy egy megfelelő típusú struktúrát visszaadó függvény hívásával is inicializálható.
+  <p> Egy kifejezésben az adott struktúra egy tagjára úgy hivatkozhatunk, hogy<br />
+  </p>
+  <pre class="defit">
+struktúra-név.tag
+</pre>
+  A pont struktúratag operátor összekapcsolja a struktúra és a tag nevét. A <span class="m">pt</span> pont koordinátáit pl. úgy írathatjuk ki, hogy<br />
+  <pre>
+<span class="f">printf</span>(&quot;%d, %d&quot;, pt.x, pt.y);
+</pre>
+  A <span class="m">pt</span> pont origótól mért távolsága:<br />
+  <pre>
+<span class="k">double</span> dist, <span class="f">sqrt</span>(<span class="k">double</span>);
+dist = <span class="f">sqrt</span>((<span class="k">double</span>)pt.x * pt.x + (<span class="k">double</span>)pt.y * pt.y);
+</pre>
+  A struktúrák egymásba ágyazhatók. Például egy téglalap az átlója két végén lévő pontpárral írható le,<br />
+  <br />
+  <br />
+  <div align="center"> <img src="img/14.png" width="259" height="198" border="0" alt="img/14.png" /> </div>
+  <br />
+  <pre>
+<span class="k">struct</span> tegla {
+   <span class="k">struct</span> pont pt1;
+   <span class="k">struct</span> pont pt2;
+};
+</pre>
+  Ennek alapján a <span class="m">tegla</span> struktúra két <span class="m">pont</span> struktúrából áll. Ha az <span class="m">abra</span> struktúrát úgy deklaráljuk, hogy<br />
+  <pre>
+<span class="k">struct</span> tegla abra;
+</pre>
+  akkor az<br />
+  <pre>
+abra.pt1.x
+</pre>
+  hivatkozás az <span class="m">abra</span> <span class="m">pt1</span> tagjának <span class="m">x</span> koordinátáját jelenti.<br />
+  <br />
+  <h3><a name="6.2." id="6.2."></a>6.2. Struktúrák és függvények<br />
+  </h3>
+  A struktúrák esetén megengedett művelet a struktúra másolása vagy értékadása, ill. a struktúra címéhez való hozzáférés az <span class="m">&amp;</span> operátorral és a struktúra tagjaihoz való hozzáférés. Ezek a műveletek a struktúrát egy egységként kezelik, és a másolás vagy értékadás magában foglalja a struktúrák függvényargumentumkénti átadását, ill. a struktúra típusú függvényvisszatérés lehetőségét is. Struktúrák egy egységként nem hasonlíthatók össze. A struktúrák állandó értékek listájával inicializálhatók, és automatikus tárolási osztályú struktúrák kezdeti értéke értékadással is beállítható.
+  <p> A struktúrák tulajdonságainak vizsgálatához írjunk néhány függvényt, amelyek pontokkal és téglalapokkal manipulálnak. A feladat megoldásának három lehetséges módja van: a függvénynek átadjuk az egyes komponenseket, a teljes struktúrát vagy annak mutatóját. Mindegyik módszernek van előnye és hátránya.</p>
+  <p> Az első függvény legyen a <span class="m">makepoint</span>, amelyet két egész értékkel hívunk és visszatér egy <span class="m">pont</span> struktúrával.<br />
+  </p>
+  <pre>
+<span class="c">/* makepoint: egy pont struktúrát csinál az x és y
+komponensekből */</span>
+<span class="k">struct</span> pont makepoint (<span class="k">int</span> x, <span class="k">int</span> y)
+{
+   <span class="k">struct</span> pont temp;
+   temp.x = x;
+   temp.y = y;
+   <span class="k">return</span> temp;
+}
+</pre>
+  Vegyük észre, hogy nincs konfliktus abból, hogy az argumentum és a struktúratag neve megegyezik: az összefüggés kiértékelésekor újra felhasználja a rendszer a nevet. A <span class="m">makepoint</span> függvényt bármilyen struktúra dinamikus inicializálására vagy struktúrák függvényargumentumként történő átadására használhatjuk. Például:<br />
+  <pre>
+<span class="k">struct</span> tegla abra;
+<span class="k">struct</span> pont kozep;
+<span class="k">struct</span> pont makepoint(<span class="k">int</span>, <span class="k">int</span>);
+
+abra.pt1 = makepoint(0, 0);
+abra.pt2 = makepoint(XMAX, YMAX);
+kozep = makepoint((abra.pt1.x + abra.pt2.x)/2,
+                  (abra.pt1.y + abra.pt2.y)/2);
+</pre>
+  A következő lépésben pontokkal aritmetikai műveleteket végző függvényeket hozunk létre. Például:<br />
+  <pre>
+<span class="c">/* addpoint: két pont összeadása */</span>
+<span class="k">struct</span> pont addpoint(<span class="k">struct</span> pont p1, <span class="k">struct</span> pont p2)
+{
+   p1.x += p2.x;
+   p1.y += p2.y;
+   <span class="k">return</span> p1; 
+}
+</pre>
+  Ennek a függvénynek a két argumentuma és a visszatérési értéke egyaránt struktúra. A függvényben átmeneti változó bevezetése nélkül, közvetlenül a <span class="m">p1</span> komponenst növeltük, hogy kihangsúlyozzuk, a struktúra típusú paraméterek éppen úgy érték szerint adódnak át, mint bármely más változó.
+  <p> A következő példa a <span class="m">ptinrect</span> függvény, amely azt ellenőrzi, hogy egy adott pont benne van-e egy téglalapban. Megállapodás szerint a téglalap belsejének tekintjük annak alsó és bal oldali határát, viszont a teteje és a jobb oldali határa már nem része a téglalapnak.<br />
+  </p>
+  <pre>
+<span class="c">/* ptinrect: visszatérés =1, ha p benne van a
+téglalapban és =0, ha nincs */</span>
+<span class="k">int</span> ptinrect(<span class="k">struct</span> pont p, <span class="k">struct</span> tegla r)
+{
+   <span class="k">return</span> p.x &gt;= r.pt1.x &amp;&amp; p.x &lt; r.pt2.x &amp;&amp;
+      p.y &gt;= r.pt1.y &amp;&amp; p.y &lt; r.pt2.y;
+}
+</pre>
+  A függvény feltételezi, hogy a téglalapot a szokásos formában írtuk le, azaz a <span class="m">pt1</span> koordináta kisebb, mint a <span class="m">pt2</span>. A következő függvény visszatérési értékül egy ilyen kanonikus alakú téglalapot mint struktúrát ad.<br />
+  <pre>
+<span class="d">#define</span> min(a, b) ((a) &lt; (b) ? (a) : (b))
+<span class="d">#define</span> max(a, b) ((a) &gt; (b) ? (a) : (b))
+
+<span class="c">/* canonrect: kanonizálja a téglalap koordinátáit */</span>
+<span class="k">struct</span> tegla canonrect(<span class="k">struct</span> tegla r)
+{
+   <span class="k">struct</span> tegla temp;
+   temp.pt1.x = min (r.pt1.x, r.pt2.x);
+   temp.pt1.y = min (r.pt1.y, r.pt2.y);
+   temp.pt2.x = max (r.pt1.x, r.pt2.x);
+   temp.pt2.y = max (r.pt1.y, r.pt2.y);
+   <span class="k">return</span> temp;
+}
+</pre>
+  Ha nagy struktúrát kell átadnunk egy függvénynek, akkor sokkal hatékonyabb, ha a struktúra mutatóját adjuk át és nem pedig a teljes struktúrát másoljuk át. Egy struktúrához tartozó mutató éppen olyan, mint egy közönséges változó mutatója. A struktúra mutatójának deklarációja:<br />
+  <pre>
+<span class="k">struct</span> pont *pp;
+</pre>
+  Ez egy <span class="k">struct</span> <span class="m">pont</span> típusú struktúrát kijelölő mutatót hoz létre. Ha <span class="m">pp</span> egy <span class="m">pont</span> struktúrát címez, akkor <span class="m">*pp</span> maga a struktúra, és <span class="m">(*pp).x</span>, ill. <span class="m">(*pp).y</span> pedig a struktúra tagjai. A <span class="m">pp</span> értékét felhasználva pl. azt írhatjuk, hogy<br />
+  <pre>
+<span class="k">struct</span> pont kezdet, *pp;
+
+pp = &amp;kezdet;
+<span class="f">printf</span>(&quot;kezdet: (%d, %d)<span class="e">\n</span>&quot;, (*pp).x, (*pp).y);
+</pre>
+  A zárójelre a <span class="m">(*pp).x</span> kifejezésben szükség van, mert a <span class="m">.</span> struktúratag operátor precedenciája nagyobb, mint a <span class="m">*</span> operátoré. A <span class="m">*pp.x</span> kifejezés azt jelentené, mint a <span class="m">*(pp.x)</span>, ami viszont szintaktikailag hibás, mivel jelen esetben <span class="m">x</span> nem mutató.
+  <p> A struktúrák mutatóit gyakran használjuk egy új, rövidített jelölési formában. Ha <span class="m">p</span> egy struktúra mutatója, akkor a<br />
+  </p>
+  <pre>
+p-&gt; <span class="defit">struktúratag</span>
+</pre>
+  kifejezés közvetlenül a struktúra megadott tagját címzi. A <span class="m">-&gt;</span> operátor a mínusz jel és a nagyobb jel egymás után írásával állítható elő. Ezt felhasználva az előző példa <span class="f">printf</span> függvényét úgy is írhatjuk, hogy<br />
+  <pre>
+<span class="f">printf</span>(&quot;kezdet: (%d, %d)<span class="e">\n</span>&quot;, pp-&gt;x, pp-&gt;y);
+</pre>
+  A <span class="m">.</span> és a <span class="m">-&gt;</span> operátorok balról jobbra hajtódnak végre, ezért a<br />
+  <pre>
+<span class="k">struct</span> tegla r, *rp = &amp;r;
+</pre>
+  deklaráció esetén az<br />
+  <pre>
+r.pt1.x;
+rp-&gt;pt1.x;
+(r.pt1).x;
+(rp-&gt;pt1).x;
+</pre>
+  kifejezések egymással egyenértékűek.
+  <p> A <span class="m">.</span> és <span class="m">-&gt;</span> struktúraoperátorok a függvény argumentumát tartalmazó <span class="m">( )</span> kerek és az indexet tartalmazó <span class="m">[ ]</span> szögletes zárójelekkel együtt a legmagasabb precedenciájú operátorok (l. a 2.1. táblázatot), így rendkívül szorosan kötnek. Például, ha adott a<br />
+  </p>
+  <pre>
+<span class="k">struct</span> {
+   <span class="k">int</span> hossz;
+   <span class="k">char</span> *str;
+} *p;
+</pre>
+  deklaráció, akkor a<br />
+  <pre>
+++p-&gt;hossz
+</pre>
+  kifejezés a <span class="m">hossz</span> változót inkrementálja és nem a <span class="m">p</span>-t, mivel a precedenciaszabályoknak és a végrehajtási sorrendnek megfelelő alapértelmezés <span class="m">++(p-&gt;hossz)</span>. A kötés zárójelezéssel változtatható meg, pl. a <span class="m">(++p)-&gt;hossz</span> a <span class="m">hossz</span> változóhoz való hozzáférés előtt inkrementálja a <span class="m">p</span> értékét, a <span class="m">(p++)-&gt;hossz</span> pedig a hozzáférés után inkrementál. Ez utóbbi esetben a zárójelek elhagyhatók.
+  <p> Ugyanígy a <span class="m">*p-&gt;str</span> előkészíti az <span class="m">str</span> által kijelölt adatot, a <span class="m">*p-&gt;str++</span> inkrementálja <span class="m">str</span>-t az általa címzett adat elővétele után és <span class="m">*p++-&gt;str</span> pedig inkrementálja <span class="m">p</span>-t, azután, hogy hozzáfért az <span class="m">str</span> által címzett adathoz.<br />
+    <br />
+  </p>
+  <h3><a name="6.3." id="6.3."></a>6.3. Struktúratömbök<br />
+  </h3>
+  Írjunk programot, amely megszámolja egy szövegben a C nyelv egyes kulcsszavainak előfordulását! A programban szükségünk lesz egy karaktersorozatokból álló tömbre az egyes kulcsszavak tárolásához, és egy egészekből álló tömbre a számlált értékek tárolásához. Ennek megvalósítására az egyik lehetőség, hogy két független, <span class="m">kulcsszo</span> és <span class="m">kulcsszam</span> nevű tömböt használunk:<br />
+  <pre>
+<span class="k">char</span> *kulcsszo[NSZO];
+<span class="k">int</span> kulcsszam[NSZO];
+</pre>
+  Az a tény, hogy a tömbök párhuzamosan léteznek, sugallja egy másik adatszervezési mód, a struktúratömbös megoldás bevezetését. Minden kulcsszóbejegyzés valójában egy adatpárból áll:<br />
+  <pre>
+<span class="k">char</span> *szo;
+<span class="k">int</span> szam;
+</pre>
+  és ezekből az adatpárokból létrehozhatunk egy tömböt. Az így deklarált struktúra:<br />
+  <pre>
+<span class="k">struct</span> kulcs {
+   <span class="k">char</span> *szo;
+   <span class="k">int</span> szam;
+} kulcstab[NSZO];
+</pre>
+  Ez a deklaráció létrehoz egy <span class="m">kulcs</span> típusú struktúrát és ezzel egy időben definiál egy <span class="m">kulcstab</span> tömböt, ami ilyen típusú struktúrákból áll. A definíció egyben le is foglalja a tárterületet a tömb számára. Ennek a tömbnek minden eleme egy struktúra, ezért akár úgy is írhatnánk, hogy:<br />
+  <pre>
+<span class="k">struct</span> kulcs {
+   <span class="k">char</span> *szo;
+   <span class="k">int</span> szam;
+};
+<span class="k">struct</span> kulcs kulcstab[NSZO];
+</pre>
+  Mivel a <span class="m">kulcstab</span> struktúra a kulcsszavak állandó neveit tartalmazza, a legegyszerűbb, ha külső változóvá tesszük és definiáláskor egyszer és mindenkorra inicializáljuk. A struktúra inicializálása a korábban elmondottak szerint történhet, a definíciót a kezdeti értékek kapcsos zárójelek között elhelyezett listája követi:<br />
+  <pre>
+<span class="k">struct</span> kulcs {
+   <span class="k">char</span> *szo;
+   <span class="k">int</span> szam;
+} kulcstab[] = {
+      &quot;<span class="k">auto</span>&quot;, 0,
+      &quot;<span class="k">break</span>&quot;, 0,
+      &quot;<span class="k">case</span>&quot;, 0,
+      &quot;<span class="k">char</span>&quot;, 0,
+      &quot;<span class="k">const</span>&quot;, 0,
+      &quot;<span class="k">continue</span>&quot;, 0,
+      &quot;<span class="k">default</span>&quot;, 0,
+      <span class="c">/* ... */</span>
+      &quot;<span class="k">unsigned</span>&quot;, 0,
+      &quot;<span class="k">void</span>&quot;, 0,
+      &quot;<span class="k">volatile</span>&quot;, 0,
+      &quot;<span class="k">while</span>&quot;, 0,
+};
+</pre>
+  A kezdeti értékeket a struktúratagoknak megfelelő adatpárok formájában soroltuk fel, de sokkal precízebb és szemléletesebb lenne, ha a tömb egyes soraihoz vagy elemi struktúráihoz tartozó kezdeti értékeket fognánk össze a kapcsos zárójelekkel, mint pl.<br />
+  <pre>
+{ &quot;<span class="k">auto</span>&quot;, 0 },
+{ &quot;<span class="k">break</span>&quot;, 0 },
+{ &quot;<span class="k">case</span>&quot;, 0 },
+...
+</pre>
+  esetben. Akkor, ha a kezdeti érték egyszerű adat vagy karaktersorozat, ill. az összes kezdeti érték fel van sorolva, akkor a belső kapcsos zárójelek elhagyhatók. Amennyiben a <span class="m">kulcstab</span> utáni <span class="m">[]</span> között nem szerepel a tömb mérete, akkor a fordítóprogram a kezdeti értékek leszámolásával határozza meg ezt az értéket (ahogyan erre korábban már utaltunk).
+  <p> A kulcsszavakat számláló program a <span class="m">kulcstab</span> definíciójával kezdődik. A <span class="m">main</span> eljárás a bemeneti szöveget a <span class="m">getword</span> függvény ismételt hívásával olvassa. A <span class="m">getword</span> minden hívásakor egy szót olvas és a program minden beolvasott szót a <a href="03.html">3. fejezetben</a> leírt bináris keresést végző függvénnyel keres meg a <span class="m">kulcstab</span> tömbben. A kereső függvény helyes működéséhez a kulcsszavaknak a tömbben növekvő (azaz ábécé-) sorrendben kell elhelyezkedni.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;ctype.h&gt;
+<span class="d">#include</span> &lt;string.h&gt;
+
+<span class="d">#define</span> MAXSZO 100
+
+<span class="k">int</span> getword(<span class="k">char</span> *, <span class="k">int</span>);
+<span class="k">int</span> binsearch(<span class="k">char</span> *, <span class="k">struct</span> kulcs *, <span class="k">int</span>);
+
+<span class="c">/* C kulcsszavait megszámoló program */</span>
+main()
+{
+   <span class="k">int</span> n;
+   <span class="k">char</span> szo[MAXSZO];
+
+   <span class="k">while</span> (getword(szo, MAXSZO) != <span class="f">EOF</span>)
+      <span class="k">if</span>(<span class="f">isalpha</span> (szo [0]))
+         <span class="k">if</span> ((n = binsearch(szo, kulcstab, NSZO)) &gt;= 0)
+            kulcstab[n].szam++;
+   <span class="k">for</span>(n = 0; n &lt; NSZO; n++)
+      <span class="k">if</span>(kulcstab[n].szam &gt; 0)
+         <span class="f">printf</span>(&quot;%4d %s<span class="e">\n</span>&quot;,
+            kulcstab[n].szam, kulcstab[n].szo);
+   <span class="k">return</span> 0;
+}
+
+<span class="c">/* binsearch: a tab[0] ...tab[n-l] táblázatban szót
+keres */</span>
+<span class="k">int</span> binsearch(<span class="k">char</span> *szo, <span class="k">struct</span> kulcs tab[], <span class="k">int</span> n)
+{
+   <span class="k">int</span> felt;
+   <span class="k">int</span> also, felso, kozep;
+
+   also = 0;
+   felso = n - 1;
+   <span class="k">while</span> (also &lt;= felso) {
+      kozep = (also+felso)/2;
+      <span class="k">if</span> ((felt = <span class="f">strcmp</span>(szo, tab[kozep].szo)) &lt; 0)
+         felso = kozep - 1;
+      <span class="k">else</span> <span class="k">if</span> (felt &gt; 0)
+         also = kozep + 1;
+      <span class="k">else</span>
+         <span class="k">return</span> kozep;
+   } <span class="k">return</span> -1;
+}
+</pre>
+  Hamarosan visszatérünk a <span class="m">getword</span> függvényre is. Egyelőre csak annyit érdemes megjegyezni róla, hogy minden alkalommal, amikor beolvas a bemenetről egy szót, azt bemásolja az első argumentumaként megadott tömbbe.
+  <p> Az <span class="m">NSZO</span> a <span class="m">kulcstab</span> táblázatban lévő kulcsszavak száma. Bár a kulcsszavakat minden további nélkül megszámolhatnánk, sokkal egyszerűbb és biztonságosabb, ha ezt a gépre bízzuk, főképp akkor, ha a lista változhat. Erre az egyik lehetőség, hogy a kezdeti értékek listáját egy null-mutatóval zárjuk és a <span class="m">kulcstab</span> tömböt feldolgozó ciklust addig működtetjük, amíg csak meg nem találtuk a végét.</p>
+  <p> Ez azonban sokkal több annál, mint amire szükségünk van, mivel a tömb méretét már fordításkor meghatározza a fordítóprogram, és azután már nem változhat. A tömb mérete az egyes bejegyzések méretének és a bejegyzések számának szorzata, és a bejegyzések száma a<br />
+  </p>
+  <pre>
+(kulcstab <span class="defit">mérete</span>) / (<span class="k">struct</span> kulcs <span class="defit">mérete</span>)
+</pre>
+  művelettel határozható meg. A fordítás idején hatásos <span class="k">sizeof</span> unáris operátor bármilyen C nyelvű objektum méretének meghatározására használható. A<br />
+  <pre>
+<span class="k">sizeof</span> <span class="defit">objektum</span>
+</pre>
+  és<br />
+  <pre>
+<span class="k">sizeof</span> (<span class="defit">típusnév</span>)
+</pre>
+  kifejezések egy egész számot adnak eredményül, ami a megadott objektum vagy adattípus bájtokban mért mérete. (Szigorúan véve a <span class="k">sizeof</span> operátor egy előjel nélküli egész számot ad, amelynek típusa az <span class="m">&lt;stddef.h&gt;</span> headerben definiált <span class="k">size_t</span> típus.) Az objektum változó, tömb vagy struktúra lehet. A típusnév lehet egy alapadattípus neve (pl. <span class="k">int</span> vagy <span class="k">double</span>) vagy egy származtatott típus (pl. struktúra vagy mutató).
+  <p> A mi esetünkben a kulcsszavak száma a tömb méretének és egy elem méretének hányadosaként adható meg. Ennek kiszámításához, és így <span class="m">NSZO</span> megadásához a <span class="d">#define</span> utasítást használhatjuk a következő módon:<br />
+  </p>
+  <pre>
+<span class="d">#define</span> NSZO (<span class="k">sizeof</span> kulcstab / <span class="k">sizeof</span>(<span class="k">struct</span> kulcs))
+</pre>
+  Egy másik lehetőség, hogy a kifejezésbe a tömb méretének és egy meghatározott elem méretének hányadosát írjuk:<br />
+  <pre>
+<span class="d">#define</span> NSZO (<span class="k">sizeof</span> kulcstab / <span class="k">sizeof</span> kulcstab[0])
+</pre>
+  Ez utóbbi alak előnye, hogy akkor sem kell módosítani, ha megváltoztatjuk a tömböt alkotó elemek típusát.
+  <p> A <span class="k">sizeof</span> operátor nem alkalmazható az <span class="d">#if</span> feltételes fordítási parancsot tartalmazó sorokban, mivel a C előfeldolgozó rendszer nem elemzi a típusneveket, viszont a <span class="d">#define</span> utasítás utáni kifejezésben már szerepelhet, mert ezt nem az előfeldolgozó, hanem a fordítóprogram értékeli ki.</p>
+  <p> Most még szólnunk kell a <span class="m">getword</span> függvényről! A programunkhoz a pillanatnyilag szükségesnél sokkal általánosabb <span class="m">getword</span> függvényt írtunk, de ettől az még nem lett bonyolultabb. A <span class="m">getword</span> függvény a bemenetről előkészíti a következő „szót”, ahol a szót úgy értelmezzük, hogy az betűkből és számjegyekből álló, betűvel kezdődő karaktersorozat vagy egy tetszőleges, nem üres helyet jelentő karakter. A függvény visszatérési értéke a szó első karaktere, vagy az állomány végét jelző <span class="f">EOF</span>, vagy maga a beolvasott karakter, ha az nem alfabetikus volt.<br />
+  </p>
+  <pre>
+<span class="c">/* getword: beveszi a következő szót vagy karaktert
+a bemenetről */</span>
+<span class="k">int</span> getword(<span class="k">char</span> *szo, <span class="k">int</span> lim)
+{
+   <span class="k">int</span> c, getch(<span class="k">void</span>);
+   <span class="k">void</span> ungetch (<span class="k">int</span>);
+   <span class="k">char</span> *w = szo;
+
+   <span class="k">while</span> (<span class="f">isspace</span>(c = getch()))
+      ;
+   <span class="k">if</span> (c != <span class="f">EOF</span>)
+      *w++ = c;
+   <span class="k">if</span>(!<span class="f">isalpha</span>(c)) {
+      *w = '<span class="e">\0</span>';
+      <span class="k">return</span> c;
+   }
+   <span class="k">for</span> ( ; --lim &gt; 0; w++)
+      <span class="k">if</span> (!<span class="f">isalnum</span>(*w = getch())) {
+         ungetch(*w);
+         <span class="k">break</span>;
+      }
+   *w = '<span class="e">\0</span>';
+   <span class="k">return</span> szo[0]; 
+}
+</pre>
+  A <span class="m">getword</span> függvény használja a <a href="04.html">4. fejezetben</a> bemutatott <span class="m">getch</span> és <span class="m">ungetch</span> függvényeket. Amikorra egy alfanumerikus kulcsszó beolvasásra került, akkorra a <span class="m">getword</span> már egy karakterrel többet olvasott be, amit az <span class="m">ungetch</span> hívásával ad vissza a bemenetnek, hogy a <span class="m">getword</span> következő hívásakor rendelkezésre álljon. A <span class="m">getword</span> használja még az üres helyeket átlépő <span class="f">isspace</span>, a betűket azonosító <span class="f">isalpha</span> és a betűket, ill. számjegyeket azonosító <span class="f">isalnum</span> függvényeket is, amelyek a <span class="m">&lt;ctype.h&gt;</span> standard headerben találhatók.<br />
+  <br />
+  <p><b>6.1.</b> gyakorlat. Az itt megírt <span class="m">getword</span> függvény nem kezeli az aláhúzást, a karakteres állandót, a megjegyzést (commentet) és az előfeldolgozó rendszert vezérlő sorokat. Írjuk meg a függvény ezen hiányosságokat kiküszöbölő, javított változatát.<br />
+    <br />
+  </p>
+  <h3><a name="6.4." id="6.4."></a>6.4. Struktúrákat kijelölő mutatók<br />
+  </h3>
+  A mutatók és a struktúratömbök együttes használatának bemutatására írjuk meg ismét a kulcsszavakat számláló programot úgy, hogy indexelt tömb helyett mutatókat alkalmazunk! A <span class="m">kulcstab</span> külső deklarációját nem szükséges módosítani, de a <span class="m">main</span> és a <span class="m">binsearch</span> eljárásokat meg kell változtatni. Az új programok:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;ctype.h&gt;
+<span class="d">#include</span> &lt;string.h&gt;
+<span class="d">#define</span> MAXSZO 100
+
+<span class="k">int</span> getword(<span class="k">char</span> *, <span class="k">int</span>);
+<span class="k">struct</span> kulcs *binsearch(<span class="k">char</span> *, <span class="k">struct</span> kulcs *, <span class="k">int</span>);
+
+<span class="c">/* C kulcsszavait megszámoló program - mutatós változat */</span>
+main ()
+{
+   <span class="k">char</span> szo[MAXSZO];
+   <span class="k">struct</span> kulcs *p;
+
+   <span class="k">while</span> (getword(szo, MAXSZO) != <span class="f">EOF</span>)
+      <span class="k">if</span> (<span class="f">isalpha</span>(szo[0]))
+         <span class="k">if</span> ((p=binsearch(szo, kulcstab, NSZO)) != <span class="f">NULL</span>)
+            p-&gt;szam++;
+   <span class="k">for</span>(p = kulcstab; p &lt; kulcstab + NSZO; p++)
+      <span class="k">if</span> (p-&gt;szam &gt; 0)
+         <span class="f">printf</span>(&quot;%4d %s<span class="e">\n</span>&quot;, p-&gt;szam, p-&gt;szo);
+   <span class="k">return</span> 0;
+}
+
+<span class="c">/* binsearch: a tab[0] ... tab[n-l] táblázatban szót
+keres */</span>
+<span class="k">struct</span> kulcs *binsearch(<span class="k">char</span> *szo,<span class="k">struct</span> kulcs *tab,<span class="k">int</span> n)
+{
+   <span class="k">int</span> felt;
+   <span class="k">struct</span> kulcs *also = &amp;tab[0];
+   <span class="k">struct</span> kulcs *felso = &amp;tab[n];
+   <span class="k">struct</span> kulcs *kozep;
+
+   <span class="k">while</span> (also &lt; felso) {
+      kozep = also + (felso - also)/2;
+      <span class="k">if</span> ((felt = <span class="f">strcmp</span>(szo, kozep-&gt;szo)) &lt; 0)
+         felso = kozep;
+      <span class="k">else</span> <span class="k">if</span> (felt &gt; 0)
+         also = kozep + 1;
+      <span class="k">else</span>
+         <span class="k">return</span> kozep;
+   }
+   <span class="k">return</span> <span class="f">NULL</span>;
+}
+</pre>
+  A programokban több dologra is szeretnénk felhívni a figyelmet! Elsőnek a <span class="m">binsearch</span> függvény deklarációjára, ami azt jelzi, hogy a függvény egy egész adat helyett egy <span class="k">struct</span> <span class="m">kulcs</span> típusú struktúrát megcímző mutatóval tér vissza. Ezt a függvény prototípusában és a <span class="m">binsearch</span>-ben egyaránt deklaráltuk. Ha a <span class="m">binsearch</span> talál egy szót, akkor egy azt címző mutatóval tér vissza, ha a keresés sikertelen, akkor a visszatérési érték <span class="f">NULL</span>.
+  <p> Másodiknak érdemes megemlíteni, hogy a <span class="m">kulcstab</span> elemeit mutatókkal jelöljük ki. Ez a <span class="m">binsearch</span> jelentős megváltoztatását igényli. Az <span class="m">also</span> és <span class="m">felso</span> változókhoz rendelt kezdeti érték mutató lesz, ami a táblázat kezdetére, ill. éppen a vége utáni helyre mutat.</p>
+  <p> A középső elem helyének kiszámítása sem történhet a megszokott és egyszerű<br />
+  </p>
+  <pre>
+kozep = (also + felso)/2; <span class="c">/* HIBÁS!!! */</span>
+</pre>
+  összefüggéssel, mivel két mutató összeadása tilos. A kivonás művelete megengedett, így <span class="m">felso-also</span> az elemek száma (ami <span class="k">int</span> típusú) és<br />
+  <pre>
+kozep = also + (felso - also)/2;
+</pre>
+  kifejezés a <span class="m">kozep</span> értékét úgy állítja be, hogy az éppen az <span class="m">also</span> és <span class="m">felso</span> között középen elhelyezkedő elemre mutasson.
+  <p> A legfontosabb módosítás, hogy az algoritmust úgy kellett átalakítani, hogy garantáltan ne adjon illegális vagy a tömbön kívüli elemet címző mutatót. A probléma az, hogy mind az <span class="m">&amp;tab[-1]</span>, mind az <span class="m">&amp;tab[n]</span> kívül esik a <span class="m">tab</span> tömb határain. Az első szigorúan tilos és a második alak is illegális hivatkozást eredményezhet. Mindazonáltal a C nyelv definíciója garantálja, hogy a címaritmetika egy tömb utolsó utáni elemével (itt <span class="m">tab[n]</span>-nel) helyesen működjön.</p>
+  <p> A <span class="m">main</span> eljárásban azt írtuk, hogy<br />
+  </p>
+  <pre>
+<span class="k">for</span> (p = kulcstab; p &lt; kulcstab + NSZO; p++)
+</pre>
+  Ha <span class="m">p</span> egy struktúra mutatója, akkor minden <span class="m">p</span>-t használó aritmetikai műveletnél a cím-aritmetika figyelembe veszi a struktúra méretét, így <span class="m">p++</span> helyes mértékben inkrementálja a mutatót, hogy az a struktúrákból álló tömb következő elemére mutasson. Ennek következtében a ciklus ellenőrző feltétele a megfelelő időben állítja le a ciklust.
+  <p> Ne gondoljuk azt, hogy a struktúra mérete az egyes tagok méreteinek összege! Mivel különböző objektumok összeigazításáról van szó, közöttük a struktúrában névvel nem rendelkező lyukak lehetnek! Így pl. ha a <span class="k">char</span> típus egy bájtot, az <span class="k">int</span> négy bájtot igényel, akkor a<br />
+  </p>
+  <pre>
+<span class="k">struct</span> {
+   <span class="k">char</span> c;
+   <span class="k">int</span> i;
+};
+</pre>
+  struktúra nyolc bájton helyezkedik el, szemben a várt öt bájttal. A <span class="k">sizeof</span> operátor mindig a tényleges méretet adja.
+  <p> Végül még szólnánk a program formájáról: amikor egy függvény egy komplikált típusú adattal, pl. egy struktúra mutatójával tér vissza, mint a<br />
+  </p>
+  <pre>
+<span class="k">struct</span> kulcs *binsearch(<span class="k">char</span> *szo, <span class="k">struct</span> kulcs *tab, <span class="k">int</span> n)
+</pre>
+  esetben is, a függvény neve nehezen vehető észre vagy kereshető szövegszerkesztővel. Emiatt néha a<br />
+  <pre>
+<span class="k">struct</span> kulcs *
+binsearch(<span class="k">char</span> *szo, <span class="k">struct</span> kulcs *tab, <span class="k">int</span> n)
+</pre>
+  írásmódot szokták alkalmazni. Mindkét forma megfelelő, a választás közöttük ízlés kérdése.<br />
+  <br />
+  <h3><a name="6.5." id="6.5."></a>6.5. Önhivatkozó struktúrák<br />
+  </h3>
+  Tételezzük fel, hogy az előbbinél sokkal általánosabb problémát akarunk megoldani: egy bemeneti szöveg összes szavának előfordulását akarjuk megszámolni. Mivel a szavak listája eredendően ismeretlen, így a hagyományos rendezés és bináris keresés nem használható. A lineáris keresést, amikor minden beolvasott szóról egy szólistán elölről kezdve végigmenve eldöntenénk, hogy már előfordult-e vagy sem, alkalmazhatnánk, de a program futási ideje rendkívül nagy lenne (pontosabban a futási idő valószínűleg a bemeneti szavak számának négyzetével arányosan növekedne). Hogyan kellene megszerveznünk az adatrendszerünket ahhoz, hogy hatékonyan megbirkózzunk a tetszőleges szavakból álló listával?
+  <p> Az egyik lehetséges megoldás, hogy állandóan rendezett állapotban tartjuk a már feldolgozott szavak halmazát úgy, hogy a beérkezés sorrendjében a megfelelő helyre rakjuk a szavakat. Ezt azonban nem úgy csináljuk, hogy egy egyindexes tömbben folyton odébbtoljuk a már meglévő szavakat, hogy helyet szorítsunk egy új szónak. Ez a megoldás szintén nagyon nagy futási időt eredményezne, ezért helyette egy <i>bináris fának</i> nevezett adatstruktúrát alkalmazunk.</p>
+  <p> A bináris fa minden egyes különböző szóhoz egy „csomópontot” rendel, és minden csomópont a<br />
+  </p>
+  <ul>
+    <li>a szó szövegét megcímző mutatóból, </li>
+    <li>a szó előfordulásának számából, </li>
+    <li>a csomópont bal oldali gyermekét (leszármazottját) címző mutatóból, </li>
+    <li>a csomópont jobb oldali gyermekét (leszármazottját) címző mutatóból </li>
+  </ul>
+  áll. Egy csomópontnak kettőnél több gyermeke nem lehet.
+  <p> Az egyes csomópontokat úgy generáljuk, hogy bármelyik csomópont bal oldali részfája csupa olyan szót tartalmaz, amely lexikográfiásan kisebb nála, amíg a jobb oldali részfa a lexikográfiásan nagyobb szavakat tartalmazza. Így annak a mondatnak a bináris fája (a kis- és nagybetűk között nem téve különbséget és a vesszőt nem véve figyelembe), hogy „Jancsi bácsi rosszat álmodott, leértékelték a forintot és ebből tudta, hogy keserves világ következik” a következő módon néz ki:<br />
+    <br />
+    <br />
+  </p>
+  <div align="center"> <img src="img/15.png" width="549" height="191" border="0" alt="img/15.png" /> </div>
+  <br />
+  <br />
+  <br />
+  Azt, hogy az éppen beolvasott szó benne van-e a fában, úgy dönthetjük el, hogy elindulunk a gyökértől és a beolvasott szót mindig összehasonlítjuk az adott csomóponton tárolt szóval. Ha bárhol egyezést tapasztalunk, akkor a kérdést igenlő módon megoldottuk. Ha a szó kisebb a tárolt szónál, akkor a keresést a bal oldali gyermekkel, különben pedig a jobb oldalival folytatjuk. Ha a kívánt irányban nincs gyermek, akkor az éppen beolvasott szó nincs a fában és a hiányzó gyermek üres helyére kell beírnunk. Ez a folyamat rekurzívan ismételhető, mivel bármely csomópontból kiinduló keresés a csomópont gyermekéből kiinduló keresést használja. Ezért elég természetes, hogy a szavak beillesztésére, majd az eredmény kiírására rekurzív eljárásokat használunk.
+  <p> Visszatérve az egyes csomópontok leírásához, látszik, hogy azok kényelmesen reprezentálhatók egy négy tagból álló struktúrával:<br />
+  </p>
+  <pre>
+<span class="k">struct</span> fcsomo {          <span class="c">/* a fa csomópontja */</span>
+   <span class="k">char</span> *szo;            <span class="c">/* a szó szövegének mutatója */</span>
+   <span class="k">int</span> szam;             <span class="c">/* előfordulások száma */</span>
+   <span class="k">struct</span> fcsomo *bal;   <span class="c">/* bal oldali gyermek */</span>
+   <span class="k">struct</span> fcsomo *jobb;  <span class="c">/* jobb oldali gyermek */</span>
+};
+</pre>
+  A csomópontoknak ez a rekurzív deklarációja elég megdöbbentően hat, de szintaktikailag korrekt. Az illegális, ha egy struktúra saját magára való hivatkozást tartalmaz, de a<br />
+  <pre>
+<span class="k">struct</span> fcsomo *bal;
+</pre>
+  a <span class="m">bal</span>-t, mint az <span class="m">fcsomo</span>-hoz tartozó mutatót deklarálja és nem egy <span class="m">fcsomo</span> struktúrát.
+  <p> Alkalmasint meg kell említeni az önhivatkozó struktúrák egy változatát, amikor két struktúra hivatkozik egymásra. Ez a következő módon oldható meg:<br />
+  </p>
+  <pre>
+<span class="k">struct</span> t {
+   ...
+   <span class="k">struct</span> s *p <span class="c">/* p egy s típusú struktúrát */</span>
+};    <span class="c">/* címez */</span>
+<span class="k">struct</span> s {
+   ...
+   <span class="k">struct</span> t *q <span class="c">/* q egy t típusú struktúrát */</span>
+}; <span class="c">/* címez */</span>
+</pre>
+  A szavak előfordulását számláló program meglepően kicsi, mivel felhasználja a korábban már megírt <span class="m">getword</span> függvényt. A <span class="m">main</span> eljárás a <span class="m">getword</span> függvénnyel szavakat olvas a bemenetről és az <span class="m">addtree</span> függvénnyel elhelyezi azokat a fában.<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;ctype.h&gt;
+<span class="d">#include</span> &lt;string.h&gt;
+<span class="d">#define</span> MAXSZO 100
+
+<span class="k">struct</span> fcsomo *addtree(<span class="k">struct</span> fcsomo *, <span class="k">char</span> *);
+<span class="k">void</span> treeprint (<span class="k">struct</span> fcsomo *);
+<span class="k">int</span> getword(<span class="k">char</span> *, <span class="k">int</span>);
+
+<span class="c">/* szavak gyakoriságának számlálása */</span>
+main ()
+{
+   <span class="k">struct</span> fcsomo *gyoker;
+   <span class="k">char</span> szo[MAXSZO];
+
+   gyoker = <span class="f">NULL</span>;
+   <span class="k">while</span> (getword(szo, MAXSZO) != <span class="f">EOF</span>)
+      <span class="k">if</span> (<span class="f">isalpha</span>(szo[0]))
+         gyoker = addtree(gyoker, szo);
+   treeprint(gyoker);
+   <span class="k">return</span> 0;
+}
+</pre>
+  Az <span class="m">addtree</span> függvény rekurzív. A <span class="m">main</span> egy szót helyez el a fa legfelső szintjén (a gyökéren). Ezután az <span class="m">addtree</span> minden egyes lépésben az új szót összehasonlítja a csomópontban tárolt szóval és az eredménytől függően a bal vagy a jobb oldali ágon halad tovább az <span class="m">addtree</span> rekurzív hívásával. A szó vagy megegyezik egy csomóponton tárolt szóval (ekkor az előfordulások számát tároló <span class="m">szam</span> változót növelni kell eggyel), vagy elérjük a végjelzést (null-mutatót), ami azt jelzi, hogy egy új csomópontot kell létrehozni és a fához csatolni. Ha új csomópontot kellett létrehozni, akkor az <span class="m">addtree</span> az azt címző mutatóval tér vissza, ami bekerül a szülő csomópontjába. Az <span class="m">addtree</span> függvény:<br />
+  <pre>
+<span class="k">struct</span> fcsomo *talloc(<span class="k">void</span>);
+<span class="k">char</span> *strdup(<span class="k">char</span> *);
+
+<span class="c">/* addtree: w elhelyezése a p című csomópontban
+vagy az alatt */</span>
+<span class="k">struct</span> fcsomo *addtree(<span class="k">struct</span> fcsomo *p, <span class="k">char</span> *w)
+{
+   <span class="k">int</span> felt;
+
+   <span class="k">if</span> (p == <span class="f">NULL</span>) { <span class="c">/* egy új szó érkezett */</span>
+      p = talloc(); <span class="c">/* csinál egy új csomópontot */</span>
+      p-&gt;szo = strdup(w);
+      p-&gt;szam = 1;
+      p-&gt;bal = p-&gt;jobb = <span class="f">NULL</span>;
+   } <span class="k">else</span> <span class="k">if</span> ((felt = <span class="f">strcmp</span>(w, p-&gt;szo)) == 0)
+      p-&gt;szam++; <span class="c">/* megismétlődött a szó */</span>
+   <span class="k">else</span> <span class="k">if</span> (felt &lt; 0) <span class="c">/* kisebb, a bal oldali részfába kerül */</span>
+      p-&gt;bal = addtree(p-&gt;bal, w);
+   <span class="k">else</span> <span class="c">/* nagyobb, a jobb oldali részfába kerül */</span>
+      p-&gt;jobb = addtree(p-&gt;jobb, w);
+   <span class="k">return</span> p;
+}
+</pre>
+  Az új csomóponthoz szükséges tárolóhelyet a <span class="m">talloc</span> függvény készíti elő és egy mutatóval tér vissza, ami az új csomópont elhelyezésére alkalmas szabad tárolóhelyet címzi. Az új szót az <span class="m">strdup</span> függvény másolja az így kijelölt (de közelebbről nem ismert) helyre. (A <span class="m">talloc</span> és <span class="m">strdup</span> függvényeket később ismertetjük.) Az új csomópontban <span class="m">1</span> kezdeti értéket kap az előfordulási darabszám és a két gyermeket kijelölő mutató értéke <span class="f">NULL</span> lesz. Az <span class="m">addtree</span> függvénynek ez a része csak a fán belüli keresés befejezésekor, azaz új csomópont beiktatásakor hajtódik végre. A <span class="m">talloc</span> és a <span class="m">strdup</span> hibaellenőrzését elhagytuk, ami persze nem túl szerencsés.
+  <p> A <span class="m">treeprint</span> függvény szétválogatott formában kinyomtatja a fát. Minden csomópontnál először kiírja a bal oldali részfát (minden, a csomópontbeli szónál kisebb szót), majd a csomópont szavát és ezután a jobb oldali részfát (minden, a csomópontbeli szónál nagyobb szót). Ha az olvasó bizonytalan a rekurzív eljárások használata terén, javasoljuk, hogy a fejezet elején megadott fa felhasználásával papíron, ceruzával szimulálja a <span class="m">treeprint</span> működését.<br />
+  </p>
+  <pre>
+<span class="c">/* treeprint : a p fa rendezett kiírása */</span>
+<span class="k">void</span> treeprint(<span class="k">struct</span> fcsomo *p)
+{
+   <span class="k">if</span> (p != <span class="f">NULL</span>) {
+      treeprint(p-&gt;bal);
+      <span class="f">printf</span>(&quot;%4d %s<span class="e">\n</span>&quot;, p-&gt;szam, p-&gt;szo);
+      treeprint(p-&gt;jobb);
+   }
+}
+</pre>
+  Meg szeretnénk jegyezni, hogy ha a fa kiegyensúlyozatlanná válik, mert a szavak nem véletlenszerűen érkeznek, akkor a program futási ideje nagyon megnőhet. A legrosszabb esetben, amikor a szavak már sorrendben vannak, a program az igen időigényes lineáris keresési algoritmust szimulálja. A bináris fáknak vannak olyan általánosításai, amikkel ez a kedvezőtlen viselkedés elkerülhető, de ezekkel itt nem foglalkozunk.
+  <p> Mielőtt befejeznénk a példa elemzését, érdemes megvizsgálni a tárterület-lefoglalás egyik problémáját. Nyilvánvalóan jó lenne, ha a programban csak egyetlen tárterületlefoglaló eljárás lenne, amellyel különböző objektumok számára kérhetnénk helyet. Ha azonban ugyanaz az eljárás foglal helyet mondjuk egy <span class="k">char</span> típusú adathoz tartozó mutató és egy <span class="k">struct</span> <span class="m">fcsomo</span> típusú struktúrához tartozó mutató számára, akkor két kérdés merül fel. Az első, hogy egy valós számítógép esetén hogyan elégítsük ki a különböző objektumokra vonatkozó elhelyezési követelményeket (pl., hogy egy egész típusú adatnak mindig páros tárcímen kell elhelyezkedni). A második kérdés, hogy milyen deklaráció teszi lehetővé, hogy a tárterület-lefoglaló eljárás különböző típusú mutatókkal térhessen vissza.</p>
+  <p> Az objektumok tárbeli elhelyezésére vonatkozó előírások viszonylag könnyen kielégíthetők, némi helyveszteség árán, ha megköveteljük, hogy a tárterület-lefoglaló eljárás mindig mutatóval térjen vissza, mivel az minden elhelyezési előírást kielégít. Az <a href="05.html">5. fejezetben</a> ismertetett <span class="m">alloc</span> függvény semmiféle meghatározott elhelyezést nem garantál, ezért a programunkhoz a <span class="f">malloc</span> standard könyvtári függvényt használtuk, ami kielégíti ezeket a követelményeket. A <a href="08.html">8. fejezetben</a> mutatunk egy lehetőséget a <span class="f">malloc</span> megvalósítására.</p>
+  <p> Egy <span class="f">malloc</span>-hoz hasonló függvény típusdeklarációja minden olyan nyelvben gondot okoz, amely a típusellenőrzést komolyan veszi. A C nyelvben a megfelelő módszert az jelenti, ha a <span class="f">malloc</span> visszatérési értékét <span class="k">void</span> típusú mutatóként deklaráljuk, majd explicit kényszerített típusmódosítással érjük el, hogy a mutató a kívánt típusú legyen. A <span class="f">malloc</span> és a vele rokon függvények az <span class="m">&lt;stdlib.h&gt;</span> standard headerben vannak deklarálva. A fentiek alapján írt <span class="m">talloc</span> függvény a következő:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdlib.h&gt;
+
+<span class="c">/* talloc: létrehoz egy fcsomo csomópontot */</span>
+<span class="k">struct</span> fcsomo *talloc(<span class="k">void</span>)
+{
+   <span class="k">return</span> (<span class="k">struct</span> fcsomo *) <span class="f">malloc</span>(<span class="k">sizeof</span>(<span class="k">struct</span> fcsomo));
+}
+</pre>
+  Az <span class="m">strdup</span> függvény mindössze az argumentumában megadott karaktersorozatot másolja a <span class="f">malloc</span> hívásával kapott helyre.<br />
+  <pre>
+<span class="k">char</span> *strdup(<span class="k">char</span> *s) <span class="c">/* másolatot készít s-ről */</span>
+{
+   <span class="k">char</span> *p;
+
+   p = (<span class="k">char</span> *) <span class="f">malloc</span>(<span class="f">strlen</span>(s) + 1);
+      <span class="c">/* a +1 hely a '\0' jelnek kell */</span>
+   <span class="k">if</span> (p != <span class="f">NULL</span>)
+      <span class="f">strcpy</span>(p, s);
+   <span class="k">return</span> p;
+}
+</pre>
+  A <span class="f">malloc</span> függvény <span class="f">NULL</span> értékkel tér vissza, ha nincs szabad hely és a <span class="m">strdup</span> továbbadja ezt az értéket, amivel a hívó eljárásra bízza a hibakezelést.
+  <p> A <span class="f">malloc</span> függvény hívásával lefoglalt tárterület a <span class="f">free</span> függvény hívásával szabadítható fel és tehető újra felhasználhatóvá. A kérdéssel részletesebben a <a href="07.html">7.</a> és <a href="08.html">8. fejezetben</a> foglalkozunk.<br />
+    <br />
+  </p>
+  <p><b>6.2.</b> gyakorlat. Írjunk programot, ami beolvas egy C nyelvű programot és ábécésorrendben kiírja a változók azon csoportjait, amelyekben az első 6 karakter azonos, de a 7. karaktertől kezdődően valahol különböznek! A program ne vegye figyelembe a karaktersorozatokban és megjegyzésekben lévő szavakat! A feladatot úgy oldjuk meg, hogy a 6 parancssorból megadható paraméter legyen!</p>
+  <p> <b>6.3.</b> gyakorlat. Írjunk kereszthivatkozási programot, amely kiírja egy dokumentumban lévő szavakat az előfordulás, helyüket megadó sorszámokkal együtt! A program ne vegye figyelembe az olyan töltelékszavakat, mint „a”, „az”, „és” stb.!</p>
+  <p> <b>6.4.</b> gyakorlat. Írjunk programot, amely kiírja a beolvasott szöveg egyes szavait azok előfordulási gyakoriságának csökkenő sorrendjében! Minden szó elé írjuk ki az előfordulásának számát is!<br />
+    <br />
+  </p>
+  <h3><a name="6.6." id="6.6."></a>6.6. Keresés táblázatban<br />
+  </h3>
+  Ebben a pontban egy táblázatkereső programcsomag gerincét írjuk meg, amivel bemutatjuk a struktúrák néhány további alkalmazási lehetőségét és tulajdonságát. A programcsomag elég tipikus, ilyen programok találhatók a makrófeldolgozók és fordítóprogramok szimbólumtáblázatot kezelő részében. Például nézzük a <span class="d">#define</span> utasítást! Amikor valahol előfordul a<br />
+  <pre>
+<span class="d">#define</span> BE 1
+</pre>
+  programsor, akkor a <span class="m">BE</span> nevet és az <span class="m">1</span> helyettesítő szöveget egy táblázatban tárolja el a rendszer. Később, amikor a <span class="m">BE</span> név előfordul egy olyan utasításban pl., mint<br />
+  <pre>
+allapot = BE;
+</pre>
+  azt az <span class="m">1</span> értékkel kell helyettesíteni.
+  <p> A nevek és helyettesítő szövegek kezelésére két eljárást írtunk. Az <span class="m">install(s, t)</span> függvény beírja az <span class="m">s</span> nevet és a <span class="m">t</span> helyettesítő szöveget a táblázatba (<span class="m">s</span> és <span class="m">t</span> mindkettő karaktersorozat). A <span class="m">lookup(s)</span> függvény megkeresi <span class="m">s</span>-t a táblázatban és egy mutatóval tér vissza, amely <span class="m">s</span> táblázatbeli helyére mutat vagy <span class="f">NULL</span> értékű, ha <span class="m">s</span> nincs a táblázatban.</p>
+  <p> A kereséshez az ún. <i>hash algoritmust</i> használjuk, amely a bejövő nevet kis, nem negatív egész számmá alakítja és ezt a számot használja egy mutatókból álló tömb indexelésére. A tömb egy eleme a hash-kódolású neveket tartalmazó blokkok láncolt listájának kezdetére mutat. A tömbelem értéke <span class="f">NULL</span>, ha a hash-kódnak megfelelő értékű név. A lista szerkezetét a következő oldalon található vázlat mutatja.<br />
+    <br />
+    <br />
+  </p>
+  <div align="center"> <img src="img/16.png" width="259" height="116" border="0" alt="img/16.png" /> </div>
+  <br />
+  <br />
+  <br />
+  A lista minden blokkja egy struktúra, amely a név mutatóját, a helyettesítő szöveg mutatóját, valamint a lista következő blokkjának mutatóját tartalmazza. A következő blokk <span class="f">NULL</span> mutatója jelzi a lista végét. A blokkot alkotó struktúra deklarációja:<br />
+  <pre>
+<span class="k">struct</span> nlist { <span class="c">/* a táblázat bejegyzései: */</span>
+   <span class="k">struct</span> nlist *kovetkezo; <span class="c">/* a következő elem a listában */</span>
+   <span class="k">char</span> *nev; <span class="c">/* a definiált név */</span>
+   <span class="k">char</span> *hszov; <span class="c">/* a helyettesítő szöveg */</span>
+};
+</pre>
+  A megfelelő mutatótömb:<br />
+  <pre>
+<span class="d">#define</span> HASHMERET 101
+
+<span class="k">static</span> <span class="k">struct</span> nlist *hashtab[HASHMERET];
+<span class="c">/* a mutatók táblázata */</span>
+</pre>
+  A <span class="m">lookup</span> és <span class="m">install</span> függvényekben használt hash-kódot előállító függvény a karaktersorozatban lévő karaktereket összegzi az előző összeg megfelelően „összekavart” értékével és az eredmény ennek az összegnek a tömbmérettel való osztásakor kapott maradék. Ez nem a legjobb algoritmus, de mindenesetre rövid és egyszerű. A függvény programja:<br />
+  <pre>
+<span class="c">/* hash: az s karaktersorozat hash-kódját generálja */</span>
+<span class="k">unsigned</span> hash(<span class="k">char</span> *s)
+{
+   <span class="k">unsigned</span> hashert;
+
+   <span class="k">for</span> (hashert = 0; *s != '<span class="e">\0</span>'; s++)
+      hashert = *s + 31 * hashert;
+   <span class="k">return</span> hashert % HASHMERET;
+}
+</pre>
+  Az előjel nélküli típusmegadás (és az ehhez tartozó aritmetikai művelet) garantálják, hogy a hash-kód nem negatív.
+  <p> A hash-kódolási eljárás létrehoz egy kezdő indexet a <span class="m">hashtab</span> tömbhöz, és ha a karaktersorozat egyáltalán megtalálható valahol, akkor a blokkok itt kezdődő listájában kell lennie. A keresést a <span class="m">lookup</span> függvény végzi. Ha a <span class="m">lookup</span> megtalálja a táblázatban a bejegyzést, akkor annak mutatójával tér vissza, ha nem, akkor a visszatérési érték <span class="f">NULL</span>.<br />
+  </p>
+  <pre>
+
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;string.h&gt;
+
+<span class="c">/* lookup: s keresése a hashtab táblázatban */</span>
+<span class="k">struct</span> nlist *lookup(<span class="k">char</span> *s)
+{
+   <span class="k">struct</span> nlist *np;
+
+   <span class="k">for</span> (np = hashtab[hash(s)]; np != <span class="f">NULL</span>; np = np-&gt;kovetkezo)
+   <span class="k">if</span> (<span class="f">strcmp</span>(s, np-&gt;nev) == 0)
+      <span class="k">return</span> np; <span class="c">/* megtalálta */</span>
+   <span class="k">return</span> <span class="f">NULL</span>; <span class="c">/* nem találta meg */</span>
+}
+</pre>
+  A <span class="m">lookup</span> függvényben lévő <span class="k">for</span> ciklus a láncolt listában való haladás szokásos megvalósítása:<br />
+  <pre>
+<span class="k">for</span> (ptr = fej; ptr != <span class="f">NULL</span>; ptr = ptr-&gt;kovetkezo)
+...
+</pre>
+  Az <span class="m">install</span> függvény a <span class="m">lookup</span>-ot használja annak eldöntésére, hogy a név benne van-e a táblázatban. Ha igen, akkor az új bejegyzés felülírja a régit, ha nem, akkor viszont egy új bejegyzés keletkezik. Az <span class="m">install</span> visszatérési értéke <span class="f">NULL</span>, ha bármilyen ok miatt nincs hely egy új bejegyzés létrehozására.<br />
+  <pre>
+<span class="d">#include</span> &lt;stdlib.h&gt;
+
+<span class="k">struct</span> nlist *lookup(<span class="k">char</span> *);
+<span class="k">char</span> *strdup(<span class="k">char</span> *);
+
+<span class="c">/* install: a nevet és a helyettesítő szöveget
+elhelyezi a hashtab-ban */</span>
+<span class="k">struct</span> nlist *install(<span class="k">char</span> *nev, <span class="k">char</span> *hszov)
+{
+   <span class="k">struct</span> nlist *np;
+   <span class="k">unsigned</span> hashert;
+
+   <span class="k">if</span> ((np = lookup(nev)) == <span class="f">NULL</span>) { <span class="c">/* nem találta */</span>
+      np = (<span class="k">struct</span> nlist *) <span class="f">malloc</span> (<span class="k">sizeof</span>(*np));
+      <span class="k">if</span> (np == <span class="f">NULL</span> || (np-&gt;nev = strdup(nev)) == <span class="f">NULL</span>)
+         <span class="k">return</span> <span class="f">NULL</span>;
+      hashert = hash(nev);
+      np-&gt;kovetkezo = hashtab[hashert];
+      hashtab[hashert] = np;
+   } <span class="k">else</span> <span class="c">/* már van ilyen bejegyzés */</span>
+      <span class="f">free</span>((<span class="k">void</span> *)np-&gt;hszov); <span class="c">/* felszabadítja az
+            előző helyettesítő szöveg helyét */</span>
+   <span class="k">if</span>((np-&gt;hszov = strdup(hszov)) == <span class="f">NULL</span>)
+      <span class="k">return</span> <span class="f">NULL</span>;
+   <span class="k">return</span> np;
+}
+</pre>
+  <br />
+  <p><b>6.5.</b> gyakorlat. Írjunk <span class="m">undef</span> néven függvényt, amely a <span class="m">lookup</span> és <span class="m">install</span> függvények kezelte táblázatból töröl egy nevet és a hozzá tartozó definíciót!</p>
+  <p> <b>6.6.</b> gyakorlat. Ebben a részben ismertetett eljárások, valamint a <span class="m">getch</span> és <span class="m">ungetch</span> függvények felhasználásával valósítsa meg a <span class="d">#define</span> utasítást feldolgozó egyszerű (argumentumokat nem használó) programot! A program legyen alkalmas a C nyelv szintaktikája szerinti, argumentum nélküli <span class="d">#define</span> utasítások feldolgozására!<br />
+    <br />
+  </p>
+  <h3><a name="6.7." id="6.7."></a>6.7. A typedef utasítás<br />
+  </h3>
+  A C nyelv <span class="k">typedef</span> utasításával új adattípus-neveket hozhatunk létre. Például a<br />
+  <pre>
+<span class="k">typedef</span> <span class="k">int</span> Hossz;
+</pre>
+  deklaráció bevezeti a <span class="m">Hossz</span> típusnevet mint az <span class="k">int</span> típusnév szinonimáját. A <span class="m">Hossz</span> ezután szabadon használható deklarációkban, kényszerített típuskonverzióban stb., csakúgy, mint az <span class="k">int</span> típusnév. Pl.:<br />
+  <pre>
+Hossz len, maxlen;
+Hossz *hosszak[2];
+</pre>
+  Hasonlóan a<br />
+  <pre>
+<span class="k">typedef</span> <span class="k">char</span> *String;
+</pre>
+  deklaráció hatására a <span class="m">String</span> a <span class="m"><span class="k">char</span> *</span> karakteres mutató szinonimája lesz, így használható a következő deklarációkban, ill. kényszerített típuskonverzióban:<br />
+  <pre>
+String p, sorptr[MAXSOR], alloc(<span class="k">int</span>);
+<span class="k">int</span> <span class="f">strcmp</span>(String, String);
+p = (String) <span class="f">malloc</span>(100);
+</pre>
+  Vegyük észre, hogy a <span class="k">typedef</span>-ben deklarált típus a változó nevének a helyén jelenik meg és nem közvetlenül a <span class="k">typedef</span> utasításszó után! Szintaktikailag a <span class="k">typedef</span> hasonló a tárolási osztályokat kijelölő <span class="k">extern</span>, <span class="k">static</span> stb. utsításokhoz. A <span class="k">typedef</span> utasítással deklarált típus nevét nagy kezdőbetűvel írtuk, hogy kiemeljük a szövegkörnyezetből.
+  <p> Most nézzünk egy bonyolultabb példát! A <span class="k">typedef</span> utasítással rendeljünk új típusnevet a korábban használt fa csomópontjaihoz!<br />
+  </p>
+  <pre>
+<span class="k">typedef</span> <span class="k">struct</span> fcsomo *Faptr;
+
+<span class="k">typedef</span> <span class="k">struct</span> fcsomo { <span class="c">/* a fa csomópontja: */</span>
+   <span class="k">char</span> *szo;           <span class="c">/* a szöveg mutatója */</span>
+   <span class="k">int</span> szam;            <span class="c">/* az előfordulások száma */</span>
+   Faptr bal;           <span class="c">/* bal oldali gyermek */</span>
+   Faptr jobb;          <span class="c">/* jobb oldali gyermek */</span>
+} Facsomo;
+</pre>
+  Ez a deklaráció két új típusnevet, a <span class="m">Facsomo</span>-t, ami egy struktúra és a <span class="m">Faptr</span>-t, ami a struktúra mutatója, vezet be. Ezek felhasználásával a <span class="m">talloc</span> függvény új programja:<br />
+  <pre>
+Faptr talloc(<span class="k">void</span>) 
+{
+   <span class="k">return</span> (Faptr) <span class="f">malloc</span> (<span class="k">sizeof</span>(Facsomo)); 
+}
+</pre>
+  Ki kell hangsúlyoznunk, hogy a <span class="k">typedef</span> utasítás semmilyen értelemben sem hoz létre új adattípust, mindössze a már meglévő adattípushoz rendel új típusnevet. Szemantikailag sem jelent újat: az így deklarált változók pontosan ugyanolyan tulajdonságúak, mint az explicit módon deklarált változók. Hatását tekintve a <span class="k">typedef</span> hasonló a <span class="d">#define</span> utasításhoz, azzal a különbséggel, hogy a <span class="k">typedef</span>-et a fordítóprogram dolgozza fel, amely olyan bonyolult szöveges helyettesítésekkel is megbirkózik, amivel a <span class="d">#define</span> utasítást feldolgozó előfeldolgozó rendszer nem képes. Például<br />
+  <pre>
+<span class="k">typedef</span> <span class="k">int</span> (*MIF)(<span class="k">char</span> *, <span class="k">char</span> *);
+</pre>
+  deklaráció létrehozza az <span class="m">MIF</span> „Mutató <span class="k">Int</span> értékkel visszatérő (két <span class="k">char</span> * típusú argumentummal hívott) Függvényhez” nevű adattípust, ami olyan összefüggésekben használható, mint<br />
+  <pre>
+MIF strcmp, numcmp;
+</pre>
+  volt az <a href="05.html">5. fejezet</a> rendezőprogramjában.
+  <p> Az esztétikai vonatkozásokon kívül a <span class="k">typedef</span> utasítást két okból szokás alkalmazni. Az első, hogy a parametrizálás a program hordozhatóságánál okozhat gondokat. A <span class="k">typedef</span>-fel deklarált adattípusok gépfüggetlenné tehetők a <span class="k">typedef</span> módosításával. Az általános gyakorlat az, hogy a <span class="k">typedef</span>-fel bevezetett neveket különböző egész típusú adatokhoz használjuk, és ekkor az éppen használt számítógép <span class="k">short</span>, <span class="k">int</span> és <span class="k">long</span> adattípusaihoz megfelelő deklarációkat alakítunk ki. Erre jó példát mutatnak a a standard könyvtárban deklarált <span class="k">size_t</span> és <span class="k">ptrdiff_t</span> adattípusok.</p>
+  <p> A másik ok, amiért a <span class="k">typedef</span> utasítást használjuk, hogy az így deklarált típusok javítják a program olvashatóságát, mert pl. a <span class="m">Faptr</span> típusnevet könnyebb megérteni, mint egy bonyolult szerkezet mutatójának deklarációját.<br />
+    <br />
+  </p>
+  <h3><a name="6.8." id="6.8."></a>6.8. Unionok<br />
+  </h3>
+  Az <i>union</i> egy olyan változó, amely különböző időpontokban különböző típusú és méretű objektumokat tartalmazhat úgy, hogy a fordítóprogram ügyel az objektumok méretére és tárbeli elhelyezésére vonatkozó előírások betartására. Az unionok alkalmazásával lehetővé válik, hogy azonos tárterületen különböző fajta adatokkal dolgozzunk, anélkül, hogy a programba géptől függő információkat kellene beépíteni. A C nyelv unionja analóg a Pascal record adattípusának egy változatával.
+  <p> Az unionok használatának bemutatására szánt példánkat a fordítóprogram szimbólumtábla-kezelőjéből vettük. Tegyük fel, hogy az állandóink <span class="k">int</span>, <span class="k">float</span> vagy karakteres mutató típusúak lehetnek! Az adott állandó értékét a megfelelő típusú változóban kell tárolnunk, viszont a táblázat kezelése szempontjából, az a kényelmes, ha az értékek ugyanannyi tárterületet foglalnak el és ugyanazon a helyen tárolódnak, függetlenül a típusuktól. Ez az union használatának fő célja: egy olyan változó, amely megengedett módon többféle adattípus bármelyikét tárolhatja. Az union szintaxisa a struktúrákon alapszik:<br />
+  </p>
+  <pre>
+<span class="k">union</span> u_tag {
+   <span class="k">int</span> iert;
+   <span class="k">float</span> fert;
+   <span class="k">char</span> *sert;
+} u;
+</pre>
+  Az így létrehozott <span class="m">u</span> változó elegendően nagy lesz ahhoz, hogy az itt megadott három adattípus közül a legnagyobbat is tárolni tudja. Az <span class="m">u</span> specifikált konkrét mérete a használt számítógéptől függ. A megadott három adattípus bármelyike hozzárendelhető <span class="m">u</span>-hoz és ezután kifejezésekben használható mindaddig, amíg a felhasználás következetes: a művelet végén visszanyert típusnak meg kell egyeznie a legutoljára <span class="m">u</span>-ba tárolt típussal. A programozó feladata, hogy nyomon kövesse, mikor és mit tárolt az unionba. Ha egy adatot adott típusként tárolunk el és más típusként nyerünk vissza, akkor az eredmény géptől függő lesz. Szintaktikailag az union tagjai az<br />
+  <pre class="defit">
+union-név.tag-név
+</pre>
+  vagy az<br />
+  <pre class="defit">
+union-mutató-&gt;tag-név
+</pre>
+  módon érhetők el, csakúgy, mint a struktúrák tagjai. Ha az <span class="m">utype</span> változót használjuk az <span class="m">u</span> unionban éppen tárolt adattípus nyilvántartására, akkor az<br />
+  <pre>
+<span class="k">if</span> (utype == INT)
+   <span class="f">printf</span>(&quot;%d<span class="e">\n</span>&quot;, u.iert);
+<span class="k">else</span> <span class="k">if</span> (utype == FLOAT)
+   <span class="f">printf</span>(&quot;%f<span class="e">\n</span>&quot;, u.fert);
+<span class="k">else</span> <span class="k">if</span> (utype == STRING)
+   <span class="f">printf</span>(&quot;%s<span class="e">\n</span>&quot;, u.sert);
+<span class="k">else</span>
+   <span class="f">printf</span>(&quot;hibás tipus %d az utype-ban<span class="e">\n</span>&quot;, utype);
+</pre>
+  programrészlet lehetővé teszi az union tartalmának tárolt típustól függő kiíratását.
+  <p> Az unionok előfordulhatnak struktúrákban és tömbökben is, és ez megfordítva is lehetséges. Egy struktúrán belüli unionhoz való hozzáférés (vagy az unionon belüli struktúrához való hozzáférés) módja megegyezik a beágyazott struktúrákhoz való hozzáférés módjával. Például az alábbi struktúratömböt definiálva a<br />
+  </p>
+  <pre>
+<span class="k">struct</span> {
+   <span class="k">char</span> *nev;
+   <span class="k">int</span> jelzok;
+   <span class="k">int</span> utype;
+   <span class="k">union</span> {
+      <span class="k">int</span> iert;
+      <span class="k">float</span> fert;
+      <span class="k">char</span> *sert;
+   } u;
+} szimbtab[NSZIMB];
+</pre>
+  az <span class="m">iert</span> tagra a<br />
+  <pre>
+szimbtab[i].u.iert
+</pre>
+  formában hivatkozhatunk, és az <span class="m">sert</span> karaktersorozat első karakteréhez az alábbi két forma bármelyikével hozzáférhetünk:<br />
+  <pre>
+*szimbtab[i].u.sert
+szimbtab[i].u.sert[0]
+</pre>
+  A valóságban az union olyan struktúra, amelyben a tagok közötti, báziscímhez viszonyított eltolás nulla. Ez a struktúra elegendően nagy ahhoz, hogy a legszélesebb tagot is tárolni tudja, miközben teljesül az unionban tárolt összes adattípusra a tárbeli elhelyezkedés minden előírása. Az unionokkal ugyanazok a műveletek végezhetők, mint a struktúrákkal: egy egységként kezelve részt vehetnek értékadásban és egyben másolhatók, előállíthatjuk a címüket és hozzáférhetünk a tagjaihoz.
+  <p> Egy union csak az elsőként megadott tagjához tartozó típusú értékkel inicializálható, így az előbbi <span class="m">u</span> unionhoz csak egész típusú kezdőérték rendelhető.</p>
+  <p> A <a href="08.html">8. fejezetben</a> található tárterület-lefoglaló program bemutatja, hogy egy union használatával hogyan lehet kikényszeríteni egy változó adott típusú tárterülethatárra való illeszkedését.<br />
+    <br />
+  </p>
+  <h3><a name="6.9." id="6.9."></a>6.9. Bitmezők<br />
+  </h3>
+  Amikor a tárolóhely a szűk keresztmetszet, gyakran kényszerülünk arra, hogy több objektumot egyetlen gépi szóban helyezzünk el. Erre jó példa a fordítóprogram szimbólumtáblát kezelő része, ahol egybites jelzőket használunk. A kívülről kényszerített adatformátumok (pl. hardvereszközök illesztésekor) is gyakran igénylik egy gépi szó részéhez való hozzáférést.
+  <p> Képzeljük el a fordítóprogramnak azt a részét, amelyik a szimbólumtáblát kezeli! Minden egyes programbeli azonosítóhoz bizonyos információk tartoznak: kulcsszó vagy sem, külső és/vagy statikus változó vagy sem stb. Ezek az információk legtömörebben egybites jelzőként tárolhatók egyetlen <span class="k">char</span> vagy <span class="k">int</span> típusú adatban.</p>
+  <p> Ezt szokásos módon úgy oldjuk meg, hogy definiálunk egy maszkhalmazt a megfelelő bitpozícióhoz, pl. az alábbiak szerint:<br />
+  </p>
+  <pre>
+<span class="d">#define</span> KULCSZSZO  01
+<span class="d">#define</span> EXTERNAL   02
+<span class="d">#define</span> STATIC     04
+</pre>
+  vagy<br />
+  <pre>
+<span class="k">enum</span> { KULCSZSZO = 01, EXTERNAL = 02, STATIC =04 };
+</pre>
+  A számértékek bitpozíciót jelölnek ki, így kettő hatványának kell lenniük. Ezek után az egyes bitek a <a href="02.html">2. fejezetben</a> leírt bitműveletekkel (léptetés, maszkolás, komplementálás stb.) már hozzáférhetők.
+  <p> Bizonyos programozási idiómák gyakran előfordulnak, mint pl. a<br />
+  </p>
+  <pre>
+jelzok != EXTERNAL | STATIC;
+</pre>
+  utasítás, amely 1-be állítja a <span class="m">jelzok</span> változóban az <span class="m">EXTERNAL</span> és <span class="m">STATIC</span> állapotot jelző biteket, a<br />
+  <pre>
+jelzok &amp;= ~(EXTERNAL | STATIC);
+</pre>
+  amely kikapcsolja (0-ba állítja) azokat, vagy az<br />
+  <pre>
+<span class="k">if</span> ((jelzok &amp; (EXTERNAL | STATIC)) == 0) ...
+</pre>
+  amelynek értéke igaz, ha mindkét jelzőbit kikapcsolt állapotú.
+  <p> Bár ezek az idiómák egyszerűen megjegyezhetők és használhatók, a C nyelv azt is lehetővé teszi, hogy egy gépi szón belül közvetlenül, minden bitenkénti logikai művelet nélkül, bitmezőket definiáljunk és használjunk. Egy bitmező (vagy röviden csak mező) egy számítógéptől függően definiált tárolási egységen (amit szónak fogunk nevezni) belül elhelyezkedő szomszédos bitek halmaza. A bitmező definíciójának és hozzáférésének a szintaxisa a struktúrák használatán alapszik. Például a szimbólumtáblához tartozó korábbi <span class="d">#define</span> szerkezetek három bitmező definiálásával helyettesíthetők:<br />
+  </p>
+  <pre>
+<span class="k">struct</span> {
+   <span class="k">unsigned</span> <span class="k">int</span> mkulcsszo : 1;
+   <span class="k">unsigned</span> <span class="k">int</span> mextern : 1;
+   <span class="k">unsigned</span> <span class="k">int</span> mstatic : 1;
+} jelzok;
+</pre>
+  Ez a struktúra egy <span class="m">jelzok</span> nevű változót definiál, amely három egybites mezőt tartalmaz. A mezőket <span class="k">unsigned</span> <span class="k">int</span> típusúnak deklaráltuk, hogy garantáltan előjel nélküli mennyiségek legyenek.
+  <p> Az egyes bitmezőkre ugyanúgy hivatkozhatunk, mint a struktúrák tagjaira: <span class="m">jelzok</span>, <span class="m">mkulcsszo</span>, <span class="m">jelzok</span>, <span class="m">mextern</span> stb. A bitmezők a kis egész számokhoz hasonlóan viselkednek, és éppúgy, mint más egész számok, szerepelhetnek aritmetikai kifejezésekben, így az előbbi példák sokkal természetesebb módon úgy írhatók, hogy:<br />
+  </p>
+  <pre>
+jelzok.mextern = jelzok.mstatic = 1;
+</pre>
+  ami 1-be állítja a biteket,<br />
+  <pre>
+jelzok.mextern = jelzok.mstatic = 0;
+</pre>
+  ami 0-ba állítja a biteket vagy<br />
+  <pre>
+<span class="k">if</span> (jelzok.mextern == 0 &amp;&amp; jelzok.mstatic == 0)
+</pre>
+  ami vizsgálja az állapotukat.
+  <p> Majdnem minden, amit a bitmezőkkel kapcsolatban elmondtunk, az éppen használt számítógéptől függ. Az, hogy egy mező átlépheti-e a szóhatárt, szintén a géptől függ. A bitmezőknek nem kötelező nevet adni. A név nélküli (csak egy kettősponttal és a szélességgel megadott) bitmezők helykitöltésre használhatók. A speciális, 0 szélességű bitmezővel a következő szóhatárra való illeszkedést kényszerítjük ki.</p>
+  <p> Néhány számítógépnél a bitmezők kijelölése jobbról balra, más típusoknál balról jobbra történik. Ezért, bár a bitmezők igen hasznosak a belsőleg definiált adatstruktúrák tárolására, a külsőleg definiált (pl. egy hardvereszköztől érkező) adatok szétbontásakor nagyon meg kell gondolni a mezők elhelyezkedését. Sajnos emiatt a programok változhatnak és így nem lesznek hordozhatók. A bitmezők csak mint <span class="k">int</span> adattípus deklarálhatók és <span class="k">signed</span> vagy <span class="k">unsigned</span> specifikátor írható elő rájuk. Ügyeljünk arra, hogy a bitmezők nem tömbök, nem címezhetők és így az <span class="m">&amp;</span> operátor sem alkalmazható rájuk!<br />
+    <br />
+  </p>
+
+<br>
+<br>
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="05.html">5. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="07.html">7. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1966 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>A. FÜGGELÉK: Referencia-kézikönyv</title>
+<link href="krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="08.html">8. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="b.html">B. FÜGGELÉK</a>
+   </td>
+</tr>
+</table>
+
+  <h2><i><a name="A. FÜGGELÉK" id="A. FÜGGELÉK"></a>A. FÜGGELÉK:<br />
+  </i></h2>
+  <h2>Referencia-kézikönyv<br />
+  </h2>
+  <h3><a name="A1." id="A1."></a>A1. Bevezetés<br />
+  </h3>
+  Ez a kézikönyv a C nyelv ANSI felé 1988. október 31-én benyújtott és az „Amerikai Nemzeti Szabvány Információs Rendszerekre – A C Programozási Nyelv, X3.159-1989.” címmel elfogadott szabvány alapján készült. A kézikönyv a tervezett szabvány értelmezése és nem magának a szabványnak a leírása, bár gondosan ügyeltünk arra, hogy a nyelv megbízható leírását adjuk.
+  <p> Ez a leírás a legtöbb részletében követi a szabvány felépítését (ami a könyv első kiadása után jelent meg), de szerkezete a részletekben különbözik attól. Néhány fogalom átnevezésétől, a lexikális tokenek (szintaktikai egységek) nem formalizált leírásától vagy az előfeldolgozó rendszertől eltekintve az itt leírt szintaxis megfelel a szabványban foglaltaknak.</p>
+  <p> Bár ez a rész egy kézikönyv, az egyes pontokhoz magyarázatokat fűztünk, amit kisebb betűtípussal szedtünk. A magyarázatok többsége rávilágít arra, hogy az ANSI C miben különbözik a könyv első kiadásában definiált nyelvtől, vagy hogy a különböző fordítóprogramok esetén milyen finomítások érvényesek.<br />
+    <br />
+  </p>
+  <h3><a name="A2." id="A2."></a>A2. Lexikális megállapodások<br />
+  </h3>
+  Egy program egy vagy több fordítási egységből áll, amelyek állományokban helyezkednek el. A program feldolgozása több fázisban történik, az egyes fázisokat az <a href="a.html#A12.">A12. pontban</a> foglaltuk össze. A legelső feldolgozási fázisban a program elvégzi az alacsony szintű lexikális átalakítást, amelynek során először végrehajtódnak a # jellel kezdődő sorokban elhelyezett direktívák, majd megtörténik a makródefiníciók feldolgozása és végül létrejön a makrókifejtés. Az <a href="a.html#A12.">A12. pontban</a> leírt előfeldolgozás befejeztével a program szintaktikai egységek (tokenek) sorozatára egyszerűsödik.<br />
+  <br />
+  <h4><a name="A2.1." id="A2.1."></a>A2.1. Szintaktikai egységek<br />
+  </h4>
+  A szintaktikai egységek hat osztályba sorolhatók: azonosítók, kulcsszavak, állandók, karaktersorozatok, operátorok és egyéb szeparátorok. A szóközt, a vízszintes és függőleges tabulátort, az új sort, a lapemelést és a megjegyzéseket (közös néven üres helyeket) a fordítóprogram nem veszi figyelembe, kivéve ha szintaktikai egységeket választanak el egymástól. Valamennyi üres helyre szükség van a szomszédos azonosítók, kulcsszavak és állandók elválasztásához.
+  <p> Ha a beolvasott programszöveg adott karakterig szintaktikai egységekre lett bontva, akkor a fordítóprogram a következő szintaktikai egységnek azt a leghosszabb karaktersorozatot tekinti, amelyről feltételezhető, hogy egyetlen szintaktikai egységet alkot.<br />
+    <br />
+  </p>
+  <h4><a name="A2.2." id="A2.2."></a>A2.2. Megjegyzések<br />
+  </h4>
+  A megjegyzés szövege a <span class="c">/*</span> karakterekkel kezdődik és a <span class="c">*/</span> karakterekkel zárul. A megjegyzések nem ágyazhatók egymásba és nem fordulhatnak elő karaktersorozatokban vagy karakteres állandókban.<br />
+  <br />
+  <h4><a name="A2.3." id="A2.3."></a>A2.3. Azonosítók<br />
+  </h4>
+  Egy azonosító betűkből és számjegyekből áll. Az első karakterének betűnek kell lenni és az _ aláhúzás-karakter betűnek számít. Azonosítókban a nagy- és kisbetűk különböznek. Az azonosítók hossza tetszőleges lehet és belső azonosítók esetén legalább 31 karakter szignifikáns, de néhány rendszerben a szignifikáns karakterek száma több is lehet. Belső azonosítók közé tartozik az előfeldolgozó rendszerrel értelmezett makrónév és minden más név, amelynek nincs külső csatolása (l. az <a href="a.html#A11.2.">A11.2. pontot</a>). A külső csatolású azonosítókra ennél több megszorítás érvényes: a megvalósításokban csak az első hat karakter szignifikáns és nem tesznek különbséget kis-, ill. nagybetű között.<br />
+  <br />
+  <h4><a name="A2.4." id="A2.4."></a>A2.4. Kulcsszavak<br />
+  </h4>
+  A következő azonosítók fenntartott kulcsszavak és más célra nem használhatók:<br />
+  <pre>
+<span class="k">auto</span>        <span class="k">double</span>     <span class="k">int</span>         <span class="k">struct</span>   
+<span class="k">break</span>       <span class="k">else</span>       <span class="k">long</span>        <span class="k">switch</span>   
+<span class="k">case</span>        <span class="k">enum</span>       <span class="k">register</span>    <span class="k">typedef</span>  
+<span class="k">char</span>        <span class="k">extern</span>     <span class="k">return</span>      <span class="k">union</span>    
+<span class="k">const</span>       <span class="k">float</span>      <span class="k">short</span>       <span class="k">unsigned</span> 
+<span class="k">continue</span>    <span class="k">for</span>        <span class="k">signed</span>      <span class="k">void</span>     
+<span class="k">default</span>     <span class="k">goto</span>       <span class="k">sizeof</span>      <span class="k">volatile</span> 
+<span class="k">do</span>          <span class="k">if</span>         <span class="k">static</span>      <span class="k">while</span>    
+</pre>
+  Néhány megvalósításban fenntartott szó még az <span class="k">asm</span> és a <span class="k">fortran</span>.<br />
+  <br />
+  <div class="note"> A <span class="ks">const</span>, <span class="ks">signed</span> és <span class="ks">volatile</span> új az ANSI szabványban; az <span class="ks">enum</span> és a <span class="ks">void</span> a könyv első kiadásához képest új, de már korábban is általánosan használt kulcsszó. Az <span class="ms">entry</span> régebben fenntartott, de soha nem használt kulcsszó volt, ezért a továbbiakban már nem fenntartott kulcsszó.<br />
+  </div>
+  <br />
+  <h4><a name="A2.5." id="A2.5."></a>A2.5. Állandók<br />
+  </h4>
+  A C nyelvben többféle állandó létezik, ezek mindegyikéhez egy adattípus tartozik. Az alapvető adattípusok leírása az <a href="a.html#A4.2.">A4.2. pontban</a> található.<br />
+  <pre class="defit">
+állandók
+      egész_állandó
+      karakteres_állandó
+      lebegőpontos_állandó
+      felsorolt_állandó
+</pre>
+  <br />
+  <h5>A2.5.1. Egész állandók<br />
+  </h5>
+  Egy egész állandó számjegyek sorozatából áll, amit oktális számként értelmezünk, ha a <span class="m">0</span>-val (nulla számjeggyel) kezdődik és decimális számként minden más esetben. Az oktális állandókban nem fordulhatnak elő a 8 és 9 számjegyek. A számjegyek <span class="m">0x</span> vagy <span class="m">0X</span> (nulla számjegy) kezdetű sorozatát hexadecimális egész számként értelmezzük. A hexadecimális számok számjegyei közé tartoznak a <span class="m">10...15</span> értékű számjegyeket jelző <span class="m">a</span> vagy <span class="m">A</span> <span class="m">...</span> <span class="m">f</span> vagy <span class="m">F</span> karakterek.
+  <p> Az egész állandók az <span class="m">u</span> vagy <span class="m">U</span> betűből álló utótaggal láthatók el, ami azt jelzi, hogy a szám előjel nélküli. Az <span class="m">l</span> vagy <span class="m">L</span> utótag szintén használható és <span class="k">long</span> típust jelöl.</p>
+  <p> Az egész állandók típusa a leírási formától, az értéktől és az utótagtól függ. (Lásd még az <a href="a.html#A4.">A4. pontban</a> az adattípusok tárgyalásánál!) Ha a leírt szám utótag nélküli, decimális szám, akkor a típusa az értéke által meghatározott <span class="k">int</span>, <span class="k">long</span> <span class="k">int</span> vagy <span class="k">unsigned</span> <span class="k">long</span> <span class="k">int</span> típusok közül az első megfelelő típus. Ha a leírt szám utótag nélküli, oktális vagy hexadecimális szám, akkor típusa az <span class="k">int</span>, <span class="k">unsigned</span> <span class="k">int</span>, <span class="k">long</span> <span class="k">int</span>, <span class="k">unsigned</span> <span class="k">long</span> <span class="k">int</span> típusok közül az első megfelelő típus. Ha az utótag <span class="m">u</span> vagy <span class="m">U</span>, akkor a típus <span class="k">unsigned</span> <span class="k">int</span> vagy <span class="k">unsigned</span> <span class="k">long</span> <span class="k">int</span>. Ha az utótag <span class="m">l</span> vagy <span class="m">L</span>, akkor a típus <span class="k">long</span> <span class="k">int</span> vagy <span class="k">unsigned</span> <span class="k">long</span> <span class="k">int</span>.<br />
+    <br />
+  </p>
+  <div class="note"> Az egész állandók típusának kimunkálása a könyv első kiadása óta lényegesen javult. Az első kiadásban még csak a nagy egész számokhoz használható <span class="ks">long</span> típus szerepelt. Az <span class="ms">U</span> utótag bevezetése új.<br />
+  </div>
+  <br />
+  <h5>A2.5.2. Karakteres állandók<br />
+  </h5>
+  A karakteres állandó egy vagy több aposztrófok (<span class="m">'</span>) közé zárt karakterből áll. Az egyetlen karakterből álló karakteres állandó értéke a karakternek a végrehajtáskor érvényes gépi karakterkészletből vett számértéke. A több karakterből álló karakteres állandók értéke a megvalósítástól függ.
+  <p> A karakteres állandókban nem szerepelhet a <span class="m">'</span> vagy az újsor-karakter; azért hogy ezeket, valamint bizonyos más karaktereket ábrázolni tudjuk, a következő escape-sorozatok használhatók:<br />
+    <br />
+    <br />
+  </p>
+  <table border="1px" align="center">
+    <tr>
+      <td width="200px">új sor</td>
+      <td width="100px"><span class="m">NL (LF)</span></td>
+      <td><span class="e">\n</span></td>
+    </tr>
+    <tr>
+      <td>vízszintes tabulátor</td>
+      <td><span class="m">HT</span></td>
+      <td><span class="e">\t</span></td>
+    </tr>
+    <tr>
+      <td>függőleges tabulátor</td>
+      <td><span class="m">VT</span></td>
+      <td><span class="e">\v</span></td>
+    </tr>
+    <tr>
+      <td>visszalépés (backspace)</td>
+      <td><span class="m">BS</span></td>
+      <td><span class="e">\b</span></td>
+    </tr>
+    <tr>
+      <td>kocsivissza</td>
+      <td><span class="m">CR</span></td>
+      <td><span class="e">\r</span></td>
+    </tr>
+    <tr>
+      <td>lapemelés (formfeed)</td>
+      <td><span class="m">FF</span></td>
+      <td><span class="e">\f</span></td>
+    </tr>
+    <tr>
+      <td>hangjelzés (bell)</td>
+      <td><span class="m">BEL</span></td>
+      <td><span class="e">\a</span></td>
+    </tr>
+    <tr>
+      <td>backslash</td>
+      <td><span class="m">\</span></td>
+      <td><span class="e">\\</span></td>
+    </tr>
+    <tr>
+      <td>kérdőjel</td>
+      <td><span class="m">?</span></td>
+      <td><span class="e">\?</span></td>
+    </tr>
+    <tr>
+      <td>aposztróf</td>
+      <td><span class="m">'</span></td>
+      <td><span class="e">\'</span></td>
+    </tr>
+    <tr>
+      <td>idézőjel</td>
+      <td><span class="m">&quot;</span></td>
+      <td><span class="e">\&quot;</span></td>
+    </tr>
+    <tr>
+      <td>oktális szám</td>
+      <td><span class="m">ooo</span></td>
+      <td><span class="e">\o</span><span class="m">oo</span></td>
+    </tr>
+    <tr>
+      <td>hexadecimális szám</td>
+      <td><span class="m">hh</span></td>
+      <td><span class="e">\x</span><span class="m">hh</span></td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  A <span class="m"><span class="e">\o</span>oo</span> escape-sorozat egy backslash karakterből és az azt követő 1, 2 vagy 3 oktális számjegyből áll, amely a kívánt karakter értékét határozza meg. Erre a legjobb példa a <span class="e">\0</span> (amit nem követ további számjegy), ami a <span class="f">NULL</span> karaktert jelenti. A <span class="m"><span class="e">\x</span>hh</span> escape-sorozat a backslash karakterből, az azt követő <span class="m">x</span> betűből és az utána írt hexadecimális számjegyekből áll, amelyek a kívánt karakter értékét határozzák meg. A beírt számjegyek száma nincs korlátozva, de ha a kapott karakterérték nagyobb, mint a legnagyobb karakterérték, akkor a hatás definiálatlan. Ha a gépi megvalósítás a <span class="k">char</span> típust előjelesen kezeli, akkor az oktális vagy hexadecimális escape-sorozatok értéke előjel-kiterjesztéssel keletkezik, csakúgy, mint a kényszerített típuskonverziójú <span class="k">char</span> típus esetén. Ha a <span class="m">\</span> karaktert követő karakter nem a fentiek egyike, akkor az eredmény definiálatlan.
+  <p> Néhány gépi megvalósítás kiterjesztett karakterkészletet használ, amelyben a karakteres állandók nem ábrázolhatók <span class="k">char</span> típussal. Az ilyen kiterjesztett karakterkészletű karakteres állandó az <span class="m">L</span> előtaggal írható be, pl. az <span class="m">L'x'</span> formában, és ezt az állandót széles karakteres állandónak nevezzük. Az ilyen állandók <span class="k">wchar_t</span> típusúak, ami egy egész adattípus és az <span class="m">&lt;stddef.h&gt;</span> standard headerben van definiálva. Ezt a típust a közönséges karakteres állandókhoz, ill. oktális vagy hexadecimális escape-sorozatokhoz lehet használni, de a hatás definiálatlan, ha a megadott érték nagyobb a <span class="k">wchar_t</span> típussal ábrázolható legnagyobb értéknél.<br />
+    <br />
+  </p>
+  <div class="note"> Az escape-sorozatok némelyike új, különösen a hexadecimális karakterleírás. A kiterjesztett karakterkészlet szintén új. Az Egyesült Államokban és Nyugat-Európában általánosan használt karakterkészlet kódolása illeszkedik a <span class="ks">char</span> típushoz, főleg az ázsiai nyelvekhez való illeszkedés igényelte a <span class="ks">wchar_t</span> típus bevezetését.<br />
+  </div>
+  <br />
+  <h5>A2.5.3. Lebegőpontos állandók<br />
+  </h5>
+  A lebegőpontos állandó egy egészrészből, tizedespontból, egy törtrészből, egy <span class="m">e</span> vagy <span class="m">E</span> betűből, egy opcionálisan előjelezhető kitevőből, valamint az <span class="m">f</span>, <span class="m">F</span>, <span class="m">l</span> vagy <span class="m">L</span> egyikének megfelelő opcionális utótagból áll. Az egész- és törtrészt számjegyek sorozata alkotja. Az egészrész vagy a törtrész (de nem mind a kettő) hiányozhat, csakúgy, mint a tizedespont vagy az <span class="m">e</span> és a kitevő (de az egyiknek léteznie kell). A lebegőpontos állandó típusát az utótag határozza meg: az <span class="m">f</span> vagy <span class="m">F</span> <span class="k">float</span> típust, az <span class="m">l</span> vagy <span class="m">L</span> <span class="k">long</span> <span class="k">double</span> típust jelöl, minden más esetben a típus <span class="k">double</span>.<br />
+  <br />
+  <div class="note"> Az utótag alkalmazása lebegőpontos állandók esetén új.<br />
+  </div>
+  <br />
+  <h5>A2.5.4. Felsorolt állandók<br />
+  </h5>
+  <span class="k">int</span> típusú állandók felsorolásaként deklarált azonosítók. (Bővebben lásd az <a href="a.html#A8.4.">A8.4. pontban</a>!)<br />
+  <br />
+  <h4><a name="A2.6." id="A2.6."></a>A2.6. Karaktersorozat-állandók<br />
+  </h4>
+  Egy karaktersorozat-állandó (stringállandó) idézőjelekkel határolt karaktersorozatból áll, mint pl. a <span class="m">&quot;...&quot;</span>. A karaktersorozat „karakteres tömb” típusú, <span class="k">static</span> tárolási osztályú (l. az <a href="a.html#A4.">A4. pontot</a>) és az adott karakterekkel inicializált adat. Az azonos karaktersorozatállandók a gépi megvalósítástól függően különbözhetnek, és ha a program megkísérli a karaktersorozat-állandó tartalmát megváltoztatni, akkor az eredmény definiálatlan.
+  <p> A szomszédos karaktersorozat-állandók egyetlen karaktersorozattá konkatenálódnak. Bármely konkatenáció után egy <span class="e">\0</span> végjel íródik a karaktersorozathoz, így a program a karaktersorozatot végignézve azonosíthatja annak végét. A karaktersorozat-állandók nem tartalmazhatnak újsor vagy idézőjel-karaktereket, ezek ábrázolására – csakúgy, mint a karakteres állandók esetén – a megfelelő escape-sorozatok használhatók.</p>
+  <p> Ahogy azt már a karakteres állandóknál elmondtuk, a karaktersorozat-állandóknál is az <span class="m">L</span> előtagot kell használni a kiterjesztett karakterkészlet esetén, pl. <span class="m">L&quot;...&quot;</span> formában. A széles karaktersorozat-állandók „wchar_ elemek tömbje” típusúak. A közönséges és széles karaktersorozat-állandók konkatenálásának eredménye definiálatlan.<br />
+    <br />
+  </p>
+  <div class="note"> Az, hogy az azonos karaktersorozat-állandóknak nem szükségképpen kell megegyezniük, valamint hogy a tartalmuk nem módosítható, új az ANSI szabványban, csakúgy, mint a szomszédos karaktersorozatok konkatenálása. A széles karaktersorozat-állandók bevezetése szintén új.<br />
+  </div>
+  <br />
+  <h3><a name="A3." id="A3."></a>A3. A szintaxis jelölése<br />
+  </h3>
+  A kézikönyvben a szintaktikai kategóriákat <i>dőlt</i> betűkkel, a literálisokat és karaktereket a <span class="m">programoknál</span> használt betűtípussal jelöljük. Az alternatív kategóriák általában külön sorban, listaszerűen felsorolva szerepelnek, ill. néhány esetben a hosszú felsorolást egy sorba írtuk és előtte az „egyike a(z)” kifejezést használtuk. Az opcionális szimbólumokat az „<i>opc</i>” index jelzi, mint pl. az<br />
+  <pre class="defit">
+{kifejezés<sub>opc</sub>}
+</pre>
+  esetén, ami egy kapcsos zárójelek között elhelyezett elhagyható kifejezést jelöl. A szintaxist az <a href="a.html#A13.">A13. pontban</a> foglaltuk össze.<br />
+  <br />
+  <div class="note"> Eltérően a könyv első kiadásában szereplő szintaktikai leírástól, itt explicit módon megadtuk a kifejezésoperátorok precedenciáját és asszociativitását.<br />
+  </div>
+  <br />
+  <br />
+  <h3><a name="A4." id="A4."></a>A4. Az azonosítók értelmezése<br />
+  </h3>
+  Az azonosítók vagy nevek többféle dologra vonatkozhatnak: kijelölhetnek függvényt, struktúra-címként, uniont, felsorolást, struktúra- vagy uniontagot, felsorolt állandót, <span class="k">typedef</span> utasítással létrehozott típusnevet, ill. objektumot. Egy objektum, amit néha változónak nevezünk, a tárolóban helyezkedik el és az értelmezése két fő attribútumtól, a <i>tárolási osztálytól</i> és a <i>típustól</i> függ. A tárolási osztály az azonosítóhoz rendelt tárterület élettartamát, a típus pedig az azonosított objektumban tárolt érték jelentését határozza meg. Egy névhez egy érvényességi tartomány és egy csatolás is tartozik. Az érvényességi tartomány megadja, hogy a név a program melyik részében ismert, a csatolás pedig meghatározza, hogy ugyanaz a név egy másik érvényességi tartományban ugyanazt az objektumot vagy függvényt jelenti-e vagy sem. Az érvényességi tartomány és a csatolás leírása az <a href="a.html#A11.">A11. pontban</a> található.<br />
+  <br />
+  <h4><a name="A4.1." id="A4.1."></a>A4.1. A tárolási osztály<br />
+  </h4>
+  Két tárolási osztályt különböztetünk meg: automatikust és statikust. A tárolási osztályt több kulcsszó határozza meg az objektum deklarációjának szövegkörnyezetével együtt. Az automatikus tárolási osztályú objektumok egy blokkon belül helyiek, vagy más néven lokálisak (l. az <a href="a.html#A9.3.">A9.3. pontot</a>), és a blokkból való kilépéskor elvesznek. Egy blokkon belül szereplő deklaráció, ha a tárolási osztályt külön nem specifikáltuk vagy az <span class="k">auto</span> specifikációt használtuk, automatikus tárolási osztályú objektumot hoz létre. A <span class="k">register</span> specifikációval deklarált objektum szintén automatikus, és (ha ez lehetséges) a számítógép gyors elérésű regisztereiben tárolódik.
+  <p> A statikus objektumok egy blokkra érvényes lokális vagy több blokkra érvényes külső (external) típusúak lehetnek, de mindkét esetben a függvényből vagy blokkból való kilépés és visszatérés közti időszakban is megőrzik az értéküket. Blokkon belül, beleértve a függvényen belüli blokkot is, a statikus objektum a <span class="k">static</span> kulcsszóval deklarálható. Az összes blokkon kívül, a függvénydefiníciókkal azonos szinten deklarált objektumok mindig statikus tárolási osztályúak. A statikus objektumok egy adott fordítási egységre vonatkozóan lokálissá tehetők a <span class="k">static</span> kulcsszó alkalmazásával. Az ilyen objektumokhoz <i>belső csatolás</i> tartozik. A statikus objektumok a tárolási osztály explicit megadása nélkül a teljes programra nézve globálisak, vagy az <span class="k">extern</span> kulcsszó használatával tehetők globálissá. Az ilyen objektumokhoz <i>külső csatolás</i> tartozik.<br />
+    <br />
+  </p>
+  <h4><a name="A4.2." id="A4.2."></a>A4.2. Alapvető adattípusok<br />
+  </h4>
+  A C nyelvben számos alapvető adattípus létezik. A <a href="b.html">B. Függelékben</a> leírt <span class="m">&lt;limits.h&gt;</span> standard header definiálja az egyes adattípusok helyi gépi megvalósításban érvényes legnagyobb és legkisebb értékét. A <a href="b.html">B. Függelékben</a> megadott számok a szóba jöhető legkisebb nagyságrendet jelentik.
+  <p> A karakterként (<span class="k">char</span>) deklarált objektumok elegendően nagyok ahhoz, hogy a végrehajtó rendszer karakterkészletének bármely tagját tárolni tudják. Ha egy, a karakterkészletből vett eredeti karaktert egy <span class="k">char</span> típusú objektumban tárolunk, akkor annak értéke megegyezik a karakter egész értékű kódjával és garantáltan nem negatív. Egy <span class="k">char</span> típusú változóban más objektumok is tárolhatók, de ilyenkor a rendelkezésre álló értékkészlet, valamint az érték előjeles vagy előjel nélküli ábrázolásmódja a gépi megvalósítástól függ.</p>
+  <p> Az <span class="k">unsigned</span> <span class="k">char</span> típusúnak deklarált karakterek ugyanakkora tárterületet igényelnek, mint a közönséges karakterek, de mindig nem negatív értékűek. Az explicit módon előjeles karaktereket <span class="k">signed</span> <span class="k">char</span> típusúnak kell deklarálni, és természetesen ezek is ugyanakkora helyet igényelnek, mint az egyszerű karakterek.<br />
+    <br />
+  </p>
+  <div class="note"> A könyv első kiadásában az <span class="ks">unsigned</span> <span class="ks">char</span> típus nem szerepelt, de általánosan használták. A <span class="ks">signed</span> <span class="ks">char</span> típus új.<br />
+  </div>
+  <br />
+  <br />
+  A <span class="k">char</span> típus mellett még háromféle egész adattípus, a <span class="k">short</span> <span class="k">int</span>, <span class="k">int</span> és <span class="k">long</span> <span class="k">int</span> alkalmazható. Az egyszerű <span class="k">int</span> típusú objektum mérete megegyezik a befogadó számítógép társzervezéséből adódó természetes alapegységgel, és a speciális igények kielégítéséről más méretek gondoskodnak. A hosszabb egészek legalább akkora tárolóhelyet foglalnak el, mint a rövidebbek, de a gépi megvalósítás az egyszerű egészeket egyenlővé teheti a rövid vagy a hosszú egészekkel. Az <span class="k">int</span> típus, ha csak másképpen nem specifikáltuk, mindig előjeles értéket jelent.<br />
+  Az előjel nélküli egészek az <span class="k">unsigned</span> kulcsszóval deklarálhatók és kielégítik a modulo 2<sup><i>n</i></sup> aritmetika szabályait (ahol <i>n</i> a gépi ábrázoláshoz használt bitek száma), így az előjel nélküli egészekkel végzett aritmetikai műveletek során túlcsordulás soha nem fordulhat elő. A nem negatív értékek halmaza egy előjeles objektumban is tárolható, mint az értékek részhalmaza és ezek az értékek előjel nélküli objektumban is tárolhatók. Ilyenkor az átfedő értékek ábrázolása azonos.
+  <p> Az egyszeres pontosságú lebegőpontos (<span class="k">float</span>), a kétszeres pontosságú lebegőpontos (<span class="k">double</span>) és az extra pontosságú lebegőpontos (<span class="k">long</span> <span class="k">double</span>) adattípusok egymás szinonimái lehetnek, de egy, a listában hátrébb álló típus legalább olyan pontosságú, mint az előrébb álló.<br />
+    <br />
+  </p>
+  <div class="note"> A <span class="ks">long</span> <span class="ks">double</span> típus új. Az első kiadásban értelmezett <span class="ks">long</span> <span class="ks">float</span> típus egyenértékű a <span class="ks">double</span> típussal. A <span class="ks">long</span> <span class="ks">float</span> típusmegadás megszűnt.<br />
+  </div>
+  <br />
+  <br />
+  A <i>felsorolások</i> speciális, egyedi, egész értékű adattípusok, amelyek a névvel ellátott állandók felsorolásával kapcsolatosak (l. az <a href="a.html#A8.4.">A8.4. pontot</a>). A felsorolások egész adatként viselkednek, de elég általános, hogy a fordítóprogram figyelmeztető jelzést ad, ha egy megadott felsorolás típusú objektumot nem annak egy állandójához vagy annak egy kifejezéséhez rendelünk.
+  <p> Mivel az eddig felsorolt objektumok mindegyike számként értelmezhető, ezért ezeket <i>aritmetikai adattípusoknak</i> nevezzük. A <span class="k">char</span>, az előjeles vagy előjel nélküli összes <span class="k">int</span>, valamint a felsorolt típusokat összefoglaló néven <i>egész adattípusoknak</i> nevezzük. A <span class="k">float</span>, <span class="k">double</span> és <span class="k">long</span> <span class="k">double</span> típusokat <i>lebegőpontos adattípusoknak</i> nevezzük.</p>
+  <p> A <span class="k">void</span> típus egy üres értékkészletet specifikál. A <span class="k">void</span> típust függvények visszatérési értékének típusjelzésére használjuk, és azt jelenti, hogy nem jön létre visszatérési érték.<br />
+    <br />
+  </p>
+  <h4><a name="A4.3." id="A4.3."></a>A4.3. Származtatott adattípusok<br />
+  </h4>
+  Az alapvető adattípusokon kívül a származtatott adattípusoknak elvileg végtelen sok változata létezik, amelyek az alapvető adattípusokból az alábbi módon hozhatók létre:<br />
+  <ul>
+    <li><i>tömbök</i>, amelyek adott típusú objektumok sorozatából állnak; </li>
+    <li><i>függvények</i>, amelyek adott típusú objektummal térnek vissza; </li>
+    <li><i>mutatók</i>, amelyek adott típusú objektumot címeznek; </li>
+    <li><i>struktúrák</i>, amelyek különböző típusú objektumok sorozatából állnak; </li>
+    <li><i>unionok</i>, amelyek a különböző típusú objektumok bármelyikét tartalmazhatják.</li>
+  </ul>
+  Általában az objektumok előállítására használt módszereket rekurzívan is alkamazhatjuk.<br />
+  <br />
+  <h4><a name="A4.4." id="A4.4."></a>A4.4. Típusminősítők<br />
+  </h4>
+  Egy objektum típusa járulékos minősítőkkel rendelkezhet. Egy objektum <span class="k">const</span> deklarálása azt jelzi, hogy az objektum értéke nem fog megváltozni. Az objektum <span class="k">volatile</span> deklarációja az optimálásnál lényeges speciális tulajdonságokat jelzi. Egyetlen minősítő sem befolyásolja az objektum értékkészletét vagy aritmetikai tulajdonságait. A minősítőket részletesen az <a href="a.html#A8.2.">A8.2. pontban</a> tárgyaljuk.<br />
+  <br />
+  <h3><a name="A5." id="A5."></a>A5. Az objektumok és a balérték<br />
+  </h3>
+  Egy <i>objektum</i> a tároló névvel kijelölt része, a <i>balérték</i> pedig az objektumra hivatkozó kifejezés. A balérték (lvalue) kifejezésre jó példa a megfelelő típusú és tárolási osztályú azonosító. Az operátorok balértéket eredményeznek pl. ha <span class="m">E</span> egy mutató típusú kifejezés, akkor a <span class="m">*E</span> balérték kifejezés arra az objektumra hivatkozik, amire az E mutat. A „balérték” elnevezés az <span class="m">E1 = E2</span> értékadó kifejezésből származik, amelyben az <span class="m">E1</span> bal oldali operandusnak balértéknek kell lennie. Az egyes operátorok tulajdonságainak tárgyalásakor mindig megadjuk, hogy a balérték operandust igényel vagy a balérték operandust állít elő.<br />
+  <br />
+  <h3><a name="A6." id="A6."></a>A6. Típuskonverziók<br />
+  </h3>
+  Néhány operátor az operandusaitól függően valamelyik operandusát az egyik adattípusról a másik adattípusra alakítja. Ebben a pontban ismertetjük az ilyen típuskonverziók várható eredményét. A közönséges operátorok típuskonverziós igényeit az <a href="a.html#A6.5.">A6.5. pontban</a> összegezzük, és ezt az egyes operátorok tárgyalásánál további információkkal egészítjük ki.<br />
+  <br />
+  <h4><a name="A6.1." id="A6.1."></a>A6.1. Az egész-előléptetés<br />
+  </h4>
+  Egy karakter, egy rövid egész számot, vagy egy egész értékű bitmezőt (függetlenül attól, hogy előjeles vagy előjel nélküli értékűek) vagy egy felsorolt típus objektumát minden olyan kifejezésben használhatjuk, amelyben egész mennyiséget használhatunk. Ha egy <span class="k">int</span> típusú mennyiség az eredeti típus összes értékét (teljes értékkészletét) ábrázolja, akkor az értéke <span class="k">int</span> típusúvá konvertálódik, máskülönben pedig <span class="k">unsigned</span> <span class="k">int</span> típusúvá. Ezt a típuskonverziós folyamatot egész-előléptetésnek (promóciónak) nevezzük.<br />
+  <br />
+  <h4><a name="A6.2." id="A6.2."></a>A6.2. Egészek konverziója<br />
+  </h4>
+  Bármely egész úgy konvertálódik egy adott előjel nélküli típussá, hogy megkeressük azt a legkisebb nem negatív értéket, amely az előjel nélküli típussal ábrázolható legnagyobb értéknél eggyel nagyobb modulussal kongruens az egész számmal. Kettes komplemens kódú számábrázolás esetén ez megfelel a balról csonkításnak, ha az előjel nélküli típus a keskenyebb, és az előjel nélküli érték nullákkal való feltöltésének és előjel-kiterjesztéssel előjelezett értéknek, ha az előjel nélküli típus a szélesebb.
+  <p> Amikor bármely egész számot előjeles típusúvá alakítunk, akkor az értéke változatlan marad, ha az az új típusban ábrázolható. Minden más esetben az eredmény a gépi megvalósítástól függ.<br />
+    <br />
+  </p>
+  <h4><a name="A6.3." id="A6.3."></a>A6.3. Egész és lebegőpontos mennyiségek<br />
+  </h4>
+  Egy lebegőpontos típusú érték egésszé alakításakor a törtrész mindenképpen elvész, és ha az eredmény nem ábrázolható az egész típussal, akkor a művelet viselkedése definiálatlan. Különösen fontos megjegyezni, hogy egy negatív lebegőpontos érték előjel nélküli egész típussá alakításának eredménye nincs specifikálva.
+  <p> Amikor egy egész értéket alakítunk lebegőpontossá és az érték az ábrázolható tartományban van, de egzaktul nem ábrázolható, akkor az eredmény a következő nagyobb vagy az előző kisebb ábrázolható érték lehet. Ha az átalakítás eredménye kívül esik az ábrázolható számok tartományán, akkor a művelet eredménye definiálatlan.<br />
+    <br />
+  </p>
+  <h4><a name="A6.4." id="A6.4."></a>A6.4. Lebegőpontos típusok konverziója<br />
+  </h4>
+  Ha egy kisebb pontosságú lebegőpontos értéket egy vele egyező vagy nagyobb pontosságú lebegőpontos típussá alakítunk, akkor az érték változatlan marad. Ha egy nagyobb pontosságú lebegőpontos értéket alakítunk kisebb pontosságúvá, és az érték belül van az ábrázolható számtartományon, akkor az eredmény a következő nagyobb vagy előző kisebb ábrázolható érték lehet. Ha az eredmény az ábrázolható számtartományon kívülre esik, akkor a művelet eredménye definiálatlan.<br />
+  <br />
+  <h4><a name="A6.5." id="A6.5."></a>A6.5. Aritmetikai típuskonverziók<br />
+  </h4>
+  Számos operátor eredményez típuskonverziót és az átalakítás után kapott típus előállításának módja hasonló. Az alapelv az, hogy az operandusokat olyan közös típusra hozzuk, ami megegyezik az eredmény típusával. Ezt a sémát a <i>szokásos aritmetikai típuskonverziónak</i> nevezzük.<br />
+  <br />
+  <i>Ha</i> az egyik operandus <span class="k">long</span> <span class="k">double</span> típusú, <i>akkor</i> a, másik is <span class="k">long</span> <span class="k">double</span> típusúvá alakul.<br />
+  <br />
+  <i>Különben</i>, <i>ha</i> az egyik operandus <span class="k">double</span> típusú, <i>akkor</i> a másik is <span class="k">double</span> típusúvá alakul.<br />
+  <br />
+  <i>Különben</i>, <i>ha</i> az egyik operandus <span class="k">float</span> típusú, <i>akkor</i> a másik is <span class="k">float</span> típusúvá alakul.<br />
+  <br />
+  <i>Különben</i> mindkét operandusra az egész-előléptetés fog végrehajtódni, és <i>ha</i> az egyik operandus <span class="k">unsigned</span> <span class="k">long</span> <span class="k">int</span> típusú, <i>akkor</i> a másik is <span class="k">unsigned</span> <span class="k">long</span> <span class="k">int</span> típusúvá alakul.<br />
+  <br />
+  <i>Különben</i>, <i>ha</i> az egyik operandus <span class="k">long</span> <span class="k">int</span>, a másik <span class="k">unsigned</span> <span class="k">int</span> típusú, <i>akkor</i> a működés attól függ, hogy a <span class="k">long</span> <span class="k">int</span> típusú mennyiség ábrázolható-e
+  az <span class="k">unsigned</span> <span class="k">int</span> összes értékével, teljes értékkészletével; <i>ha igen</i>, akkor az <span class="k">unsigned</span> <span class="k">int</span> típusú operandus <span class="k">long</span> <span class="k">int</span> típusúvá alakul; <i>ha nem</i>, <i>akkor</i> mindkét operandus <span class="k">unsigned</span> <span class="k">long</span> <span class="k">int</span> típusúvá alakul.<br />
+  <br />
+  <i>Különben</i>, <i>ha</i> az egyik operandus <span class="k">long</span> <span class="k">int</span> típusú, <i>akkor</i> a másik is <span class="k">long</span> <span class="k">int</span> típusúvá alakul.<br />
+  <br />
+  <i>Különben</i>, <i>ha</i> az egyik operandus <span class="k">unsigned</span> <span class="k">int</span> típusú, <i>akkor</i> a másik is <span class="k">unsigned</span> <span class="k">int</span> típusúvá alakul.<br />
+  <br />
+  <i>Különben</i> mindkét operandus <span class="k">int</span> típusú.<br />
+  <br />
+  <div class="note"> Itt két változás van. Az első, hogy az aritmetika a <span class="ks">float</span> típusú mennyiségekkel egyszeres pontosságú műveleteket végez a kétszeres pontosságú helyett. A könyv első kiadása szerint minden lebegőpontos aritmetikai művelet kétszeres pontosságú. A második, hogy ha egy rövidebb előjel nélküli típus egy nagyobb előjeles típussal kombinálódik, akkor az előjel nélküli jelleg nem terjed ki az eredményre. A könyv első kiadása szerint mindig az előjel nélküli jelleg dominál. Az új konverziós szabályok kissé bonyolultak, de a meglepetést valamennyire csökkenti, hogy előfordulhat olyan eset, amikor előjel nélküli mennyiség előjelessel kombinálódik. Váratlan eredmény jöhet létre akkor is, amikor egy előjel nélküli kifejezést hasonlítunk össze egy ugyanolyan méretű előjeles kifejezéssel.<br />
+  </div>
+  <br />
+  <br />
+  <h4><a name="A6.6." id="A6.6."></a>A6.6. Mutatók és egész mennyiségek<br />
+  </h4>
+  Egy mutatóhoz hozzáadható vagy abból kivonható egy egész típusú kifejezés, és ilyen esetben az egész kifejezés úgy konvertálódik, ahogyan azt az összeadás operátorának leírásában (az <a href="a.html#A7.7.">A7.7. pontban</a>) specifikáljuk.
+  <p> Két, azonos tömbben, azonos típusú objektumot címző mutató kivonható egymásból és az eredmény a kivonás operátorának leírásában (az <a href="a.html#A7.7.">A7.7. pontban</a>) specifikált módon egész mennyiséggé konvertálódik.</p>
+  <p> Egy <span class="m">0</span> értékű egész típusú állandó kifejezés, vagy kényszerített típuskonverzióval <span class="m"><span class="k">void</span> *</span> típusúvá alakított kifejezés kényszerített típuskonverzióval, értékadással vagy összehasonlítással bármilyen típusú objektum mutatójává konvertálható. Ez a művelet egy null-mutatót eredményez, ami egyenlő bármely, ugyanilyen típushoz tartozó null-mutatóval, de nem egyenlő bármely függvényt vagy objektumot címző mutatóval.</p>
+  <p> Más, mutatókra vonatkozó típuskonverziók is megengedettek, de ezek értelmezése függhet a gépi megvalósítástól. Az ilyen átalakításokat egy explicit típuskonverziós operátorral vagy kényszerített típuskonverzióval kell specifikálni.</p>
+  <p> Egy mutató átalakítható saját tárolásához elegendően nagy egész típussá, de a kívánt méret a gépi megvalósítástól függ. Az átalakítást végző leképező függvény szintén a gépi megvalósítástól függ.</p>
+  <p> Az egyik adattípus mutatója egy másik adattípus mutatójává alakítható, de az eredményül kapott mutató címzési hibát jelezhet, ha az átalakított mutató nem megfelelő tárillesztésű objektumra hivatkozik. Csak az garantálható, hogy egy adott objektumhoz tartozó mutató változtatás nélkül egy azonos vagy enyhébb tárillesztési feltételeket igénylő adattípus mutatójává konvertálható vagy abból visszakonvertálható. Megjegyezzük, hogy a „tárillesztés” a gépi megvalósítástól függ, és a legkevésbé szigorú tárillesztési feltétel a <span class="k">char</span> típusú objektumokra vonatkozik. Mint az <a href="a.html#A6.8.">A6.8. pontban</a> majd részletesen tárgyaljuk, egy mutató mindig változtatás nélkül átalakítható <span class="m"><span class="k">void</span> *</span> típusúvá, ill. abból visszaalakítható.</p>
+  <p> Minden mutató átalakítható egy másik, azonos típusú, legfeljebb a típusminősítő meglétében vagy hiányában különböző objektumra hivatkozó mutatóvá (l. az <a href="a.html#A4.4.">A4.4.</a> és <a href="a.html#A8.2.">A8.2. pontot</a>). Ha az objektum típusához minősítőt is rendelünk, akkor az új mutató egyenértékű lesz a régivel, kivéve, hogy az új minősítőtől eredő korlátozások vonatkoznak rá. Ha a minősítőt elhagyjuk, akkor az alapul szolgáló objektumra továbbra is az aktuális deklarációjában szereplő minősítő marad érvényben a műveletek során.</p>
+  <p> Végül, adott függvényhez tartozó mutató átalakítható egy másik függvénytípus mutatójává. A függvényt az átalakított mutatón keresztül híva a hatás a gépi megvalósítástól függ, viszont ha az átalakított mutatót visszaalakítjuk az eredeti típusára, akkor az eredmény azonos lesz az eredeti mutatóval kapott eredménnyel.<br />
+    <br />
+  </p>
+  <h4><a name="A6.7." id="A6.7."></a>A6.7. A void típus<br />
+  </h4>
+  Egy <span class="k">void</span> típusú objektum (nemlétező) értékét nem lehet semmiféle módon felhasználni, és sem explicit, sem implicit konverzióval nem alakítható semmiféle nem <span class="k">void</span> típussá. Mivel egy <span class="k">void</span> kifejezés egy nemlétező értéket jelöl, ezért egy ilyen kifejezést csak ott lehet használni, ahol nincs szükség értékre, pl. kifejezésutasításként vagy egy vessző operátor bal oldali operandusaként (l. az <a href="a.html#A9.2.">A9.2.</a> és az <a href="a.html#A7.18.">A7.18. pontot</a>).
+  <p> Egy kifejezés kényszerített típuskonverzióval alakítható <span class="k">void</span> típusúvá. Például egy kényszerített <span class="k">void</span> típuskonverzió törli egy kifejezésutasításban szereplő függvényhívás értékét.<br />
+    <br />
+  </p>
+  <div class="note"> A <span class="ks">void</span> típus nem szerepelt a könyv első kiadásában, de azóta általánosan használt típussá vált.<br />
+  </div>
+  <br />
+  <br />
+  <h4><a name="A6.8." id="A6.8."></a>A6.8. A void típushoz tartozó mutatók<br />
+  </h4>
+  Egy objektumhoz tartozó bármilyen mutató informácóveszteség nélkül átalakítható <span class="m"><span class="k">void</span> *</span> típusúvá. Ha az eredményt visszaalakítjuk az eredeti mutatótípusra, akkor az eredeti mutatót kapjuk vissza. Eltérően az <a href="a.html#A6.6.">A6.6. pontban</a> a mutató-mutató konverziókról írtaktól, amely általában egy explicit kényszerített típuskonverziót igényel, bármely mutató értékül adható <span class="m"><span class="k">void</span> *</span> típusú mutatónak, ill. értéket kaphat <span class="m"><span class="k">void</span> *</span> típusú mutatótól, valamint az így kapott mutatók összehasonlításban is szerepelhetnek.<br />
+  <br />
+  <div class="note"> A <span class="ms"><span class="ks">void</span> *</span> típusú mutató ilyen értelmezése új; a korábbiakban a <span class="ms"><span class="ks">char</span> *</span> típusú mutató játszotta a generikus mutató szerepét. Az ANSI szabvány különösen előnyben részesíti a <span class="ms"><span class="ks">void</span> *</span> és objektumhoz tartozó mutatók kombinációját értékadó és relációs utasításokban, viszont más kevert típusú mutatóhasználat esetén explicit kényszerített típuskonverziót igényel.<br />
+  </div>
+  <br />
+  <br />
+  <h3><a name="A7." id="A7."></a>A7. Kifejezések<br />
+  </h3>
+  A kifejezésekben előforduló operátorok precedenciája megegyezik a következő tárgyalási sorrenddel, amelyben a legmagasabb precedenciájú operátorral kezdjük a tárgyalást. Így pl. azokat a kifejezéseket, amelyek a <span class="m">+</span> operátor operandusai (<a href="a.html#A7.7.">A7.7. pont</a>) lehetnek, az <a href="a.html#A7.1.">A7.1.</a> ... A7.6. pontokban definiáljuk. Az egyes pontokban leírt operátorok azonos precedenciájúak, és leírásuknál megadjuk a bal vagy jobb oldali asszociativitásukat is. A szintaktika <a href="a.html#A13.">A13. pontbeli</a> leírásában összesítve is megadjuk az operátorok precedenciáját és asszociativitását.
+  <p> Az operátorok precedenciája és asszociativitása teljesen specifikált, de a kifejezések kiértékelési sorrendje, néhány kivételtől eltekintve definiálatlan, különösen, ha a részkifejezések mellékhatásokat eredményeznek. Ezért azt az esetet kivéve, amikor egy operátor garantálja, hogy operandusai az előírt sorrendben értékelődnek ki, a gépi megvalósítás szabadon dönthet az operandusok tetszőleges kiértékelési sorrendje mellett, vagy minden sorrend nélkül, a leghatékonyabban végezheti a kiértékelést. Természetesen az egyes operátorok az operandusaik által képviselt értékeket úgy kombinálják, hogy az kompatibilis legyen annak a kifejezésnek a szintaktikai elemzésével, amelyben előfordul.<br />
+    <br />
+  </p>
+  <div class="note"> Ez a szabály érvényteleníti az előzőekben megadott, a matematikailag kommutatív és asszociatív operátorokat tartalmazó kifejezések átrendezhetőségének szabadságára vonatkozó szabályt, de a számítási asszociativitásnak teljesülnie kell. A változás csak a lebegőpontos számokkal a pontossági korlátjuk közelében végzett számításokat befolyásolja, ill. olyan esetben lényeges, ahol túlcsordulás fordulhat elő.<br />
+  </div>
+  <br />
+  <br />
+  <p>A nyelvben nincs definiálva a túlcsordulás kezelése, az osztás ellenőrzése vagy a kifejezések kiértékelése során fellépő más kivételes esetek kezelése. A legtöbb létező C megvalósítás az előjeles egész kifejezések kiértékelésekor vagy értékadáskor fellépő túlcsordulást figyelmen kívül hagyja, de ez a működési mód nem garantálható. A nullával való osztás és az összes lebegőpontos extra eset kezelése gépi megvalósításonként változik, néha nem standard könyvtári függvényekkel oldható meg.<br />
+    <br />
+  </p>
+  <h4><a name="A7.1." id="A7.1."></a>A7.1. Mutatógenerálás<br />
+  </h4>
+  Ha egy kifejezés vagy részkifejezés típusa valamilyen <i>T</i> típusra <i>„T tömbje”</i>, akkor a kifejezés értéke a tömb első objektumát címző mutatóra, és a kifejezés típusa <i>„mutató T-re”</i> típusra változik. Ez a konverzió nem történik meg, ha a kifejezés az unáris <span class="m">&amp;</span> operátor, vagy a <span class="m">++</span>, <span class="m">--</span>, ill. <span class="k">sizeof</span> operátor operandusa, vagy egy értékadó operátor bal oldali operandusa, vagy egy operátor operandusa. Hasonló módon egy kifejezés <i>„T-vel visszatérő függvény”</i> típusúról <i>„T-vel visszatérő függvény mutatója”</i> típusra konvertálódik, kivéve azt az esetet, amikor az <span class="m">&amp;</span> operátor operandusa.<br />
+  <br />
+  <h4><a name="A7.2." id="A7.2."></a>A7.2. Elsődleges kifejezések<br />
+  </h4>
+  Elsődleges kifejezés az azonosító, az állandó, a karaktersorozat vagy a zárójelbe tett kifejezés. Az elsődleges kifejezés szintaktikai leírása:<br />
+  <pre class="defit">
+elsődleges_kifejezés:
+azonosító
+állandó
+karaktersorozat
+(kifejezés)
+</pre>
+  Egy azonosító elsődleges kifejezés, ha a később ismertetett módon megfelelően deklarálták. Ilyenkor az azonosító típusát annak deklarációjában határozták meg. Egy azonosító balérték, ha egy objektumra hivatkozik (l. az <a href="a.html#A5.">A5. pontot</a>) és ha típusa aritmetikai, struktúra, <span class="k">union</span> vagy mutató típus.
+  <p> Az állandó elsődleges kifejezés, és típusa függ az alakjától, mint azt az <a href="a.html#A2.5.">A2.5. pontban</a> már tárgyaltuk.</p>
+  <p> A karaktersorozat-állandó szinten elsődleges kifejezés. Típusa eredetileg „<span class="k">char</span> <i>elemek tömbje</i>” (vagy széles karakterekből álló karaktersorozat esetén „<span class="k">wchar_t</span> <i>elemek tömbje</i>”), de az <a href="a.html#A7.1.">A7.1.</a> szabályt követve ez rendszerint „<span class="k">char</span><i>-hoz tartozó mutatóra</i>” vagy „<span class="k">wchar_t</span><i>-hez tartozó mutatóra</i>” módosul, és az eredmény a karaktersorozat első karakterére hivatkozó mutató lesz. A konverzió egyes inicializálásoknál nem jön létre, erre vonatkozóan l. az <a href="a.html#A8.7.">A8.7. pontot</a>.</p>
+  <p> Egy zárójelbe tett kifejezés elsődleges kifejezés, amelynek típusa és értéke megegyezik annak egyszerű (zárójel nélküli) kifejezéséhez tartozó típussal és értékkel. A zárójel jelenléte nincs hatással a kifejezés esetleges balérték szerepére.<br />
+    <br />
+  </p>
+  <h4><a name="A7.3." id="A7.3."></a>A7.3. Utótagos kifejezések<br />
+  </h4>
+  Az utótagos (postfix) kifejezésekben az operátorok csoportosítása balról jobbra történik. Az utótagos kifejezések szintaktikai leírása:<br />
+  <pre class="defit">
+utótagos_kifejezés:
+      elsődleges kifejezés
+      utótagos_kifejezés[kifejezés]
+      utótagos_kifejezés(argumentum_kifejezés_lista<sub>opc</sub>)
+      utótagos_kifejezés.azonosító
+      utótagos_kifejezés-&gt;azonosító
+      utótagos_kifejezés++
+      utótagos_kifejezés--
+
+argumentum-kifejezés_lista:
+      értékadó_kifejezés
+      argumentum-kifejezés_lista, értékadó_kifefezés
+</pre>
+  <i>
+  <h5>A7.3.1. Tömbhivatkozások<br />
+  </h5>
+  </i> Egy szögletes zárójelbe tett kifejezéssel követett utótagos kifejezés egy utótagos kifejezést alkot, ami egy indexelt tömbre való hivatkozást jelöl. A két kifejezés egyikének <i>„T-hez tartozó mutató”</i> típusúnak kell lennie, ahol <i>T</i> bármilyen típus lehet, és a másiknak egész típusúnak kell lennie. Az indexkifejezés <i>T</i> típusú. Az El [E2] kifejezés definíció szerint azonos a <span class="m">*((E1) + (E2))</span> kifejezéssel. A kérdéssel bővebben az <a href="a.html#A8.6.">A8.6.2. pontban</a> foglalkozunk.<br />
+  <br />
+  <i>
+  <h5>A7.3.2. Függvényhívások<br />
+  </h5>
+  </i> Egy függvényhívás szintén utótagos kifejezés, amelyet a hívott függvény nevét követő, zárójelben elhelyezett, vesszővel elválasztott elemekből álló (esetleg üres) értékadó kifejezés lista alkot. Az értékadó kifejezések listája képezi a függvény argumentumlistáját. Ha az utótagos kifejezés az aktuális érvényességi tartományban nem deklarált azonosítóból áll, akkor az azonosító implicit módon úgy deklarálódik, mint ha az<br />
+  <pre>
+<span class="k">extern</span> <span class="k">int</span> <span class="defit">azonosító( )</span>;
+</pre>
+  deklaráció a függvényhívást tartalmazó legbelső blokkban helyezkedne el. Az utótagos kifejezés típusának (az esetleges implicit deklaráció és az <a href="a.html#A7.1.">A7.1. pontban</a> leírt mutatógenerálás után) <i>„T értékkel visszatérő függvény mutatója”</i> típusúnak kell lennie (ahol <i>T</i> bármilyen típus lehet), és a függvényhívás értéke <i>T</i> típusú.<br />
+  <br />
+  <div class="note"> A könyv- első kiadásában a típus mindössze a „függvény” megjelölésre korlátozódott, és a függvény mutatón keresztüli hívásához egy explicit <span class="ms">*</span> operátort kellett alkalmazni. Az ANSI szabvány támogatja néhány fordítóprogram azon gyakorlatát, amely megengedi a függvény és a mutatóval specifikált függvény azonos szintaktika szerinti hívását. Ennek ellenére a régi szintaktika még használható.<br />
+  </div>
+  <br />
+  <br />
+  Az <i>argumentum</i> megjelölést a függvényhívással átadott kifejezésekre alkalmazzuk, a <i>paraméter</i> megjelölést pedig a függvény definíciójában átvett, ill. a deklarációjában leírt bemeneti objektumokra (vagy azok azonosítójára) használjuk. Néha ugyanilyen értelemben használjuk az „aktuális argumentum (paraméter)” és a „formális argumentum (paraméter)” fogalmakat is.
+  <p> A függvényhívás előkészítése során az egyes argumentumokról másolat készül és minden argumentumátadás szigorúan érték szerint történik. A függvény megváltoztathatja a paraméterként átadott objektumok értékét, amik az argumentumkifejezés másolatai, de ez a változtatás semmiféle módon nem befolyásolhatja az argumentum értékét (vagyis a hívó oldalon szereplő értéket). Természetesen lehetőség van rá, hogy a függvénynek mutatót adjunk át és ekkor a függvény megváltoztathatja a mutatóval címzett eredeti (hívó oldali) objektum értékét is.</p>
+  <p> A függvényt kétféle stílusban deklarálhatjuk. Az új stílusú deklarációban a paraméterek típusát explicit módon adjuk meg és az a függvény típusmegadásának része. Az ilyen deklarációt függvényprototípusnak is nevezzük. A régi stílusú deklarációban a paraméterek típusát nem specifikáljuk. A függvénydeklaráció kérdéseit az <a href="a.html#A8.6.">A8.6.3.</a> és <a href="a.html#A10.1.">A10.1.</a> pontokban tárgyaljuk.</p>
+  <p> Ha a híváshoz tartozó függvénydeklaráció régi stílusú, akkor alapfeltételezés szerint az egyes argumentumokra bekövetkezik az ún. argumentum-előléptetés, vagyis az egész típusú argumentumok az <a href="a.html#A6.1.">A6.1. pontban</a> leírt egész-előléptetéssel konvertálódnak, a <span class="k">float</span> típusú argumentumok pedig <span class="k">double</span> típusúvá alakulnak. A függvényhívás hatása definiálatlan, ha az argumentumok száma nem egyezik meg a definícióban szereplő paraméterek számával, vagy ha egy argumentum típusa az előléptetés után nem egyezik meg a megfelelő paraméter típusával. A típusegyeztetés attól függ, hogy a függvény definíciója régi vagy új stílusú. Ha a definíció régi stílusú, akkor a híváskor megadott argumentum előléptetett típusát hasonlítja össze a gép a paraméter előléptetett típusával. Ha a definíció új stílusú, akkor az argumentum előléptetett típusának meg kell egyezni a paraméter előléptetés nélküli típusával.</p>
+  <p> Ha a híváshoz tartozó függvénydeklaráció új stílusú, akkor az argumentumok típusa úgy konvertálódik, mint az értékadásnál, vagyis a függvényprototípusban szereplő megfelelő paraméterek típusára alakul át. Az argumentumok számának meg kell egyezni az explicit módon leírt paraméterek számával, kivéve azt az esetet, ha a deklaráció paraméterlistája a további ki nem írt paraméterekre utaló <span class="m">,...)</span> jelzéssel végződik. Ilyen esetben az argumentumok száma egyenlő vagy több kell legyen, mint a paraméterek száma és az explicit módon beírt paraméterekhez képest többlet argumentumok az előzőekben leírt argumentum-előléptetésnek lesznek kitéve. Ha a függvény definíciója régi stílusú, akkor a híváskor a prototípusban látható egyes paraméterek típusának meg kell egyezni a definícióban szereplő, a definíció paramétereire végrehajtott argumentum előléptetés utáni paramétertípusokkal.<br />
+    <br />
+  </p>
+  <div class="note"> Ezek a szabályok különösen bonyolultak, mivel az új és a régi stílusban deklarált függvények keveredésére vonatkoznak. A kétféle deklaráció kevert használatát, amennyiben lehetséges, kerüljük!<br />
+  </div>
+  <br />
+  <br />
+  Az argumentumok kiértékelési sorrendje nincs meghatározva, a különböző fordítóprogramok eltérően viselkednek. Mindezek ellenére az argumentumok és maga a függvénykijelölés a függvénybe való belépés előtt teljesen kiértékelődnek, beleértve a mellékhatásokat is.<br />
+  <br />
+  <i>
+  <h5>A7.3.3. Struktúrahivatkozások<br />
+  </h5>
+  </i> Utótagos kifejezést alkot egy utótagos kifejezést követő pontból és az azt követő azonosítóból álló szerkezet. Az első operandust alkotó kifejezésnek sturktúrának vagy unionnak, a pont után következő azonosítónak pedig egy struktúra- vagy uniontag nevének kell lennie. Az így kapott utótagos kifejezés értéke a struktúra vagy <span class="k">union</span> megnevezett tagjának értéke és típusa a tag típusa. A kifejezés balérték, ha az első kifejezés balérték és ha a második kifejezés típusa nem egy tömb.
+  <p> Egy utótagos kifejezést követő nyílból (amit a <span class="m">-</span> és <span class="m">&gt;</span> jelekből rakunk össze) és egy azt követő azonosítóból álló szerkezet szintén utótagos kifejezést alkot. Az első operandust alkotó kifejezésnek sruktúrát vagy uniont címző mutatónak, az azonosítónak pedig a struktúra- vagy uniontag nevének kell lennie. A művelet eredménye a mutatókifejezéssel címzett struktúra vagy <span class="k">union</span> megnevezett tagjának értéke és típusa a tag típusának felel meg. Az eredmény balérték, ha a típus nem tömbtípus.</p>
+  <p> A fentiek alapján az <span class="m">E1-&gt;TAG</span> kifejezés azonos a <span class="m">(*E1).TAG</span> kifejezéssel. A sturktúrákat és az unionokat az <a href="a.html#A8.3.">A8.3. pontban</a> ismertetjük.<br />
+    <br />
+  </p>
+  <div class="note"> A könyv első kiadásában már szerepelt az a szabály, hogy a tag neve mint kifejezés az utótagos kifejezésben szereplő struktúrához vagy unionhoz tartozik. Mindenesetre ez a megjegyzésben elismert szabály nem volt következetesen érvényre juttatva. A jelenlegi fordítóprogramok és az ANSI szabvány már érvényre juttatja.<br />
+  </div>
+  <br />
+  <br />
+  <i>
+  <h5>A7.3.4. Utótagos inkrementálás<br />
+  </h5>
+  </i> Egy utótagos kifejezést követő <span class="m">++</span> vagy <span class="m">--</span> operátorból álló szerkezet szintén utótagos kifejezés. A kifejezés értéke az operandus értéke. Az érték elővétele (és felhasználása) után az operandus értéke <span class="m">++</span> esetén eggyel növekszik (inkrementálás), <span class="m">--</span> esetén pedig eggyel csökken (dekrementálás). Az operandusnak balértéknek kell lenni. Az operandusra vonatkozó további megszorítások, ill. a működés részletei az additív operátoroknál (<a href="a.html#A7.7.">A7.7.</a>) és az értékadásnál (<a href="a.html#A7.17.">A7.17.</a>) találhatók.<br />
+  <br />
+  <h4><a name="A7.4." id="A7.4."></a>A7.4. Egyoperandusú operátorok<br />
+  </h4>
+  Az egyoperandusú (unáris) operátorokkal létrehozott kifejezések csoportosítása jobbról balra történik. Az egyoperandusú kifejezések szintaktikai leírása:<br />
+  <pre class="defit">
+egyoperandusú_kifejezés:
+      utótagos_ kifejezés
+      <span class="m">++</span> egyoperandusú_kifejezés
+      <span class="m">--</span> egyoperandusú_kifejezés
+      egyoperandusú_operátor kényszerített_típuskonverziójú_kifejezés
+      <span class="k">sizeof</span> egyoperandusú_kifejezés
+      <span class="k">sizeof</span> (típusnév)
+
+egyoperandusú_operátorok:<span class="def"> egyike a következőknek:</span>
+      <span class="m">&amp; * + - ~ !</span>
+</pre>
+  <br />
+  <i>
+  <h5>A7.4.1. Előtagos inkrementáló operátorok<br />
+  </h5>
+  </i> Egy egyoperandusú kifejezést megelőző <span class="m">++</span> vagy <span class="m">--</span> operátorból álló szerkezet szintén egyoperandusú kifejezés. A végrehajtás során az operandus <span class="m">++</span> esetén eggyel növekszik (inkrementálás), <span class="m">--</span> esetén pedig eggyel csökken (dekrementálás). A kifejezés értéke az inkrementálás vagy dekrementálás után kapott érték. Az operandusnak balértéknek kell lennie. Az operandusra vonatkozó további megszorítások, ill. a működés részletei az additív operátoroknál (<a href="a.html#A7.7.">A7.7.</a>) és az értékadásnál (<a href="a.html#A7.17.">A7.17.</a>) találhatók.<br />
+  <br />
+  <i>
+  <h5>A7.4.2. Címoperátor<br />
+  </h5>
+  </i> Az egyoperandusú <span class="m">&amp;</span> operátor az operandusának a címét állítja elő. Az operandusnak nem bitmezőre vagy <span class="k">register</span> típusúnak deklarált objektumra hivatkozó balértéknek, vagy függvény típusúnak kell lenni. Az eredmény egy mutató, amely a balértékkel egy objektumot vagy függvényt címez. Ha az operandus típusa <i>T</i>, akkor az eredmény típusa <i>„T típust címző mutató”</i>.<br />
+  <br />
+  <i>
+  <h5>A7.4.3. Indirekciós operátor<br />
+  </h5>
+  </i> Az egyoperandusú <span class="m">*</span> indirekciós operátor eredményül azt az objektumot vagy függvényt adja, amelyre az opreandusa mutat. Az eredmény balérték, ha az operandus egy aritmetikai objektum, struktúra, <span class="k">union</span> vagy mutató típus mutatója. Ha a kifejezés típusa <i>„T típust címző mutató”</i>, akkor az eredmény típusa <i>T</i>.<br />
+  <br />
+  <i>
+  <h5>A7.4.4. Egyoperandusú plusz operátor<br />
+  </h5>
+  </i> Az egyopreandusú <span class="m">+</span> operátor operandusának aritmetikai típusúnak kell lenni, és az eredmény az operandus értéke. Egy egész típusú operandusra végrehajtódik az egész előléptetés. Az eredmény típusa megegyezik az előléptetett operandus típusával.<br />
+  <br />
+  <div class="note"> Az egyoperandusú <span class="ms">+</span> új az ANSI szabványban. Azt az egyoperandusú <span class="ms">-</span> operátor miatt, szimmetria okokból vezették be.<br />
+  </div>
+  <br />
+  <br />
+  <i>
+  <h5>A7.4.5. Egyoperandusú mínusz operátor<br />
+  </h5>
+  </i> Az egyoperandusú <span class="m">-</span> operátor operandusának aritmetikai típusúnak kell lenni, és az eredmény az operandus negáltja. Egész típusú operandus esetén végrehajtódik az egészelőléptetés. Egy előjel nélküli mennyiség negáltját úgy számítjuk ki, hogy az előléptetett értékét kivonjuk az előléptetett típussal ábrázolható legnagyobb számból, és hozzáadunk egyet. A negatív nulla értéke nulla lesz. A művelet eredményének típusa megegyezik az előléptetett operandus típusával.<br />
+  <i>
+  <h5>A7.4.6. Egyes komplemens operátor<br />
+  </h5>
+  </i> A <span class="m">~</span> operátor operandusának egész típusúnak kell lenni és az eredmény az operandus egyes komplemense. Az egész-előléptetés itt is végrehajtódik. Ha az operandus előjel nélküli, akkor az eredményt úgy számítjuk ki, hogy az operandus értékét kivonjuk az előléptetett típussal ábrázolható legnagyobb számból. Ha az operandus előjeles mennyiség, akkor az eredményt úgy számítjuk ki, hogy az előléptetett operandust a megfelelő előjel nélküli típusra konvertáljuk, végrehajtjuk a <span class="m">~</span> műveletet, majd a kapott értéket visszakonvertáljuk előjeles típusra. Az eredmény típusa megegyezik az előléptetett operandus típusával.<br />
+  <i>
+  <h5>A7.4.7. Logikai negálás operátor<br />
+  </h5>
+  </i> A <span class="m">!</span> operátor operandusának aritmetikai vagy mutató típusúnak kell lenni, és az eredmény <span class="m">1</span>, ha az operandus értéke <span class="m">0</span>, ill. <span class="m">0</span> minden más esetben. Az eredmény típusa <span class="k">int</span>.<br />
+  <i>
+  <h5>A7.4.8. Sizeof operátor<br />
+  </h5>
+  </i> A <span class="k">sizeof</span> operátor az operandusaként megadott típusú objektum tárolásához szükséges bájtok számát határozza meg. Az operandus egy kifejezés (amely nem értékelődik ki) vagy egy zárójelben elhelyezett típusnév lehet. A <span class="k">sizeof</span> operátort <span class="k">char</span> típusra alkalmazva, az eredmény 1 lesz, tömbre alkalmazva pedig a tömb által lefoglalt teljes terület bájtban mért hossza. Az operátort struktúrára vagy unionra alkalmazva az eredmény az objektumban lévő bájtok száma, beleértve a helykitöltő bájtokat is (amelyek az illesztési feltételek teljesítése miatt szükségesek). Tömb esetén a hosszt úgy kapjuk meg, hogy az elemek számát szorozzuk egy elem méretével. Az operátort nem alkalmazhatjuk függvény típusra, bitmezőre vagy nem teljes típusra. Az eredmény előjel nélküli egész típusú állandó, amelynek a típusa a gépi megvalósítástól függ. Ezt a típust az <span class="m">&lt;stddef.h&gt;</span> standard header (l. a <a href="b.html">B. Függeléket</a>) <span class="k">size_t</span> típusként definiálja.<br />
+  <h4><a name="A7.5." id="A7.5."></a>A7.5. Kényszerített típusmódosító<br />
+  </h4>
+  Egy egyoperandusú kifejezést megelőző zárójelbe tett típusnév a kifejezés értékének megadott típusra alakítását okozza. A kényszerített típusmódosítás szintaktikai leírása:<br />
+  <pre class="defit">
+kényszerített_típusmódosítójú_kifejezés:
+      egyoperandusú kifejezés
+      (típusnév) kényszerített_típusmódosítójú_kifejezés
+</pre>
+  Ezt a konstrukciót kényszerített típusmódosításnak (a C nyelv terminológiájában cast szerkezetnek) nevezik. A típusnevek leírása az <a href="a.html#A8.8.">A8.8. pontban</a> található, az átalakítás hatásait pedig az <a href="a.html#A6.">A6. pontban</a> adtuk meg. A kényszerített típusmódosítójú kifejezés nem balérték.<br />
+  <h4><a name="A7.6." id="A7.6."></a>A7.6. Multiplikatív operátorok<br />
+  </h4>
+  A <span class="m">*</span>, <span class="m">/</span> és <span class="m">%</span> multiplikatív operátorok csoportosítása balról jobbra történik. A szintaktikai leírásuk:<br />
+  <pre class="defit">
+multiplikatív_kifejezés:
+      kényszerített_típusmódosítójú_kifejezés
+      multiplikatív_kifejezés * kényszerített_típusmódosítójú_kifejezés
+      multiplikatív_kifejezés / kényszerített_típusmódosítójú_kifejezés
+      multiplikatív_kifejezés % kényszerített_típusmódosítójú_kifejezés
+</pre>
+  A <span class="m">*</span> és <span class="m">/</span> operátorok operandusainak aritmetikai típusúnak, a <span class="m">%</span> operátor operandusainak egész típusúnak kell lenni. A művelet során az operandusok szokásos aritmetikai átalakításai végbemennek és ezekből meghatározható az eredmény várható típusa.
+  <p> A kétoperandusú <span class="m">*</span> operátor a szorzás műveletét jelzi.</p>
+  <p> A kétoperandusú <span class="m">/</span> operátor a hányadost, a kétoperandusú % operátor a maradékot állítja elő, ha az első operandust osztjuk a másodikkal. Ha a második operandus nulla, akkor az eredmény definiálatlan. Ha a második operandus nulla, akkor mindig igaz az<br />
+  </p>
+  <pre>
+(a/b)*b + a%b = a
+</pre>
+  összefüggés. Ha mindkét operandus nem negatív, akkor a maradék nem negatív és mindig kisebb, mint az osztó. Ha a fenti feltétel nem teljesül, akkor csak az garantálható, hogy a maradék abszolút értéke kisebb az osztó abszolút értékénél.<br />
+  <h4><a name="A7.7." id="A7.7."></a>A7.7. Additív operátorok<br />
+  </h4>
+  A <span class="m">+</span> és <span class="m">-</span> additív operátorok csoportosítása balról jobbra történik. Ha az operandusok aritmetikai típusúak, akkor végbemennek a szokásos aritmetikai típuskonverziók. Mindkét operátor esetén vannak további típuslehetőségek is. Az additív operátorok szintaktikai leírása:<br />
+  <pre class="defit">
+additív_kifejezés:
+      multiplikatív_kifejezés
+      additív_kifejezés + multiplikatív_kifejezés
+      additív_kifejezés - multiplikatív_kifejezés
+</pre>
+  A <span class="m">+</span> operátor eredménye az operandusok összege. Egy tömb egy objektumát címző mutató bármilyen egész típusú értékkel összeadható, és ilyenkor a második operandus a mutatóval címzett objektum méretével való szorzással egy címeltolássá alakul. Az eredmény az eredeti mutatóval azonos típusú mutató, amely ugyanazon tömb másik, az eredeti objektumtól a címeltolással odébb lévő objektumát címzi. Így ha <span class="m">P</span> egy tömb objektumának mutatója, akkor <span class="m">P + 1</span> kifejezés szintén egy mutató, amely a tömb következő objektumát címzi. Ha az összegként kapott mutató a tömb határain kívülre címez, kivéve a felső határ utáni első helyet, akkor az eredmény definiálatlan.<br />
+  <br />
+  <div class="note"> A tömb utolsó eleme utáni első elemre való hivatkozás lehetősége új. Ez a lehetőség legalizálja a tömbök ciklusban való feldolgozásánál használt szokásos programszerkezetet.<br />
+  </div>
+  <br />
+  <br />
+  A <span class="m">-</span> operátor eredménye az operandusok különbsége. Egy mutatóból bármilyen egész típusú érték kivonható, és a műveletre az összeadásnál elmondott típuskonverziós szabályok, ill. feltételek érvényesek.
+  <p> Ha két, azonos típusú objektumot címző mutatót kivonunk egymásból, akkor az eredmény előjeles egész érték, ami két megcímzett objektum közötti címkülönbséget jelenti. Ez az érték egymást követő objektumok esetén 1. Az eredmény típusa a gépi megvalósítástól függ, de az <span class="m">&lt;stddef.h&gt;</span> standard headerben ez a típus <span class="k">ptrdiff_t</span> típusként van definiálva. A kivonással kapott érték csak akkor definit, ha a mutatók azonos tömb elemeit címzik. Ha <span class="m">P</span> egy tömb utolsó elemére mutat, akkor mindig igaz, hogy<br />
+  </p>
+  <pre>
+(P + 1) - P = 1.
+</pre>
+  <br />
+  <h4><a name="A7.8." id="A7.8."></a>A7.8. Léptető operátorok<br />
+  </h4>
+  A <span class="m">&lt;&lt;</span> és <span class="m">&gt;&gt;</span> léptető operátorok csoportosítása balról jobbra történik. Mindkét operátor operandusainak egész típusúaknak kell lenni és végbemegy az egész-előléptetés. Az eredmény típusa megegyezik a bal oldali, előléptetett operandus típusával. Az eredmény definiálatlan, ha a jobb oldali operandus negatív, vagy ha értéke a bal oldali kifejezés típusának megfelelő gépi ábrázolás bitszámával egyenlő, ill. annál nagyobb. A szintaktikai leírás:<br />
+  <pre class="defit">
+léptető_kifejezés:
+      additív_kifejezés
+      léptető_kifejezés &lt;&lt; additív_kifejezés
+      léptető_kifejezés &gt;&gt; additív_kifejezés
+</pre>
+  Az <span class="m">E1&lt;&lt;E2</span> kifejezés értéke a bitmintaként értelmezett <span class="m">E1</span> <span class="m">E2</span> számú bittel balra léptetett értéke, ami, ha nem jött létre túlcsordulás, akkor a 2<i><sup>E2</sup></i> értékkel való szorzásnak felel meg. Az <span class="m">E1&gt;&gt;E2</span> kifejezés értéke az <span class="m">E1</span> <span class="m">E2</span> számú bittel jobbra léptetett értéke. A jobbra léptetés 2<i><sup>E2</sup></i> értékkel való osztásnak felel meg, ha <span class="m">E1</span> előjel nélküli vagy nem negatív mennyiség. Minden más esetben az eredmény a gépi megvalósítástól függ.<br />
+  <br />
+  <h4><a name="A7.9." id="A7.9."></a>A7.9. Relációs operátorok<br />
+  </h4>
+  A relációs operátorok csoportosítása balról jobbra történik, de ennek nincs túl nagy jelentősége, mivel a kiértékelés során az <span class="m">a&lt;b&lt;c</span> reláció mindig <span class="m">(a&lt;b)&lt;c</span> alakra íródik át és először mindig az <span class="m">a&lt;b</span> értékelődik ki, aminek értéke <span class="m">0</span> vagy <span class="m">1</span> lesz. A szintaktikai leírás:<br />
+  <pre class="defit">
+relációs_kifejezés:
+      léptető_kifejezés
+      relációs_kifejezés &lt; léptető_kifejezés
+      relációs_kifejezés &gt; léptető_kifejezés
+      relációs_kifejezés &lt;= léptető_kifejezés
+      relációs_kifejezés &gt;= léptető_kifejezés
+</pre>
+  A <span class="m">&lt;</span> (kisebb), <span class="m">&gt;</span> (nagyobb), <span class="m">&lt;=</span> (kisebb vagy egyenlő) és <span class="m">&gt;=</span> (nagyobb vagy egyenlő) operátorok <span class="m">0</span> eredményt adnak, ha a kijelölt reláció hamis és <span class="m">1</span> eredményt, ha igaz. Az eredmény <span class="k">int</span> típusú. Az aritmetikai típusú operandusokon végrehajtódnak a szokásos aritmetikai típuskonverziók. Csak (a minősítőket figyelmen kívül hagyva) azonos típusú objektumokhoz tartozó mutatók hasonlíthatók össze és az eredmény a címzett objektumok címtartományon belüli egymáshoz viszonyított (relatív) helyétől függ. A mutatók összehasonlítása csak azonos objektum részeire van értelmezve: ha két mutató ugyanazon egyszerű objektumot címzi, akkor összehasonlíthatók egyenlőségre; ha a mutatók ugyanazon struktúra tagjait címzik, akkor a struktúrában később deklarált objektumokhoz tartozó mutatók összehasonlíthatók a nagyobb feltétel szerint; ha a mutatók egy tömb elemeit címzik, akkor az összehasonlítás egyenértékű a megfelelő indexek összehasonlításával. Ha a <span class="m">P</span> mutató egy tömb utolsó elemét címzi, akkor az összehasonlításban <span class="m">P+1</span> nagyobb mint <span class="m">P</span>, függetlenül attól, hogy <span class="m">P+1</span> már a tömbön kívülre mutat. Minden, itt felsoroltaktól eltérő esetben a mutatók összehasonlítása nincs definiálva.<br />
+  <br />
+  <div class="note"> Ezek a szabályok azzal, hogy megengedik egy struktúra vagy union különböző tagjaihoz tartozó mutatók összehasonlítását, kissé liberalizálják az előző kiadásban megfogalmazott korlátozásokat. Az új szabályok a tömb utolsó utáni eleméhez tartozó mutatóval való összehasonlítást szintén legalizálják.<br />
+  </div>
+  <br />
+  <br />
+  <h4><a name="A7.10." id="A7.10."></a>A7.10. Egyenlőségoperátorok<br />
+  </h4>
+  Az egyenlőségoperátorok szintaktikai leírása:<br />
+  <pre class="defit">
+egyenlőség_kifejezés:
+      relációs_kifejezés
+      egyenlőség_kifejezés == relációs_kifejezés
+      egyenlőség_kifejezés != relációs_kifejezés
+</pre>
+  A <span class="m">==</span> (egyenlő valamivel) és a <span class="m">!=</span> (nem egyenlő valamivel) operátorok megegyeznek a megfelelő relációs operátorokkal, kivéve, hogy alacsonyabb a precedenciájuk. (így <span class="m">a&lt;b == c&lt;d</span> akkor <span class="m">1</span>, ha <span class="m">a&lt;b</span> és <span class="m">c&lt;d</span> egyformán igaz vagy egyformán hamis.)
+  <p> Az egyenlőségoperátorok eleget tesznek mindazon szabályoknak, mint a relációs operátorok, de azokhoz képest további lehetőségeket is megengednek: mutatót összehasonlíthatunk egy állandó egész kifejezéssel vagy egy <span class="k">void</span> típushoz tartozó mutatóval (l. az <a href="a.html#A6.6.">A6.6. pontot</a>).<br />
+    <br />
+  </p>
+  <h4><a name="A7.11." id="A7.11."></a>A7.11. Bitenkénti ÉS operátor<br />
+  </h4>
+  A szintaktikai leírás:<br />
+  <pre class="defit">
+ÉS_kifejezés:
+      egyenlőség_kifejezés
+      ÉS_kifejezés &amp; egyenlőség_kifejezés
+</pre>
+  A szokásos aritmetikai típuskonverziók végbemennek, az eredmény az operandusok bitenkénti ÉS (AND) kapcsolata. Az operátor csak egész típusú operandusokra alkalmazható.<br />
+  <h4><a name="A7.12." id="A7.12."></a>A7.12. Bitenkénti kizáró VAGY operátor<br />
+  </h4>
+  Szintaktikai leírás:<br />
+  <pre class="defit">
+kizáró_VAGY_kifejezés: 
+      ÉS_kifejezés
+      kizáró_VAGY_kifejezés^ ÉS_kifejezés<br />
+</pre>
+  A szokásos aritmetikai típuskonverziók végrehajtódnak, az eredmény az operandusok bitenkénti kizáró VAGY kapcsolata. Az operátor csak egész típusú operandusokra alkalmazható.<br />
+  <h4><a name="A7.13." id="A7.13."></a>A7.13. Bitenkénti inkluzív VAGY operátor<br />
+  </h4>
+  Szintaktikai leírás:<br />
+  <pre class="defit">
+inkluzív_VAGY_kifejezés:
+      kizáró_VAGY_kifejezés
+      inkluzív_VAGY_kifejezés | kizáró_VAGY_kifejezés
+</pre>
+  A szokásos aritmetikai típuskonverziók végbemennek, az eredmény az operandusok bitenkénti inkluzív VAGY kapcsolata. Az operátor csak egész típusú operandusokra alkalmazható.<br />
+  <h4><a name="A7.14." id="A7.14."></a>A7.14. Logikai ÉS operátor<br />
+  </h4>
+  Szintaktikai leírás:<br />
+  <pre class="defit">
+logikai_ÉS_kifejezés:
+      inkluzív_ VAGY_kifejezés
+      logikai_ÉS_kifejezés &amp;&amp; inkluzív_VAGY_kifejezés
+</pre>
+  Az <span class="m">&amp;&amp;</span> operátor csoportosítása balról jobbra történik. A művelet eredménye 1, ha mindkét operandus nullától különböző, és 0 különben. Az <span class="m">&amp;</span> operátortól eltérően az <span class="m">&amp;&amp;</span> operátor esetén garantált a balról jobbra történő végrehajtás: először az első operandus értékelődik ki, beleértve az összes mellékhatást is, és ha ez 0 értékű, akkor a teljes kifejezés értéke nulla. Különben a jobb oldali operandus is kiértékelődik, és ha az értéke nulla, akkor a teljes kifejezés értéke nulla. Minden más esetben a teljes kifejezés értéke 1.
+  <p> Nem szükséges, hogy az operandusok azonos típusúak legyenek, de mindegyiknek aritmetikai vagy mutató típusúnak kell lennie. A művelet eredménye <span class="k">int</span> típusú.<br />
+  </p>
+  <h4><a name="A7.15." id="A7.15."></a>A7.15. Logikai VAGY operátor<br />
+  </h4>
+  A szintaktikai leírás:<br />
+  <pre class="defit">
+logikai_VAGY_kifejezés
+      logikai_ÉS_kifejezés
+      logikai_VAGY_kifejezés || logikai_ÉS_kifejezés
+</pre>
+  A <span class="m">||</span> logikai VAGY operátor csoportosítása balról jobbra történik. A művelet eredménye 1, ha az egyik operandus nullától különböző és minden más esetben 0. Az <span class="m">|</span> operátortól eltérően a <span class="m">||</span> operátor esetén garantált a balról jobbra való kiértékelés: először mindig az első operandus értékelődik ki (beleértve a mellékhatásokat is) és ha ez nem egyenlő nullával, akkor a kifejezés értéke 1. Máskülönben a jobb oldali operandus értékelődik ki, és ha ez nem egyenlő nullával, a kifejezés értéke 1, ha nulla, akkor pedig 0.
+  <p> Nem szükséges, hogy az operátor operandusai azonos típusúak legyenek, de mindegyiknek aritmetikai vagy mutató típusúnak kell lennie. A művelet eredménye <span class="k">int</span> típusú.<br />
+  </p>
+  <h4><a name="A7.16." id="A7.16."></a>A7.16. Feltételes operátor<br />
+  </h4>
+  A szintaktikai leírás:<br />
+  <pre class="defit">
+feltételes_kifejezés:
+      logikai_VAGY_kifejezés
+      logikai_VAGY_kifejezés ? kifejezés : feltételes_kifejezés
+</pre>
+  A művelet végrehajtása során kiértékelődik az első kifejezés (beleértve a mellékhatásokat is) és ha ez nem nulla, akkor az eredmény a második kifejezés értéke, különben pedig a harmadik kifejezés értéke. A második és harmadik kifejezések közül mindig csak az egyik értékelődik ki. Ha a második és harmadik kifejezés (operandus) aritmetikai típusú, akkor a szokásos aritmetikai típuskonverziók mennek végbe a közös típus elérése érdekében, és ez a közös típus lesz az eredmény típusa is. Ha mindkét operandus <span class="k">void</span> típusú, vagy azonos típusú struktúra, ill. union, vagy azonos típusú objektumok mutatója, akkor az eredmény típusa a közös típus. Ha az egyik operandus mutató, a másik pedig 0 értékű állandó, akkor a 0 mutató típusra konvertálódik és ez lesz az eredmény típusa is. Ha az egyik operandus <span class="k">void</span> típushoz tartozó mutató, a másik pedig nem, akkor a másik operandus is <span class="k">void</span> típushoz tartozó mutatóvá alakul és ez lesz az eredmény típusa is.
+  <p> A mutatók típusának összehasonlításakor a mutatókkal címzett objektumok típusát meghatározó típusminősítők (l. <a href="a.html#A8.2.">A8.2. pont</a>) érdektelenek, de az eredmény típusa örökli a feltétel mindkét oldalának típusminősítőjét.<br />
+  </p>
+  <h4><a name="A7.17." id="A7.17."></a>A7.17. Értékadó kifejezések<br />
+  </h4>
+  A C nyelvben számos értékadó operátor létezik, amelyek csoportosítása jobbról balra történik. Az értékadó kifejezés szintaktikai leírása:<br />
+  <pre class="defit">
+értékadó_kifejezés:
+      feltételes_kifejezés
+      egyoperandusú_kifejezés értékadó_operátor értékadó_kifejezés
+
+értékadó_operátor: <span class="def">egyike a következőknek:</span>
+      <span class="m">= *= /= %= += -= &lt;&lt;= &gt;&gt;= &amp;= ^=</span> |=
+</pre>
+  Az összes operátor bal oldali operandusként balértéket igényel és ennek a balértéknek módosíthatónak kell lennie, azaz nem lehet tömb és nem lehet nemteljes vagy függvény típusú. Az szintén követelmény, hogy a típusa nem lehet <span class="k">const</span> minősítésű, ill. ha struktúra vagy union, akkor nem lehet egyetlen tagja vagy rekurzívan beleágyazott altagja sem <span class="k">const</span> minősítésű. Egy értékadó kifejezés típusa a bal oldali operandus típusával egyezik meg és értéke az értékadás után a bal oldali operandusban tárolt érték lesz.
+  <p> Az egyszerű, <span class="m">=</span> jellel történő értékadás esetén a kifejezés értéke beíródik a balértékkel kijelölt objektumba. A következő állítások egyike igaz kell hogy legyen: mindkét operandus aritmetikai típusú, és ebben az esetben a jobb oldali operandus az értékadás során a bal oldali operandus típusára konvertálódik; mindkét operandus azonos típusú struktúra vagy union; az egyik operandus mutató, a másik <span class="k">void</span> típushoz tartozó mutató; a bal oldali operandus egy mutató és a jobb oldali egy 0 értékű állandó kifejezés; mindkét operandus függvényhez vagy azonos típusú objektumokhoz (kivéve, hogy a jobb oldali operandus nem lehet <span class="k">const</span> vagy <span class="k">volatile</span> minősítésű) tartozó mutató.</p>
+  <p> Az <span class="m">E1 <span class="defit">op</span>= E2</span> alakú kifejezés egyenértékű az <span class="m">E1 = E1 <span class="defit">op</span> (E2)</span> kifejezéssel, kivéve, hogy <span class="m">E1</span> csak egyszer értékelődik ki.<br />
+  </p>
+  <h4><a name="A7.18." id="A7.18."></a>A7.18. Vesszőoperátor<br />
+  </h4>
+  A szintaktika leírása:<br />
+  <pre class="defit">
+kifejezés:
+      értékadó_kifejezés
+      kifejezés, értékadó_kifejezés
+</pre>
+  Egy vesszővel elválasztott kifejezéspár balról jobbra értékelődik ki és a bal oldali kifejezés értéke elvész. Az eredmény típusa és értéke megegyezik a jobb oldali operandus típusával és értékével. A jobb oldali operandus kiértékelése során létrejövő mellékhatások teljesen lezajlanak. Olyan szövegkörnyezetben, ahol a vessző speciális jelentésű pl. függvények argumentumlistájában (<a href="a.html#A7.3.">A7.3.2.</a>) vagy inicializáló kifejezések listájában (<a href="a.html#A8.7.">A8.7.</a>), az igényelt szintaktikai egység egy értékadó kifejezés, így a vesszőoperátor csak zárójelbe tett csoporton belül jelenhet meg. Például az<br />
+  <pre>
+f(a, (t=3, t + 2 ), c)
+</pre>
+  függvénynek három argumentuma van, és ezek közül a második (vesszőoperátorral előállított) értéke 5.<br />
+  <h4><a name="A7.19." id="A7.19."></a>A7.19. Állandó kifejezések<br />
+  </h4>
+  Szintaktikailag egy állandó kifejezés az operátorok egy részhalmazára korlátozódó kifejezés. A szintaktikai leírása:<br />
+  <pre class="defit">
+állandó_kifejezés:
+      feltételes_kifejezés
+</pre>
+  A kifejezéseket kiértékelve állandó értéket kapunk, ami különböző értelemben használható (pl. a <span class="k">case</span> utasítás után, tömbhatárként vagy bitmező hosszaként, felsorolt állandó értékeként, kezdeti értékként, az előfeldolgozó rendszer bizonyos kifejezéseiben).
+  <p> Az állandó kifejezések nem tartalmazhatnak értékadást, inkrementáló vagy dekrementáló operátorokat, függvényhívást vagy vesszőoperátort, kivéve a <span class="k">sizeof</span> operátor operandusát. Ha az állandó kifejezésnek egész típusúnak kell lennie, akkor az operandusai csak egész, felsorolt, karakteres és lebegőpontos állandókat tartalmazhatnak, a kényszerített típuskonverziónak egész típust kell kijelölni és bármely lebegőpontos állandót kényszerített típuskonverzióval kell egész típusúvá alakítani. Ennek következtében a műveletben nem szerepelhetnek tömbökre vonatkozó műveletek, indirekció, címgenerálás és struktúratagra vonatkozó művelet. (Viszont bármely operandusra alkalmazható a <span class="k">sizeof</span> operátor.)</p>
+  <p> A C nyelv a kezdeti értéket adó állandó kifejezések számára sokkal tágabb lehetőségeket enged meg. Az operandusok bármilyen típusú állandók lehetnek, az egyoperandusú &amp; operátor alkalmazható a külső vagy statikus objektumokra, valamint állandó kifejezéssel indexelt statikus tömbökre. Az egyoperandusú <span class="m">&amp;</span> operátor ugyancsak alkalmazható implicit módon indexeletlen tömbökre és függvényekre. A kezdeti értéket adó kifejezés kiértékelésével állandót vagy egy korábban deklarált külső vagy statikus objektum állandóval növelt vagy csökkentett címét kell kapnunk.</p>
+  <p> Az <span class="d">#if</span> utasítás utáni egész típusú állandó kifejezésekre kevesebb lehetőség van megengedve: ilyen helyen a <span class="k">sizeof</span> kifejezés, felsorolt állandó és kényszerített típuskonverzió nem alkalmazható (l. az <a href="a.html#A12.5.">A12.5. pontot</a>).<br />
+    <br />
+  </p>
+  <h3><a name="A8." id="A8."></a>A8. Deklarációk<br />
+  </h3>
+  A deklarációk határozzák meg a fordítóprogram számára az egyes azonosítók értelmezését. A deklaráció nem szükségszerűen jelent tárbeli helyfoglalást az azonosító számára. A tárterületet lefoglaló deklarációkat definíciónak nevezzük. A deklaráció formája:<br />
+  <pre class="defit">
+deklaráció:
+      deklaráció_specifikátorok kezdeti_deklarátor_lista<sub>opc</sub>;
+</pre>
+  A kezdeti deklarátorlistában szereplő deklarátorok tartalmazzák a deklarálandó azonosítókat. A deklaráció specifikátorok típus és tárolási osztály specifikátorokból állnak.<br />
+  <pre class="defit">
+deklaráció_specifikátorok:
+      tárolási_osztály_specifikátor deklaráció_specifikátor<sub>opc</sub>
+      típus_specifikátor deklaráció_specifikátor<sub>opc</sub>
+      típus_minősítő deklaráció_specifikátor<sub>opc</sub>
+
+kezdeti_deklarátor_lista:
+      kezdeti_deklarátor
+      kezdeti_deklarátor_lista, kezdeti_deklarátor
+
+kezdeti_deklarátor:
+      deklarátor
+      deklarátor = kezdeti_érték
+</pre>
+  A deklarátorokat az <a href="a.html#A8.5.">A8.5. pontban</a> fogjuk részletesen tárgyalni, itt csak annyit említünk meg, hogy a deklarátorok tartalmazzák a deklarálandó neveket. Egy deklarációnak legalább egy deklarátort vagy egy struktúracímkét, unioncímkét, ill. felsorolástagot deklaráló típusspecifikátort kell tartalmaznia. Az üres deklarációk nem használhatók.<br />
+  <h4><a name="A8.1." id="A8.1."></a>A8.1. Tároláslosztály-specifikátorok<br />
+  </h4>
+  A tárolásiosztály-specifikátorok a következők:<br />
+  <pre class="defit">
+tárolási_osztály_specifikátor:
+      <span class="k">auto</span>
+      <span class="k">register</span>
+      <span class="k">static</span>
+      <span class="k">extern</span>
+      <span class="k">typedef</span>
+</pre>
+  Az egyes tárolási osztályok jelentését az <a href="a.html#A4.">A4. pontban</a> tárgyaltuk.
+  <p> Az <span class="k">auto</span> és <span class="k">register</span> specifikátorok azt mondják ki, hogy a deklarált objektumok automatikus tárolási osztályúak és csak függvényeken belül használhatók. Az ilyen deklarációk egyben definíciók is és lefoglalják az objektum számára a tárolóhelyet. Egy <span class="k">register</span> deklaráció egyenértékű az <span class="k">auto</span> deklarációval, de arra utal, hogy a deklarált objektumot gyakran kívánjuk használni. Ténylegesen csak kevés objektum helyezkedik el regiszterben és csak meghatározott típusú objektumok lehetnek regiszteres típusúak. A korlátozások a gépi megvalósítástól függenek. Ha az objektum <span class="k">register</span> tárolási osztályúnak deklarált, akkor az egyoperandusú &amp; címgeneráló operátor sem explicit, sem implicit módon nem alkalmazható rá.<br />
+    <br />
+  </p>
+  <div class="note"> Új az a szabály, hogy a <span class="ks">register</span> tárolási osztályúnak deklarált, de ténylegesen <span class="ks">auto</span> tárolási osztályú objektum címét nem szabad kiszámítani.<br />
+  </div>
+  <br />
+  <br />
+  A <span class="k">static</span> specifikáció hatására a deklarált objektum statikus tárolási osztályú lesz, és függvények belsejében vagy azokon kívül egyaránt használható. Egy függvény belsejében a <span class="k">static</span> specifikátor egyben tárterületet is rendel az objektumhoz (azaz definícióként szolgál), a függvényen kívüli alkalmazásra vonatkozóan l. az <a href="a.html#A11.2.">A11.2. pontot</a>.
+  <p> Az <span class="k">extern</span> deklaráció használható a függvények belsejében és azt jelzi, hogy a deklarált objektumhoz máshol rendeljük hozzá a tárterületet, a függvényen kívüli alkalmazásokra vonatkozóan l. az <a href="a.html#A11.2.">A11.2. pontot</a>.</p>
+  <p> A <span class="k">typedef</span> specifikátor nem foglal le tárterületet és csak a kényelmes szintaktikai leírás miatt nevezzük tárolásiosztály-specifikátornak. A részletes leírása az <a href="a.html#A8.9.">A8.9. pontban</a> található.</p>
+  <p> Egy deklarációban legfeljebb csak egy tárolásiosztály-specifikátor adható meg. Ha egyet sem adunk meg, akkor a következő szabályok érvényesek: egy függvényen belül deklarált objektum mindig <span class="k">auto</span> tárolási osztályú lesz; a függvényen belül deklarált függvények mindig <span class="k">extern</span> tárolási osztályúak lesznek; a függvényen kívül deklarált objektumok és függvények mindig külső csatolással rendelkező statikus tárolási osztályúak lesznek. A részletesebb leírás az <a href="a.html#A10.">A10.</a> és <a href="a.html#A11.">A11.</a> pontokban található.<br />
+  </p>
+  <h4><a name="A8.2." id="A8.2."></a>A8.2. Típusspecifikátorok<br />
+  </h4>
+  A típusspefcifikátorok a következők:<br />
+  <pre class="defit">
+típus_specifikátor:
+      <span class="k">void</span>
+      <span class="k">char</span>
+      <span class="k">short</span>
+      <span class="k">int</span>
+      <span class="k">long</span>
+      <span class="k">float</span>
+      <span class="k">double</span>
+      <span class="k">signed</span>
+      <span class="k">unsigned</span>
+
+struktúra_vagy_union_specifikátor
+felsorolás_specifikátor
+typedef_név
+</pre>
+  A <span class="k">short</span> vagy <span class="k">long</span> specifikátorok közül legfeljebb az egyik alkalmazható az <span class="k">int</span> specifikátorral együtt, és az ilyen deklarációk jelentése ugyanaz, mint ha az <span class="k">int</span> nem is szerepelne benne. A <span class="k">long</span> specifikátor alkalmazható a <span class="k">double</span> specifikátorral együtt is. A <span class="k">signed</span> vagy <span class="k">unsigned</span> specifikátorok közül legfeljebb egy alkalmazható az int-tel vagy annak <span class="k">short</span>, ill. <span class="k">long</span> változatával, vagy <span class="k">char</span> specifikátorral együtt. A <span class="k">signed</span> és <span class="k">unsigned</span> specifikátorok bármelyike önmagában is megjelenhet, az <span class="k">int</span> megadása magától értetődő, így elhagyható. A <span class="k">signed</span> specifikátor alkalmazásával a <span class="k">char</span> típusú mennyiségekre rákényszeríthető az előjeles adatábrázolás, viszont az alkalmazásuk az egész típusokkal együtt megengedett, de redundáns.
+  <p> A fentieken kívül, minden más esetben egy deklarációban legfeljebb csak egy típusspecifikátor használható. Ha egy deklarációból hiányzik a típusspecifikátor, akkor a fordítóprogram a deklarált objektumot <span class="k">int</span> típusúnak tekinti.</p>
+  <p> A típusok minősítettek is lehetnek, és a minősítés a deklarált objektum speciális tulajdonságait jelzi.<br />
+  </p>
+  <pre class="defit">
+típusminősítő:
+      <span class="k">const</span>
+      <span class="k">volatile</span>
+</pre>
+  A típusminősítők bármelyik típusspecifikátorral együtt is megjelenhetnek. A <span class="k">const</span> minősítésű objektumhoz kezdeti értéket értéket rendelhetünk, de azután az értéke már nem változtatható. A <span class="k">volatile</span> minősítőjű objektumoknak nincs a gépi megvalósítástól független szemantikájuk.<br />
+  <br />
+  <div class="note"> A <span class="ks">const</span> és <span class="ks">volatile</span> minősítővel jelzett tulajdonságok újak az ANSI szabványban. A <span class="ks">const</span> minősítő az objektumról kinyilvánítja, hogy az egy csak olvasható memóriában (ROM-ban) is elhelyezhető és ezzel talán növeli az optimálhatóság lehetőségeit. A <span class="ks">volatile</span> minősítő szerepe, hogy a gépi megvalósítást az egyébként alkalmazott optimálások elhagyására kényszerítse. Például egy tárleképezéses bemenetet-kimenetet használó számítógép esetén egy perifériaregiszterhez tartozó mutató <span class="ks">volatile</span> minősítésű mutatóként deklarálható, azért, hogy a fordítóprogram ne távolítsa el a nyilvánvalóan redundáns (de szükséges) mutatón keresztüli hivatkozásokat. Eltekintve a <span class="ks">const</span> minősítőjű objektumokhoz való explicit változtatási kísérletek diagnosztizálásától, a fordítóprogram ezeket a minősítőket figyelmen kívül hagyhatja.<br />
+  </div>
+  <br />
+  <br />
+  <br />
+  <h4><a name="A8.3." id="A8.3."></a>A8.3. Struktúrák és unionok deklarációja<br />
+  </h4>
+  A struktúra különböző típusú, névvel azonosított tagok sorozatából álló objektum. Az union különböző időpontokban a különböző típusú tagok egyikét tartalmazza. A struktúra- és unionspecifikátorok azonos alakúak.<br />
+  <pre class="defit">
+struktúra_vagy_union_specifikátor:
+      struktúra_vagy_union azonosító<sub>opc</sub> { struktúra_deklarációs_lista }
+      struktúra_vagy_union azonosító
+
+struktúra_vagy_union:
+      <span class="k">struct</span>
+      <span class="k">union</span>
+</pre>
+  A struktúradeklarációs lista a struktúra vagy union tagjaihoz tartozó deklarációk sorozata.<br />
+  <pre class="defit">
+struktúra_deklarációs_lista:
+      struktúra_deklaráció
+      struktúra_deklarációs_lista struktúra_deklaráció
+
+struktúra_deklaráció:
+      specifikátor_minősítő_lista struktúra_deklarátor_lista
+
+specifikátor_minősítő_lista:
+      típus_specifikátor specifikátor_minősítő_lista<sub>opc</sub>
+      típusminősítő specifikátor_minősítő_lista<sub>opc</sub>
+
+struktúra_deklarátor_lista: 
+      struktúra_deklarátor 
+      struktúra_deklarátor_lista, struktúra_deklarátor
+</pre>
+  Általában egy struktúradeklarátor a struktúra vagy union egy tagjának deklarátora. Egy struktúratag meghatározott számú bitből is állhat és az ilyen tagokat bitmezőnek vagy röviden mezőnek nevezzük. A mező hossza a deklarátorból, a mező nevét követő kettőspont utáni részből vehető ki.<br />
+  <pre class="defit">
+struktúra_deklarátor:
+      deklarátor
+      deklarátor<sub>opc</sub> : állandó kifejezés
+</pre>
+  A következő alakú típusspecifikátor<br />
+  <pre class="defit">
+struktúra_vagy_union azonosító { struktúra_deklarációs_lista }
+</pre>
+  az azonosítót a listában megadott struktúra vagy union címkéjeként deklarálja. Egy soron következő, az előzővel azonos vagy azon belüli érvényességi tartományú deklaráció ugyanerre a típusra a specifikátorban használt címke alapján, a lista nélkül hivatkozhat. Ennek formája:<br />
+  <pre class="defit">
+struktúra_vagy_union azonosító
+</pre>
+  Ha egy specifikátor a címkével, de lista nélkül jelenik meg, amikor a címke még nincs deklarálva, akkor egy nemteljes típus megadásáról beszélünk. Egy nemteljes struktúra vagy union típusú objektum minden olyan programkörnyezetben használható, ahol az objektum méretére nincs szükség, és csak ilyen esetekben használható. Megengedett pl. a használata deklarációkban (de nem definíciókban), mutató specifikálásakor vagy <span class="k">typedef</span> létrehozásakor. Ügyeljünk arra, hogy a listával ellátott specifikátorban a struktúra vagy union típusa a listán belül nemteljes deklarációjú és csak akkor válik teljessé, ha a specifikátort a <span class="m">}</span> kapcsos zárójellel lezárjuk!
+  <p> Egy struktúra nem tartalmazhat nemteljes típusú tagot, ezért lehetetlen olyan struktúrát vagy uniont deklarálni, amely saját magát tartalmazza. Ettől függetlenül a struktúra vagy <span class="k">union</span> típushoz nevet rendelhetünk és az így kapott címke már lehetővé teszi önhivatkozó struktúrák definiálását. Ez azon alapszik, hogy a struktúra vagy <span class="k">union</span> tartalmazhat egy önmagát címző mutatót, mivel a nemteljes típusokhoz is deklarálhatók mutatók.</p>
+  <p> Nagyon speciális szabály alkalmazható a<br />
+  </p>
+  <pre class="defit">
+struktúra_vagy_union azonosító;
+</pre>
+  alakú deklarációkra, amelyek egy struktúrát vagy uniont deklarálnak, de nincs a deklarációban sem deklarációs lista, sem deklarátor. Ez a deklaráció az aktuális érvényességi tartományon belül még akkor is létrehoz egy új, nemteljes típusú struktúrát vagy uniont az azonosítónak megfelelő címkével, ha az azonosító egy külső érvényességi tartományban már deklarált struktúra vagy union címkéje.<br />
+  <br />
+  <div class="note"> Ez a mélyértelmű szabály új az ANSI szabványban. Feladata, hogy gondoskodjon a belső érvényességi tartományban deklarált olyan kölcsönösen rekurzív struktúrák kezeléséről, amelyek címkéje már deklarálva volt a külső érvényességi tartományban.<br />
+  </div>
+  <br />
+  <br />
+  <p>Egy listát igen, de címkét nem tartalmazó struktúra- vagy unionspecifikátor egy egyedi típust hoz létre, amire közvetlenül csak abban a deklarációban hivatkozhatunk, amelynek része.</p>
+  <p> A tagok és címkék neve nem kerül konfliktusba egymással vagy a közönséges változók nevével. Egy tagnév nem jelenhet meg kétszer ugyanazon struktúrában vagy unionban, de ugyanaz a tagnév más struktúrában vagy unionban használható.<br />
+    <br />
+  </p>
+  <div class="note"> A könyv első kiadásában a struktúra- vagy uniontagok neve nem volt kapcsolatban a „szülővel”, viszont ez a kapcsolat már az ANSI szabvány megjelenése előtt általánossá vált a fordítóprogramokban.<br />
+  </div>
+  <br />
+  <br />
+  Egy struktúra vagy union nem mező típusú tagja bármilyen objektumnak megfelelő típussal rendelkezhet. Egy mező típusú tag (amelyhez nem szükséges, hogy deklarátor tartozzon, ezért név nélküli is lehet) <span class="k">int</span>, <span class="k">unsigned</span> <span class="k">int</span> vagy <span class="k">signed</span> <span class="k">int</span> típusú, és úgy értelmezhető, mint az adott számú bitnek megfelelő hosszúságú egész típusú objektum. Az, hogy az <span class="k">int</span> típusú mező, mint előjeles mennyiség, hogyan kezdődik, a gépi megvalósítástól függ. A struktúra szomszédos, mező típusú tagjai a gépi megvalósítástól függő méretű tárolóhelyekre, egymás mellé kerülnek, de az elhelyezési sorrendjük szintén a megvalósítástól függ. Amikor egy mezőt követő másik mező nem illeszthető egy részlegesen feltöltött tárolóhelybe, akkor a fordítóprogram megosztja azokat két tárolóhely között vagy a második mezőt teljes egészében egy új tárolóhelyre teszi és a részlegesen feltöltött tárolóhelyre helykitöltő egységet rak. Ezt a helykitöltést a 0 hosszúságú, név nélküli mező alkalmazásával lehet kikényszeríteni, így az utána következő mező már biztosan a következő tárolóhely kezdetére kerül.<br />
+  <br />
+  <div class="note"> Az ANSI szabvány a mezőket sokkal inkább függővé tette a gépi megvalósítástól, mint ahogy az a könyv előző kiadásában volt; ezért minden kritika nélkül célszerű a bitmezők tárolási szabályait mint a nyelv „gépi megvalósítástól függő” részét olvasni. A bitmezőket tartalmazó struktúrák a struktúra tárolőhelyigényének csökkentésére alkalmas hordozható megoldásként (bár ez valószínűleg a bitmezők bonyolultabb kezelése miatt a futási idő növekedését eredményezi) vagy a bit-szinten ismert tárolóterület nem hordozható leírásaként használhatók. A második esetben az adott gépi megvalósítás szabályainak ismeretére van szükség.<br />
+  </div>
+  <br />
+  <br />
+  Egy struktúra tagjai a deklaráció sorrendjében, folyamatosan növekvő címeken helyezkednek el. A nem mező típusú tagok az adott típustól függő címhatárhoz illeszkednek, ezért a struktúrában név nélküli lyukak (üres helyek) lehetnek. Ha egy struktúrát címző mutatót kényszerített típuskonverzióval a struktúra első tagját címző mutatóvá alakítunk, az eredő mutató ténylegesen a struktúra első tagjára fog mutatni.
+  <p> Az uniont olyan struktúraként értelmezhetjük, amelynek tagjai a 0 ofszetnél kezdődnek és méretük elegendő bármelyik tag befogadására. Egy union egy időben legfeljebb csak egyetlen tagját tartalmazhatja. Ha egy uniont címző mutatót kényszerített típuskonverzióval a tagját címző mutatóvá alakítunk, akkor az eredményül kapott mutató magára a tagra mutat.</p>
+  <p> A következőkben egyszerű példát mutatunk a struktúra deklarálására.<br />
+  </p>
+  <pre>
+<span class="k">struct</span> tcsomo {
+   <span class="k">char</span> tszo[20];
+   <span class="k">int</span> szam;
+   <span class="k">struct</span> tcsomo *bal;
+   <span class="k">struct</span> tcsomo *jobb;
+};
+</pre>
+  Ez a deklaráció egy 20 elemű karakteres tömbből, egy egészből és két, hasonló struktúrát címző mutatóból áll. Ha egyszer ezt a deklarációt megadtuk, akkor a<br />
+  <pre>
+<span class="k">struct</span> tcsomo s, *sp;
+</pre>
+  deklaráció a megadott fajtájú s struktúrát, valamint a megadott fajtájú struktúrát címző <span class="m">sp</span> mutatót deklarálja. Ezeket a deklarációkat felhasználva az<br />
+  <pre>
+sp-&gt;szam
+</pre>
+  kifejezés az <span class="m">sp</span> mutatóval címzett struktúra <span class="m">szam</span> nevű tagjára hivatkozik. Hasonló módon az<br />
+  <pre>
+s.bal
+</pre>
+  az <span class="m">s</span> struktúra bal oldali részfájának mutatójára hivatkozik. Az<br />
+  <pre>
+s.jobb-&gt;tszo[0]
+</pre>
+  az <span class="m">s</span> struktúrában lévő jobb oldali részfa <span class="m">tszo</span> karakteres tömbjének első karakterét címzi.
+  <p> Általában egy union tagját nem lehet ellenőrizni, kivéve, ha az unionhoz ugyanezen tagnak megfelelő értéket rendelünk. Ezért az unionok használatát egy speciális szabály egyszerűsíti: ha egy union többféle, de azonos kezdeti résszel (az elején azonosan deklarált tagokkal) rendelkező struktúrát tartalmaz és ha az union aktuális tartalma ezen struktúrák egyike, akkor megengedett, hogy bármely, az unionban lévő ilyen struktúra közös kezdeti részére hivatkozzunk. Például a következő egy szintaktikailag helyes programrészlet:<br />
+  </p>
+  <pre>
+<span class="k">union</span> {
+   <span class="k">struct</span> {
+      <span class="k">int</span> tipus;
+   }n;
+   <span class="k">struct</span> {
+      <span class="k">int</span> tipus;
+      <span class="k">int</span> intcsomo;
+   }ni;
+   <span class="k">struct</span> {
+      <span class="k">int</span> tipus;
+      <span class="k">float</span> floatcsomo;
+   }nf;
+}u;
+
+...
+
+u.nf.tipus = FLOAT;
+u.nf.floatcsomo = 3.14;
+
+...
+
+<span class="k">if</span> (u.n.tipus == FLOAT)
+
+...
+
+<span class="f">sin</span>(u.nf.floatcsomo)
+
+...
+</pre>
+  <h4><a name="A8.4." id="A8.4."></a>A8.4. Felsorolások<br />
+  </h4>
+  A felsorolás olyan egyedi típus, amelynek értékei sorra felveszik a névvel megadott állandók (elemek) halmazából a megfelelő értéket. A felsorolásspecifikátor alakját a struktúrák és unionok specifikátorától kölcsönözték. A szintaktikai leírás:<br />
+  <pre class="defit">
+felsorolás_specifikátor:
+      <span class="k">enum</span> azonosító<sub>opc</sub> {felsorolás-lista}
+      <span class="k">enum</span> azonosító
+
+felsorolás-lista:
+      felsorolt_érték
+      felsorolás_lista, felsorolt_érték
+
+felsorolt_érték:
+      azonosító
+      azonosító = állandó_kifejezés
+</pre>
+  A felsoroláslistában lévő azonosítók <span class="k">int</span> típusú állandóként vannak deklarálva, és a programban bárhol megjelenhetnek, ahol állandó kifejezésre van szükség. Ha nincs egyenlőségjel és az azt követő felsorolt érték, akkor a megfelelő állandók értéke nullával kezdődő, eggyel növekvő számsorozat lesz, amely hozzárendelődik a deklarációban szereplő azonosítókhoz. A hozzárendelés balról jobbra történik. Az <span class="m">=</span> jelből és az utána következő felsorolt értékből álló lista esetén az azonosítóhoz a megadott érték rendelődik, és ha a listában soron következő azonosítóhoz nem tartozik <span class="m">=</span> felsorolt érték rész, akkor az utolsó értékadástól folytatólagosan rendelődnek az értékek az azonosítókhoz.
+  <p> A felsorolásban deklarált neveknek az adott érvényességi tartományon belül különbözniük kell egymástól és a közönséges változók neveitől, de az értékek megegyezhetnek.</p>
+  <p> A felsorolásspecifikátorban az azonosítók feladata analóg a struktúraspecifikátorban szereplő struktúracímkével vagyis megnevezi az adott felsorolást. A címkével és listával ellátott vagy anélküli felsorolásspecifikátorra vonatkozó szabályok ugyanazok, mint a struktúra- vagy unionspecifikátorokra vonatkozóak, kivéve, hogy nemteljes felsorolás típus nem létezik. A felsoroláslista nélküli felsorolásspecifikátor címkéjének egy, az érvényességi tartományon belüli, listával ellátott specifikátorra kell hivatkozni.<br />
+    <br />
+  </p>
+  <div class="note"> A felsorolás a könyv első kiadása óta bevezetett új adatfajta, de már évek óta a C nyelv részét alkotja.<br />
+  </div>
+  <br />
+  <br />
+  <h4><a name="A8.5." id="A8.5."></a>A8.5. Deklarátorok<br />
+  </h4>
+  A deklarátorok szintaktikája:<br />
+  <pre class="defit">
+deklarátor:
+      mutató<sub>opc</sub> direkt_deklarátor
+
+direkt_deklarátor
+      azonosító
+      (deklarátor)
+      direkt_deklarátor [állandó_kifejezés<sub>opc</sub>]
+      direkt_deklarátor (paraméter_típus_lista)
+      direkt deklarátor (azonosító lista<sub>opc</sub>)
+
+mutató:
+      típus_minősítő_lista<sub>opc</sub>
+      típus_minősítő_lista<sub>opc</sub> mutató
+
+típus_minősítő_lista:
+      *típus_minősítő
+      *típus_minősítő_lista típus_minősítő
+</pre>
+  A deklarátorok szerkezete hasonlít az indirekció, függvény és tömbkifejezések szerkezetéhez; a csoportosítás ugyanaz.<br />
+  <h4><a name="A8.6." id="A8.6."></a>A8.6. A deklarátorok jelentése<br />
+  </h4>
+  A deklarátorok listája a típus- és tárolásiosztály-specifikátorok sorozata után jelenik meg. Minden egyes deklarátor egy egyedi fő azonosítót deklarál, ez az első alternatíva a direkt deklarátor szintaktikai leírásában. Erre az azonosítóra kövzetlenül alkalmazzuk a tárolási-osztály-specifikátorokat, de a típus a deklarátor alakjától függ. Egy deklarátor azt jelenti, hogy amikor az azonosítója megjelenik a deklarátorral azonos alakú kifejezésben, akkor az a megadott típusú objektumot eredményezi.
+  <p> Egyelőre foglalkozzunk csak a deklarációspecifikátor (<a href="a.html#A8.2.">A8.2.</a>) típusleíró részével: egy adott deklarátor esetén a deklaráció <span class="m">T D</span> alakú, ahol <span class="m">T</span> a típus és <span class="m">D</span> a deklarátor. A típus a különböző alakú deklarátorokban hozzárendelődik az azonosítóhoz, így ezt a jelölésrendszert használjuk a deklarátorok leírására.</p>
+  <p> Egy <span class="m">T D</span> alakú deklarációban, ahol <span class="m">D</span> sima azonosító, az azonosító típusa <span class="m">T</span> lesz.</p>
+  <p> Egy <span class="m">T D</span> alakú deklarációban, ahol <span class="m">D</span><br />
+  </p>
+  <pre>
+(D1)
+</pre>
+  alakú, a <span class="m">D1</span>-ben szereplő azonosító típusa ugyanaz, mint <span class="m">D</span>-ben. A zárójelzés nem változtatja meg a típust, csak az összetett deklarátorok kötésére lehet hatással.<br />
+  <i>
+  <h5>A8.6.1. Mutatódeklarátorok<br />
+  </h5>
+  </i> A <span class="m">T D</span> deklarációban, ahol <span class="m">D</span><br />
+  <pre>
+* <span class="defit">típusminősítő_lista<sub>opc</sub></span> D1
+</pre>
+  alakú és az azonosító típusa a <span class="m">T D1</span> deklarációban „<i>típusmódosított</i> <span class="m">T</span>”, a <span class="m">D</span> azonosítójának típusa „<i>típus_módosító típus_minősítő_lista</i> mutató <span class="m">T</span> típushoz” lesz. A minősítőt követő <span class="m">*</span> operátor a mutatóra magára és nem a mutatóval címzett objektumra vonatkozik. Például nézzük a következő deklarációt:<br />
+  <pre>
+<span class="k">int</span> *ap[];
+</pre>
+  Itt <span class="m">ap[]</span> játssza a <span class="m">D1</span> szerepét. Az <span class="k">int</span> <span class="m">ap[]</span> deklaráció az <span class="m">ap</span>-hoz „<i>egész elemek tömbje</i>” típust rendel, a típusminősítő lista üres, és a típusmódosító „<i>tömbje a ...-nek</i>&quot;. Így az aktuális deklaráció <span class="m">ap</span>-hez „<i>int típusú adatokat címző mutatók tömbje</i>” típust rendel. Egy másik példa a deklarációra:<br />
+  <pre>
+<span class="k">int</span> i, *pi, *<span class="k">const</span> cpi = &amp;i;
+<span class="k">const</span> <span class="k">int</span> ci = 3, *pci;
+</pre>
+  Ez az első részében egy <span class="m">i</span> egészt és a <span class="m">pi</span> egészhez tartozó mutatót deklarál. A <span class="m">cpi</span> állandó mutató értéke nem változhat, mindig ugyanarra a helyre fog mutatni és értéke nem módosítható (bár kezdeti érték hozzárendelhető, csakúgy, mint itt). A <span class="m">pci</span> típusa „<span class="k">const int</span><i>-et címző mutató</i>”, és a <span class="m">pci</span>-t magát meg lehet változtatni, hogy más címre mutasson, de az értéket, amelyre mutat a <span class="m">pci</span> mutatón keresztüli értékadással nem lehet módosítani.<br />
+  <i>
+  <h5>A8.6.2. Tömbdeklarátorok<br />
+  </h5>
+  </i> A <span class="m">T D</span> deklarációban, ahol <span class="m">D</span><br />
+  <pre>
+D1 [<span class="defit">állandó_kifejezés<sub>opc</sub></span>]
+</pre>
+  alakú és az azonosító típusa a <span class="m">T D1</span> deklarációban „<i>típusmódosított</i> <span class="m">T</span>”, a <span class="m">D</span> azonosítójának típusa „<i>típusmódosított tömbje a</i> <span class="m">T</span><i>-nek</i>” lesz. Ha az állandó kifejezés jelen van, annak egész típusúnak és nullánál nagyobb értékűnek kell lennie. Ha az állandó kifejezéssel specifikált tömbhatár hiányzik, akkor a tömb nemteljes típusú.
+  <p> Egy tömb előállítható aritmetikai típusból, mutatóból, struktúrából vagy unionból, vagy más tömbből (ez többdimenziós tömböt eredményez). Bármilyen típusú elemekből is állítottuk elő a tömböt, annak teljes típusúnak kell lenni, nem szabad, hogy nemteljes típusú tömbből vagy struktúrából álljon. Ezért egy többdimenziós tömbnek csak az első dimenziója hiányozhat. A nemteljes típusú tömb objektumának típusa egy másik, az objektumra vonatkozó teljes deklarációval (<a href="a.html#A10.2.">A10.2.</a>) vagy kezdetiérték-adással (<a href="a.html#A8.7.">A8.7.</a>) tehető teljessé. Például a<br />
+  </p>
+  <pre>
+<span class="k">float</span> fa[17], *afp[17];
+</pre>
+  deklaráció <span class="k">float</span> típusú számokból álló tömböt és <span class="k">float</span> típusú számokat címző mutatókból álló tömböt deklarál. Hasonlóan a<br />
+  <pre>
+<span class="k">static</span> <span class="k">int</span> x3d[3][5][7];
+</pre>
+  deklaráció egy statikus, háromdimenziós egészekből álló tömböt deklarál, amelynek mérete 3*5*7 elem. Részleteiben nézve <span class="m">x3d</span> valójában háromelemű tömb, amelynek minden eleme öt tömb tömbje, és ez utóbbi tömbök hét egész elem tömbjét alkotják. Az <span class="m">x3d</span>, <span class="m">x3d[i]</span>, <span class="m">x3d[i][j]</span>, <span class="m">x3d[i][j][k]</span> kifejezések bármelyike megjelenhet más kifejezésben, és ezek közül az első három kifejezés tömb típusú, a negyedik pedig <span class="k">int</span> típusú. Pontosabban nézve az <span class="m">x3d[i][j]</span> hét egész számból álló tömb, az <span class="m">x3d[i]</span> pedig öt, egyenként hét egész számból álló tömb tömbje.
+  <p> Az <span class="m">E1[E2]</span> formában definiált tömbindexelési művelet azonos a <span class="m">*(E1+E2)</span> művelettel, ezért az aszimmetrikus megjelenés ellenére az indexelés kommutatív művelet. Mivel a konverziós szabályokat alkalmazni kell a <span class="m">+</span> műveletre és a tömbökre (<a href="a.html#A6.6.">A6.6.</a>, <a href="a.html#A7.1.">A7.1.</a>, <a href="a.html#A7.7.">A7.7.</a>), ha <span class="m">E1</span> tömb és <span class="m">E2</span> egész típusú, akkor <span class="m">E1[E2]</span> az <span class="m">E1</span> tömb <span class="m">E2</span>-dik elemére hivatkozik.</p>
+  <p> A példánkban <span class="m">x3d[i][j][k]</span> egyenértékű a <span class="m">*(x3d[i][j]+k)</span>-vel. Az <span class="m">x3d[i][j]</span> első részkifejezés az <a href="a.html#A7.1.">A7.1. pontban</a> leírtak szerint „egészekből álló tömb mutatója” típusúvá alakítódik és az <a href="a.html#A7.7.">A7.7.</a> szerint az összeadás egy egész méretének megfelelő többszörözést von maga után. Az eddigiek a tömb soronkénti tárolásának szabályából következnek. A deklarációban az első index segít a tömb által igényelt teljes tárolóterület meghatározásában, de nincs további szerepe az index kiszámításában.<br />
+  </p>
+  <i>
+  <h5>A8.6.3. Függvénydeklarátorok<br />
+  </h5>
+  </i> Az új stílusú függvénydeklaráció is felírható <span class="m">T D</span> alakban, ahol D<br />
+  <pre>
+D1 <span class="defit">(paraméter_típus_lista)</span>
+</pre>
+  alakú, és a <span class="m">T D1</span> deklarációban levő azonosító „<i>típusmódosított</i> <span class="m">T</span>” típusú, a <span class="m">D</span>-ben szereplő azonosító pedig „<i>típusmódosított</i> függvény <i>paraméter_típus_lista</i> argumentumokkal és <span class="m">T</span> típusú visszatérési értékkel” típusú. A paraméterek szintaxisa:<br />
+  <pre class="defit">
+paraméter_típus_lista:
+      paraméterlista
+      paraméterlista , ...
+
+paraméter_lista:
+      paraméter_deklaráció
+      paraméterlista, paraméter_deklaráció
+
+paraméter_deklaráció:
+      deklaráció_specifikátorok deklarátorok
+      deklaráció_specifikátorok absztrakt_deklarátor<sub>opc</sub>
+</pre>
+  Az új stílusú deklarációban a paraméterlista meghatározza a paraméterek típusát. Speciális esetben az új stílusú függvény deklarátora nem tartalmaz paramétereket és a paraméterlistában mindössze a <span class="k">void</span> kulcsszó áll. Ha a paraméterlista a „<span class="m"> ,...</span>” résszel végződik, akkor a függvény a paraméterlistában explicit módon megadottakon kívül további argumentumokhoz is hozzáférhet (l. az <a href="a.html#A7.3.">A7.3.2. pontot</a>).
+  <p> A függvény tömb vagy függvény típusú paramétereinek típusa mutató típusra változik az <a href="a.html#A10.1.">A10.1. pontban</a> leírásra kerülő paraméterkonverziós szabályoknak megfelelően. Egy paraméter deklarációjában csak a <span class="k">register</span> tárolásiosztály-specifikátor használható, és ez a specifikátor is törlődik, kivéve ha a függvénydeklarátor megelőzi a függvénydefiníciót. Hasonló módon, ha a paraméterdeklarációban a deklarátorok azonosítót tartalmaznak, valamint a függvénydeklarátor nem előzi meg a függvénydefiníciót, akkor az azonosítók kilépnek a pillanatnyi érvényességi tartományból. Az azonosítót nem tartalmazó absztrakt deklarátorokat az <a href="a.html#A8.8.">A8.8. pontban</a> tárgyaljuk.</p>
+  <p> A régi stílusú függvénydeklaráció <span class="m">T D</span> alakú felírásában <span class="m">D</span><br />
+  </p>
+  <pre>
+D1 (<span class="defit">azonosító lista<sub>opc</sub></span>)
+</pre>
+  formájú, és a <span class="m">T D1</span> deklarációban szereplő azonosító típusa „<i>típusmódosított</i> <span class="m">T</span>”, amíg a <span class="m">D</span>-ben szereplő azonosító típusa „<i>típusmódosított</i> függvény nem specifikált argumentumokkal, <span class="m">T</span> típusú visszatérési értékkel” típus lesz. A paraméterek (ha jelen vannak) alakja:<br />
+  <pre class="defit">
+azonosító_lista:
+      azonosító
+      azonosító_lista, azonosító
+</pre>
+  <p>A régi stílusú deklarátorokban az azonosítólistának hiányozni kell, kivéve, ha a deklarátort a függvénydefiníció előtt használjuk (l. <a href="a.html#A10.1.">A10.1.</a>). Így a deklaráció alapján a paraméterek típusáról nincs információnk.</p>
+  <p> Példák függvénydeklarációra:<br />
+  </p>
+  <pre>
+<span class="k">int</span> f(), *fpi(), (*pfi)();
+</pre>
+  Ez egész értékkel visszatérő <span class="m">f</span> függvényt, egészt címző mutatóval visszatérő <span class="m">fpi</span> függvényt, valamint egész értékkel visszatérő függvényhez tartozó pfi mutatót deklarál. Egyik deklarációnál sem specifikáltuk a paraméter típusát, így ezek régi stílusú deklarációk.
+  <p> A következőkben új stílusú deklarációt mutatunk be:<br />
+  </p>
+  <pre>
+<span class="k">int</span> strcpy(<span class="k">char</span> *cel, <span class="k">const</span> <span class="k">char</span> *forras), rand(<span class="k">void</span>);
+</pre>
+  Itt az <span class="m">strcpy</span> egész értékkel visszatérő függvény, amelynek két argumentuma van és az első karaktert címző mutató, a második pedig állandó karaktereket címző mutató. A paraméterek neve egyben utal a szerepükre is. A másodiknak deklarált <span class="m">rand</span> függvénynek nincs argumentuma és <span class="k">int</span> értékkel tér vissza.<br />
+  <br />
+  <div class="note"> A C nyelv ANSI szabvány bevezetéséből adódó messze legfontosabb változása a paraméterprototípust tartalmazó függvénydeklarátorok alkalmazása. Ezeknek számos előnye van a könyv első kiadásában ismertetett „régi stílusú” deklarátorokkal szemben, mivel lehetővé teszik a hibaellenőrzést és a függvényhíváson keresztül korlátozzák az argumentumokat. Természetesen a bevezetésüknek ára is volt: a bevezetésekor fellépő zűrzavar és keveredés, valamint a kétféle formához való alkalmazkodás szükségessége. A kompatibilitás kedvéért néhány nem túl szép szintaktikai megoldásra volt szükség, mint pl. a <span class="ks">void</span> explicit jelzésként történő bevezetésére az új stílusú, paraméter nélküli függvények esetén.<br />
+    A paraméterlista végén elhelyezhető „<span class="ms"> ,...</span>” kiegészítéssel jelzett változó hosszúságú paraméterlistájú függvények bevezetése szintén új. Ezt az <span class="ms">&lt;stdarg.h&gt;</span> standard headerben lévő makrókkal együtt megvalósított formális kezelési mechanizmust a könyv első kiadása hivatalosan tiltotta, de nem hivatalosan szemet hunyt felette.<br />
+    Ezeket az új megoldásokat a szabvány a C++ nyelvből vette át.<br />
+  </div>
+  <br />
+  <br />
+  <h4><a name="A8.7." id="A8.7."></a>A8.7. Kezdetiérték-adás<br />
+  </h4>
+  Egy objektum deklarálása során a kezdetiérték-deklarátorral adhatunk kezdeti értéket a deklarált azonosítónak. A kezdeti értéket <span class="m">=</span> jelnek kell megelőzni, és az egy kifejezés vagy kapcsos zárójelek között elhelyezett kezdetiérték-lista lehet. A lista a megfelelő formátum kialakítása érdekében végződhet vesszővel. A szintaktikai leírás:<br />
+  <pre class="defit">
+kezdeti_érték:
+      értékadó_kifejezés
+      { kezdeti_érték-lista }
+      { kezdeti_érték-lista , }
+
+kezdetiérték-lista:
+      kezdeti érték
+      kezdetiérték-lista kezdeti érték
+</pre>
+  A statikus objektumokhoz vagy tömbökhöz tartozó kezdeti értékekben szereplő kifejezéseknek állandó kifejezéseknek kell lennie (ahogy ezt az <a href="a.html#A7.19.">A7.19. pontban</a> leírtuk). Az <span class="k">auto</span> vagy <span class="k">register</span> tárolási osztályú objektumok vagy tömbök kezdetiérték-kifejezésének ugyancsak állandó kifejezésnek kell lennie, ha a kezdeti értékek kapcsos zárójelben lévő listában helyezkednek el. Viszont ha egy automatikus tárolási osztályú objektum kezdeti értéke egyetlen kifejezés, akkor nem szükséges, hogy az állandó kifejezés legyen (de az objektumhoz való hozzárendelés miatt a típusának megfelelőnek kell lennie).<br />
+  <br />
+  <div class="note"> A könyv első kiadásában leírt C nyelv nem támogatta az automatikus tárolási osztályú struktúrák, unionok vagy tömbök kezdetiérték-adását. Az ANSI szabvány megengedi ezt, de csak állandó értékű konstrukcióval (kivéve, ha a kezdeti érték egyszerű kifejezéssel adható meg).<br />
+  </div>
+  <br />
+  <br />
+  Egy nem explicit módon inicializált statikus objektum úgy inicializálódik, mintha önmaga vagy tagja állandó nulla értéket kapott volna. A nem explicit módon inicializált automatikus tárolási osztályú objektumok kezdeti értéke definiálatlan.
+  <p> Egy mutató vagy egy aritmetikai típusú objektum kezdeti értéke egyetlen, esetleg kapcsos zárójelek között elhelyezett kifejezés. A kifejezés értéke hozzárendelődik az objektumhoz. Egy struktúra kezdeti értéke vagy egy azonos típusú kifejezés, vagy egy kapcsos zárójelek között elhelyezett, a tagok sorrendjében felsorolt kezdeti értékekből álló lista lehet. A név nélküli bitmező típusú struktúratagokat a fordítóprogram figyelmen kívül hagyja és azok nem kapnak kezdeti értéket. Ha a listában kevesebb kezdeti érték van, mint a tagok száma, akkor a további tagok 0 kezdeti értéket kapnak. A tagok számánál több kezdeti érték nem lehet a listában.</p>
+  <p> Egy tömb inicializálása kapcsos zárójelben elhelyezett, az egyes elemekhez rendelt kezdeti értékek listájával történhet. Ha a tömb mérete ismeretlen, akkor a kezdeti értékek leszámolásával határozza meg a fordítóprogram a tömb méretét, és a típus így válik teljessé. Ha a tömb rögzített méretű, akkor a listában megadott kezdeti értékek száma nem haladhatja meg a tömb elemeinek számát. Ha a kezdeti értékek száma kisebb, mint a tömbelemek száma, akkor a további tömbelemek 0 kezdeti értéket kapnak.</p>
+  <p> Speciális esetként egy karakteres tömb karaktersorozattal inicializálható. Ilyenkor a karaktersorozat egymást követő karaktereit rendeli a fordítóprogram a tömb soron következő eleméhez. Hasonló módon egy széles karaktersorozat-állandóval (<a href="a.html#A2.6.">A2.6.</a>) inicializálható a <span class="k">wchar_t</span> típusú karakteres tömb. Ha a tömb méretét nem ismerjük, akkor a karaktersorozatban lévő és hozzá rendelődő karakterek száma (beleértve a karaktersorozatot lezáró null-karaktert is) határozza meg a tömb méretét. Ha a tömb mérete rögzített, akkor a karaktersorozatban lévő karakterek száma (nem számítva a lezáró null-karaktert) nem haladhatja meg a tömb deklarált méretét.</p>
+  <p> Egy union egy azonos típusú egyedi kifejezéssel vagy egy kapcsos zárójelbe tett kezdeti értékkel inicializálható, de az inicializálás mindig csak az union első tagjára alkalmazható.<br />
+    <br />
+  </p>
+  <div class="note"> A könyv első kiadása még nem engedte meg az unionok inicializálását. Az „első tag” inicializálhatóságára bevezetett új szabály elég ügyetlen, de új színtaxis nélkül nehezen általánosítható. Azonkívül, hogy az ANSI szabvány megengedi az unionok explicit inicializálását, még megadja a nem explicit módon inicializált statikus unionok definit szemantikáját is.<br />
+  </div>
+  <br />
+  <br />
+  Egy <i>aggregátum</i> olyan összetett objektum, amely struktúra vagy tömb jellegű. Ha egy aggregátum további aggregátum típusú tagokat tartalmaz, akkor az inicializálási szabályok rekurzívan alkalmazhatók. Az inicializálásból a kapcsos zárójelek elhagyhatók a következő szabályok alapján: ha egy aggregátum tagjához, amely maga is aggregátum, tartozó kezdeti értékek bal oldali kapcsos zárójellel kezdődnek, akkor a következő, kezdeti értékek vesszővel elválasztott sorozatából álló lista a részaggregátumok tagjait inicializálja. Ha a kezdeti értékek száma nagyobb a tagok számánál, akkor a fordítóprogram hibát jelez. Amennyiben a részaggregátumokhoz tartozó kezdetiérték-lista nem bal oldali kapcsos zárójellel kezdődik, akkor a fordítóprogram a listából csak a részaggregátum tagjai számának megfelelő elemet vesz figyelembe és a listában fennmaradó elemek azon aggregátum további tagjait fogják inicializálni, amelynek a részaggregátum a része volt.
+  <p> Az elmondottakra nézzünk néhány példát! Az<br />
+  </p>
+  <pre>
+<span class="k">int</span> x[] = { 1, 3, 5 };
+</pre>
+  deklarálja az <span class="m">x</span> egydimenziós tömböt és egyben inicializálja is azt. Mivel a tömb mérete nincs megadva és három elem kap kezdeti értéket, így a tömb háromelemű lesz. A<br />
+  <pre>
+<span class="k">float</span> y[4][3] = {
+   { 1, 3, 5 },
+   { 2, 4, 6 },
+   { 3, 5, 7 },
+};	
+</pre>
+  egy teljesen kapcsos zárójelezésű inicializálás: az <span class="m">1</span>, <span class="m">3</span> és <span class="m">5</span> érték inicializálja az <span class="m">y[0]</span> tömb első sorát, azaz az <span class="m">y[0][0]</span>, <span class="m">y[0][1]</span> és <span class="m">y[0][2]</span> elemeket. A következő két értéksor hasonló módon inicializálja az <span class="m">y[1]</span> és <span class="m">y[2]</span> tömböket. Mivel a kezdeti értékek a szükségesnél hamarabb fogynak el (a kezdeti értékek száma kisebb, mint a tömbelemek száma), ezért az <span class="m">y[3]</span> tömb elemei <span class="m">0</span> kezdeti értéket kapnak. Pontosan ugyanez a hatás érhető el a<br />
+  <pre>
+<span class="k">float</span> y[4][3] = { 1, 3, 5, 2, 4, 3, 5, 7};
+</pre>
+  inicializálással. Itt az <span class="m">y</span> kezdeti értékeit tartalmazó lista kapcsos zárójellel kezdődik, de az <span class="m">y[0]</span> tömbhöz tartozó lista nem. Ezért a listából három elem kerül felhasználásra. A továbbiakban a következő három elem az <span class="m">y[1]</span> tömbhöz, az utolsó három elem pedig az <span class="m">y[2]</span> tömbhöz rendelődik hozzá, <span class="m">y</span> további elemei <span class="m">0</span> kezdeti értéket kapnak. A<br />
+  <pre>
+<span class="k">float</span> y[4][3] = {
+   {1}, {2}, {3}, {4}
+};
+</pre>
+  deklaráció <span class="m">y</span> első oszlopát (<span class="m">y</span>-t kétdimenziós tömbként értelmezve) inicializálja és a fennmaradó elemekhez <span class="m">0</span> kezdeti értéket rendel. Végül nézzük a következő példát: a<br />
+  <pre>
+<span class="k">char</span> msg[] = „Szintaktikai hiba a sorban %s<span class="e">\n</span>”;
+</pre>
+  az msg karakteres tömb elemeit inicializálja egy karaktersorozattal. A tömb méretét a karaktersorozat hossza határozza meg, beleszámítva a karaktersorozatot lezáró null-karaktert is.<br />
+  <h4><a name="A8.8." id="A8.8."></a>A8.8. Típusnevek<br />
+  </h4>
+  Néhány összefüggésben (kényszerített típuskonverzióval specifikált explicit típusmódosításban, függvénydeklarátorokban a paraméterek típusának deklarálásakor, a <span class="k">sizeof</span> argumentumakénti alkalmazásakor) szükség lehet az adattípus nevének megadására. Ez a típusnév felhasználásával érhető el. A típusnév szintaktikailag egy adott típusú objektum olyan deklarációja, amelyből hiányzik az objektum neve. A szintaktikai leírás:<br />
+  <pre class="defit">
+típusnév:
+      specifikátor_minősítő_lista absztrakt_deklarátor<sub>opc</sub>
+
+absztrakt_deklarátor:
+      mutató
+      mutató<sub>opc</sub> direkt absztrakt deklarátor
+
+direkt_absztrakt__deklarátor:
+      (absztrakt_deklarátor)
+      direkt_absztrakt_deklarátor<sub>opc</sub> [állandó kifejezés<sub>opc</sub>]
+      direkt_absztrakt_deklarátor<sub>opc</sub> (paraméter_ típus_lista<sub>opc</sub>)
+</pre>
+  Az absztrakt deklarátorban egyértelműen azonosítható az a hely, ahol az azonosító megjelenhetne, ha a szerkezet egy deklaráción belüli deklarátor lenne. Az így megnevezett típus ilyenkor ugyanaz lesz, mint a hipotetikus azonosító típusa. Néhány példa:<br />
+  <pre>
+<span class="k">int</span>
+<span class="k">int</span> *
+<span class="k">int</span> *[3]
+<span class="k">int</span> (*) []
+<span class="k">int</span> *()
+<span class="k">int</span> (* []) (<span class="k">void</span>)
+</pre>
+  Ezek a szerkezetek sorban egymás után „egész”, „egészhez tartozó mutató”, „három, egészekhez tartozó mutatóból álló tömb”, „nem meghatározott számú egész elemből álló tömbhöz tartozó mutató”, „nem meghatározott paraméterlistájú, egészhez tartozó mutatóval visszatérő függvény” és „paraméterlista nélküli, egész értékkel visszatérő függvényekhez tartozó mutatókból álló, nem meghatározott méretű tömb” típusokat neveznek meg.<br />
+  <h4><a name="A8.9." id="A8.9."></a>A8.9. A typedef<br />
+  </h4>
+  Azok a deklarációk, amelyekben a tárolásiosztály-specifikátor a <span class="k">typedef</span>, nem objektumot deklarálnak, hanem egy olyan azonosítót definiálnak, ami a későbbiekben típusnévként használható. Az így definiált azonosítókat <i>typedef neveknek</i> nevezzük. A szintaktikai leírás:<br />
+  <pre class="defit">
+typedef_név
+      azonosító
+</pre>
+  A <span class="k">typedef</span> deklaráció az egyes, deklarátorokban szereplő nevekhez a szokásos módon (l. <a href="a.html#A8.6.">A8.6. pontot</a>) hozzárendel egy típust. Ezért az ilyen <span class="k">typedef</span> nevek szintaktikailag egyenértékűek a típusjelző kulcsszóval a megfelelő típushoz rendelt típusnévvel. Például a<br />
+  <pre>
+<span class="k">typedef</span> <span class="k">long</span> Blokkszam, *Blokkptr;
+<span class="k">typedef</span> <span class="k">struct</span> { <span class="k">double</span> r, theta; } Complex;
+</pre>
+  deklarációk után a<br />
+  <pre>
+Blokkszam b;
+<span class="k">extern</span> Blokkptr bp;
+Complex z, *zp;
+</pre>
+  konstrukciók teljesen legális deklarációk lesznek. A <span class="m">b</span> típusa <span class="k">long</span>, így a <span class="m">bp</span> egy „long típushoz tartozó mutató”; a <span class="m">z</span> egy meghatározott struktúra, <span class="m">zp</span> pedig ezt a struktúrát kijelölő mutató.
+  <p> A <span class="k">typedef</span> nem vezet be új típust, csak a más módon megadott típusok szinonimáit állítja elő. Például az előzőekben deklarált <span class="m">b</span> ugyanolyan típusú, mint bármilyen más <span class="k">long</span> típusú objektum.</p>
+  <p> A <span class="k">typedef</span> nevek deklarálhatók a belső érvényességi tartományban, de nem üres típusspecifikátor-halmazt kell megadnunk. Például az<br />
+  </p>
+  <pre>
+<span class="k">extern</span> Blokkszam;
+</pre>
+  nem deklarálja a <span class="m">Blokkszam</span>-ot, de az<br />
+  <pre>
+<span class="k">extern</span> <span class="k">int</span> Blokkszam;
+</pre>
+  már igen.<br />
+  <h4><a name="A8.10." id="A8.10."></a>A8.10. Típusekvivalenciák<br />
+  </h4>
+  Két típusspecifikátor-lista egyenértékű, ha mindegyik a típusspecifikátorok azonos halmazát tartalmazza, figyelembe véve, hogy ugyanazt a specifikátort más módon is megadhatjuk (pl. a <span class="k">long</span> ugyanazt jelenti, mint a <span class="k">long</span> <span class="k">int</span>). A különböző címkéjű struktúrák, unionok és felsorolások különbözőek, és egy címke nélküli struktúra, union vagy felsorolás egy egyedi típust specifikál.
+  <p> Két típus azonos, ha az absztrakt deklarátoruk (<a href="a.html#A8.8.">A8.8.</a>) az esetleges <span class="k">typedef</span> típusok kifejtése és bármilyen függvényparaméter azonosító törlése után ekvivalens típus-specifikátorlistákat eredményez. A tömbméretek és a függvényparaméter-típusok a típusekvivalencia meghatározásánál lényegesek.<br />
+  </p>
+  <h3><a name="A9." id="A9."></a>A9. Utasítások<br />
+  </h3>
+  Az utasítások a leírásuk sorrendjében hajtódnak végre, kivéve azt, ahol külön jelezzük. Az utasítások végrehajtása a hatásukban nyilvánul meg és nem rendelkeznek értékkel. Az utasítások számos csoportba sorolhatók, és általános szintaktikai leírásuk:<br />
+  <pre class="defit">
+utasítás:
+      címkézett_ utasítás
+      kifejezésutasítás
+      összetett_utasítás
+      kiválasztó_utasítás
+      iterációs_utasítás
+      vezérlésátadó_ utasítás
+</pre>
+  <h4><a name="A9.1." id="A9.1."></a>A9.1. Címkézett utasítások<br />
+  </h4>
+  Az utasításokhoz előtagként megadott címke tartozhat. A címkézett utasítások szintaktikája:<br />
+  <pre class="defit">
+címkézett_utasítás
+      azonosító : utasítás
+      <span class="k">case</span> állandó_kifejezés : utasítás
+      <span class="k">default</span> : utasítás
+</pre>
+  A címke egy azonosítóként deklarált azonosítóból áll. Egy azonosító címkét csak a <span class="k">goto</span> utasítás célpontjaként használhatunk. Az azonosító címke érvényességi tartománya az aktuális függvény (az a függvény, amelyben előfordul). Mivel a címkékhez nem tartozik megnevezett tárterület, ezért nem kerülhetnek kapcsolatba más azonosítókkal és nem deklarálhatók újra (l. az <a href="a.html#A11.1.">A11.1. pontot</a> is).
+  <p> A <span class="k">case</span> és <span class="k">default</span> címkéi a <span class="k">switch</span> utasítással használhatók. A <span class="k">case</span> utáni állandó kifejezésnek egész típusúnak kell lennie.</p>
+  <p> A címkék önmagukban nem módosítják az utasítások végrehajtásának sorrendjét.<br />
+  </p>
+  <h4><a name="A9.2." id="A9.2."></a>A9.2. Kifejezésutasítások<br />
+  </h4>
+  Az utasítások többsége kifejezésutasítás, amelynek általános alakja:<br />
+  <pre class="defit">
+kifejezésutasítás:
+      kifejezés<sub>opc</sub>;
+</pre>
+  Funkcióját tekintve a legtöbb kifejezésutasítás értékadás vagy függvényhívás. A kifejezésutasításban lévő kifejezés összes mellékhatása lezajlik a következő utasítás végrehajtásának kezdete előtt. Ha kifejezésutasításból hiányzik a kifejezés, akkor ezt a konstrukciót null-utasításnak (üres utasításnak) nevezzük, és gyakran használjuk az iterációs utasítások üres ciklusmagjának helyettesítésére vagy címke helyének kijelölésére.<br />
+  <h4><a name="A9.3." id="A9.3."></a>A9.3. Összetett utasítás<br />
+  </h4>
+  Vannak olyan programkörnyezetek, ahol a fordítóprogram csak egyetlen utasítást fogad el. Az összetett utasítás (vagy más néven blokk) ennek a korlátozásnak a megszüntetését és több utasítás egyetlen utasításkénti kezelését teszi lehetővé. Például egy függvénydefiníció magja egyetlen összetett utasítás. Az összetett utasítás szintaktikai leírása:<br />
+  <pre class="defit">
+összetett_utasítás:
+      { deklarációs_lista<sub>opc</sub> utasítás_lista<sub>opc</sub> }
+
+deklarációs_lista:
+      deklaráció
+      deklarációs_lista deklaráció
+
+utasítás_lista:
+      utasítás
+      utasítás_lista utasítás
+</pre>
+  Ha a deklarációs listában található valamelyik azonosító a blokkon kívüli érvényességi körrel rendelkezik (a blokkon kívül már deklarálva van), akkor a külső deklaráció a blokkba való belépéskor fel lesz függesztve (l. az <a href="a.html#A11.1.">A11.1. pontot</a>) és csak annak befejeztével nyeri vissza a hatályát. Egy blokkban egy azonosítót csak egyszer lehet deklarálni. Ezeket a szabályokat kell alkalmazni az összes, azonos névtérben lévő azonosítóra (<a href="a.html#A11.1.">A11.1.</a>); a különböző névtérben lévő azonosítók egymástól különbözőként kezelhetők.
+  <p> Az automatikus tárolási osztályú objektumok inicializálása a blokkba való minden egyes belépéskor, a blokk tetején megtörténik, és ugyanakkor sorban feldolgozza a program a deklarátorokat is. Ha kívülről egy vezérlésátadó utasítással a blokk belsejébe ugrunk, akkor ezek az inicializálások elmaradnak. A <span class="k">static</span> tárolási osztályú objektumok csak egyszer, a program végrehajtásának kezdetén inicializálódnak.<br />
+  </p>
+  <h4><a name="A9.4." id="A9.4."></a>A9.4. Kiválasztó utasítások<br />
+  </h4>
+  A kiválasztó utasítások minden esetben a lehetséges végrehajtási sorrendek egyikét választják ki. Általános szintaktikai leírásuk:<br />
+  <pre class="defit">
+kiválasztó_utasítás:
+      <span class="k">if</span> ( kifejezés ) utasítás
+      <span class="k">if</span> ( kifejezés ) utasítás <span class="k">else</span> utasítás
+      <span class="k">switch</span> ( kifejezés ) utasítás
+</pre>
+  Az <span class="k">if</span> utasítás mindkét formájában a kifejezés (amelynek aritmetikai vagy mutató típusú kifejezésnek kell lennie) kiértékelődik (beleértve az összes mellékhatást is) és ha az eredmény nem egyenlő nullával, akkor az első alutasítás hajtódik végre. Az <span class="k">if</span> utasítás második alakja esetén a második alutasítás akkor hajtódik végre, ha a kifejezés nulla. Sokszor nem egyértelmű, hogy az <span class="k">else</span> ág melyik <span class="k">if</span> utasításhoz tartozik. Ezt a kétértelműséget a C nyelv azzal oldja fel, hogy egy <span class="k">else</span> mindig az azonos blokkon belüli utolsó <span class="k">else</span> nélküli <span class="k">if</span> utasításhoz kötődik.
+  <p> A <span class="k">switch</span> utasítás hatására a vezérlés a kifejezés értékétől (amelynek egész típusúnak kell lennie) függően több utasítás egyikére adódik át. A <span class="k">switch</span> utasítással vezérelt alutasítások tipikusan összetett utasítások. Az alutasításon belül bármely utasítást címkézhetünk egy vagy több <span class="k">case</span> címkével (<a href="a.html#A9.1.">A9.1.</a>). A végrehajtás során a vezérlő kifejezésre végbemegy az egész-előléptetés (l. <a href="a.html#A6.1.">A6.1.</a>), és a <span class="k">case</span> részek állandói az előléptetett típusra konvertálódnak. Ugyanazon <span class="k">switch</span> utasításon belül két <span class="k">case</span> rész állandójának a konverzió után nem lehet azonos értéke. Egy <span class="k">switch</span> utasításhoz legfeljebb egy <span class="k">default</span> címke is tartozhat. A <span class="k">switch</span> utasítások egymásba ágyazhatók; a <span class="k">case</span> és <span class="k">default</span> címkék mindig ahhoz a legbelső <span class="k">switch</span> utasításhoz kapcsolódnak, amely tartalmazza azokat.</p>
+  <p> A <span class="k">switch</span> utasítás végrehajtásakor a kifejezés az összes mellékhatást beleértve kiértékelődik és összehasonlításra kerül az egyes <span class="k">case</span> részek állandóival. Ha az egyik <span class="k">case</span> rész állandója megegyezik a kifejezés értékével, akkor a vezérlés átadódik a <span class="k">case</span> címkét követő utasításra. Ha egyetlen <span class="k">case</span> rész állandója sem egyezik a kifejezés értékével, és ha a <span class="k">switch</span> utasítás tartalmaz <span class="k">default</span> címkét, akkor a vezérlés a <span class="k">default</span> címke utáni utasításra adódik át. Ha a <span class="k">switch</span> utasításban nincs <span class="k">default</span> rész és egyik <span class="k">case</span> rész állandója sem egyezik meg a kifejezés értékével, akkor egyetlen alutasítás sem hajtódik végre.<br />
+    <br />
+  </p>
+  <div class="note"> A könyv első kiadásában az a feltétel szerepelt, hogy a <span class="ks">switch</span> utasítás vezérlő kifejezésének és a <span class="ks">case</span> állandójának <span class="ks">int</span> típusúnak kell lenni, ez a szabványban úgy módosult, hogy csak egész jelleget követelnek meg.<br />
+  </div>
+  <br />
+  <br />
+  <h4><a name="A9.5." id="A9.5."></a>A9.5. Iterációs utasítások<br />
+  </h4>
+  Az iterációs utasítások egy ciklust határoznak meg. Általános szintaktikai leírásuk:<br />
+  <pre class="defit">
+iterációs_utasítás:
+      <span class="k">while</span> ( kifejezés ) utasítás
+      <span class="k">do</span> utasítás <span class="k">while</span> ( kifejezés ) ;
+      <span class="k">for</span> (kifejezés<sub>opc</sub> ; kifejezés<sub>opc</sub> ; kifejezés<sub>opc</sub> ) utasítás
+</pre>
+  A <span class="k">while</span> és a <span class="k">do</span> utasításban a program az alutasításokat ismételten végrehajtja mindaddig, amíg a kifejezés értéke nullától különböző marad. A kifejezésnek aritmetikai vagy mutató típusúnak kell lennie. A <span class="k">while</span> utasítás esetén az ellenőrzés, beleértve a kifejezés kiértékelésekor adódó mellékhatásokat is, az utasítás végrehajtása előtt megy végbe, amíg a <span class="k">do</span> utasítás esetén az ellenőrzés csak az egyes iterációk után történik meg.
+  <p> A <span class="k">for</span> utasításban az első kifejezés csak egyszer értékelődik ki és ez adja a ciklus kezdeti értékét. Az első kifejezés típusára vonatkozóan semmiféle megkötés nincs. A második kifejezésnek aritmetikai vagy mutató típusúnak kell lenni. Ez a kifejezés az egyes iterációk előtt értékelődik ki, és ha az értéke nullává válik, akkor a <span class="k">for</span> ciklus befejeződik. A harmadik kifejezés szintén minden iteráció elején kiértékelődik és az így kapott érték adja a ciklus újbóli kezdő értékét (a ciklusváltozó aktuális értékét). Ennek típusára sincs semmiféle megkötés. Az egyes kifejezések kiértékelésekor adódó mellékhatások a kiértékelés után azonnal teljesen lecsengenek. Ha a ciklus alutasításai között nem szerepel a <span class="k">continue</span>, akkor a<br />
+  </p>
+  <pre class="defit">
+<span class="k">for</span> ( 1.kifejezés ; 2.kifejezés ; 3.kifejezés ) utasítás
+</pre>
+  szerkezetű ciklus egyenértékű az<br />
+  <pre class="defit">
+1.kifejezés ;
+      <span class="k">while</span> ( 2.kifejezés ) {
+      utasítás
+      3.kifejezés;
+      }
+</pre>
+  szerkezetű ciklussal.
+  <p> A három kifejezés bármelyike elhagyható. A második kifejezés hiánya esetén a <span class="k">for</span> ellenőrző része úgy működik, mintha az ellenőrzés egy nem nulla értékű állandóval történne.<br />
+  </p>
+  <h4><a name="A9.6." id="A9.6."></a>A9.6. Vezérlésátadó utasítások<br />
+  </h4>
+  A vezérlésátadó utasítások a vezérlés feltétel nélküli átadására alkalmasak. A szintaktikai leírásuk:<br />
+  <pre class="defit">
+Vezérlésátadó_utasítás:
+      <span class="k">goto</span> azonosító ;
+      <span class="k">continue</span> ;
+      <span class="k">break</span> ;
+      <span class="k">return</span> kifejezés<sub>opc</sub> ;
+</pre>
+  A <span class="k">goto</span> utasításban szereplő azonosítónak az aktuális függvényben (amelyben a <span class="k">goto</span> utasítást kiadtuk) lévő címkének kell lennie. Az utasítás hatására a vezérlés átadódik a címkézett utasításra.
+  <p> A <span class="k">continue</span> utasítás a ciklusszervező utasításokban jelenhet meg. A <span class="k">continue</span> utasítás hatására a vezérlés átadódik a legbelső ciklus folytatását vezérlő részre (vagyis a ciklusmagot alkotó utasítás további végrehajtása lezárul és újra elindul a ciklus tesztelése). Pontosabban megfogalmazva a <span class="k">continue</span> utasítás hatása az egyes ciklusszervező utasításokban ugyanaz, mint a <span class="m"><span class="k">goto</span> contin</span> utasításé a következő ciklusokban:<br />
+  </p>
+  <pre>
+<span class="k">while</span> (...){      <span class="k">do</span>{               <span class="k">for</span> (...) {
+   ...               ...               ...
+   contin: ;         contin: ;         contin: ;
+}                 } <span class="k">while</span> (...);    }
+</pre>
+  A <span class="k">break</span> utasítás csak ciklusszervező vagy <span class="k">switch</span> utasításokban jelenhet meg. A <span class="k">break</span> hatására befejeződik a ciklusmagot alkotó utasítás végrehajtása, a vezérlés a lezáró utasítást követő utasításra adódik.
+  <p> Egy függvény a hívó eljárásba a <span class="k">return</span> utasítás hatására tér vissza. Amikor a <span class="k">return</span> utasítás után kifejezés áll, annak értékét a függvény visszaadja a hívó eljárásnak. A kifejezés típusa az értékadásnak megfelelően konvertálódik a függvény által meghatározott visszatérési típusra.</p>
+  <p> Ha a függvény végén nincs <span class="k">return</span> utasítás (a vezérlés „kifolyik” a függvényből), akkor az egyenértékű egy olyan visszatéréssel, mintha nem lenne a <span class="k">return</span> utasítás után kifejezés. Ezekben az esetekben a visszatérési érték nincs definiálva.<br />
+  </p>
+  <h3><a name="A10." id="A10."></a>A10. Külső deklarációk<br />
+  </h3>
+  A C fordítóprogram számára átadott szöveges bemeneti egységet fordítási egységnek nevezzük. Egy fordítási egység külső deklarációk sorozatából áll, amelyben deklarációk vagy függvénydefiníciók lehetnek. A szintaktikai leírás:<br />
+  <pre class="defit">
+fordítási_ egység:
+      külső_deklaráció
+      fordítási_egység külső_deklaráció
+
+külső_deklaráció:
+      függvénydefiníció
+      deklaráció
+</pre>
+  A külső deklarációk érvényességi tartománya azon fordítási egység végéig tart, amelyben deklarálva voltak, csakúgy, mint ahogy a blokkon belüli deklarációk érvényességi tartománya a blokk végéig tart. A külső deklarációk szintaxisa ugyanaz, mint az összes többi deklarációé, kivéve, hogy függvényeket csak ezen a szinten lehet deklarálni (azaz csak itt adható meg a függvényt alkotó programkód).<br />
+  <h4><a name="A10.1." id="A10.1."></a>A10.1. Függvénydefiníciók<br />
+  </h4>
+  A függvények definíciója a következő alakban adható meg:<br />
+  <pre class="defit">
+függvénydefiníció:
+      deklaráció_specifikátorok<sub>opc</sub> deklarátor
+            deklarációs lista<sub>opc</sub>
+                  összetett utasítás
+</pre>
+  A deklarációspecifikátorok közül csak az <span class="k">extern</span> vagy <span class="k">static</span> tárolásiosztály-specifikátor a megengedett, és a közöttük lévő különbségre az <a href="a.html#A11.2.">A11.2. pontban</a> térünk ki.
+  <p> Egy függvény visszatérési értéke aritmetikai típusú, struktúra, union, mutató vagy <span class="k">void</span> típus lehet; de függvénnyel vagy tömbbel való visszatérés nem lehetséges. A függvénydeklarációban lévő deklarátornak explicit módon meg kell határozni, hogy a deklarált azonosító függvény típusú, vagyis az alábbi alakok egyikét tartalmaznia kell (l. az <a href="a.html#A8.6.">A8.6.3. pontot</a>):<br />
+  </p>
+  <pre class="defit">
+direkt_deklarátor ( paraméter_típus_lista )
+direkt_deklarátor ( azonosító_lista<sub>opc</sub> )
+</pre>
+  ahol a direkt deklarátor egy azonosító vagy egy zárójelezett azonosító. Főként nem szabad a függvény típust a <span class="k">typedef</span>-fel deklarálni.
+  <p> A fenti két forma közül az első az új stílusú függvénydefiníció, ami a függvény paramétereit, azok típusával együtt a paramétertípus-listában deklarálja. Ilyen esetben a deklarátor-listát követő függvénydeklarátornak hiányoznia kell. Eltekintve attól az esettől, amikor a paraméterlista csak a <span class="k">void</span> típusjelzést tartalmazza (ami azt jelzi, hogy a függvénynek nincsenek paraméterei), a paramétertípus-lista egyes deklarátorainak azonosítót kell tartalmaznia. Ha a paraméterlista a „<span class="m"> ,... </span>” karakterekkel végződik, akkor a függvény több argumentummal hívható, mint a megadott paraméterek száma. Ilyen esetekben az <span class="m">&lt;stdarg.h&gt;</span> standard headerben definiált és a <a href="b.html">B. Függelékben</a> leírt, <span class="f">va_arg</span> makró használatán alapuló eljárással lehet a többletargumentumokhoz hozzáférni. A változó hosszúságú paraméterlistájú függvényeknek kell hogy legyen legalább egy névvel hivatkozott paramétere.</p>
+  <p> A második alak a régi stílusú definíció: az azonosító lista megnevezi a paramétereket, amíg a deklarációs lista hozzájuk rendeli a típust. Ha a paraméterekre nincs megadva deklaráció, akkor azok típusát a fordítóprogram int-nek tekinti. A deklarációs listának csak a listában megnevezett paramétereket kell deklarálnia, a paraméterek inicializálása nem megengedett, és csak a <span class="k">register</span> tárolásiosztály-specifikátor használható.</p>
+  <p> Mindkét stílusú függvénydefiníció esetén a paraméterek magától értetődően a függvény magját képező összetett utasítás kezdetén deklarálódnak, és így ugyanazt az azonosítót nem szabad ott újra deklarálni (de természetesen más azonosítókhoz hasonlóan azok szintén újra deklarálhatók a külső blokkban). Ha a paraméter <span class="m">T</span> <i>típusú</i> tömbként lett deklarálva, akkor a deklaráció „<span class="m">T</span> <i>típushoz</i> tartozó mutató” típusúra alakul át, hasonlóan, ha a paraméter „<span class="m">T</span> <i>típusú</i> értékkel visszatérő függvény” típusúnak lett deklarálva, akkor a deklaráció „<span class="m">T</span> <i>típusú</i> értékkel visszatérő függvényhez tartozó mutató” típusra<br />
+    alakul át. A függvény hívása során az argumentumok típusa a szükséges módon átalakul és értéke értékadással átadódik a paramétereknek.<br />
+    <br />
+  </p>
+  <div class="note"> Az új stílusú függvénydefiníció új az ANSI szabványban. A szabvány kissé megváltoztatta a típus-előléptetés részleteit is: a könyv első kiadása még úgy specifikálta, hogy a <span class="ks">float</span> típusúnak deklarált paraméter <span class="ks">double</span> típusúvá alakul. A típus-előléptetésben meglévő kis különbségek elsősorban akkor válnak észrevehetővé, ha egy paraméterhez tartozó mutató a függvényben generálódik.<br />
+  </div>
+  <br />
+  <br />
+  A következőkben egy teljes példát mutatunk a függvények új stílusú definíciójára.<br />
+  <pre>
+<span class="k">int</span> max (<span class="k">int</span> a, <span class="k">int</span> b, <span class="k">int</span> c)
+{
+   <span class="k">int</span> m;
+   m = (a &gt; b) ? a : b;
+   <span class="k">return</span> (m &gt; c) ? m : c;
+}
+</pre>
+  Itt <span class="k">int</span> a deklarációspecifikátor; <span class="m">max (<span class="k">int</span> a, <span class="k">int</span> b, <span class="k">int</span> c)</span> a függvény deklarátora és <span class="m">{...}</span> a függvény programkódját tartalmazó blokk. A megfelelő régi stílusú deklaráció a következőképpen nézne ki:<br />
+  <pre>
+<span class="k">int</span> max (a, b, c)
+<span class="k">int</span> a, b, c;
+{
+   <span class="c">/* a függvény utasításai */</span>
+}
+</pre>
+  Itt most <span class="k">int</span> <span class="m">max (a, b, c)</span> a deklarátor és <span class="m"><span class="k">int</span> a, b, c;</span> a paraméterek deklarációs listája.<br />
+  <h4><a name="A10.2." id="A10.2."></a>A10.2. Külső deklarációk<br />
+  </h4>
+  A külső (external) deklarációk objektumok, függvények és más azonosítók jellemzőit specifikálják. A külső megnevezés a függvényen kívüli elhelyezkedésre utal és nincs közvetlen kapcsolata az <span class="k">extern</span> kulcsszóval. A külsőleg deklarált objektumok tárolásiosztály-meghatározása üresen hagyható, vagy <span class="k">extern</span>, ill. <span class="k">static</span> típusúnak adható meg.
+  <p> Adott fordítási egységen belül ugyanannak az azonosítónak számos külső deklarációja létezhet, ha azok típusa és csatolása megegyezik és ha az azonosítónak létezik legfeljebb egy definíciója.</p>
+  <p> Egy objektum vagy függvény kétféle deklarációval megadott típusa akkor egyezik, ha teljesülnek az <a href="a.html#A8.10.">A8.10. pontban</a> leírt szabályok. Ehhez kiegészítésül még egy szabály tartozik: ha a deklarációk azért különböznek, mert az egyik típus egy nemteljes struktúra, union vagy felsorolás (<a href="a.html#A8.3.">A8.3.</a>) és a másik az ugyanolyan címkéjű, megfelelő, teljessé tett típus, akkor a típusok megegyeznek. Mi több, ha az egyik egy nemteljes tömb típus, a másik pedig egy teljes tömb típus (<a href="a.html#A8.6.">A8.6.2.</a>), akkor a típusok – ha máskülönben azonosak – szintén megegyeznek. Végül, ha az egyik típus egy régi stílusú függvényt határoz meg, a másik pedig – egy különben azonos – új stílusú függvényt, a megfelelő paraméterdeklarációkkal, akkor a két típus megegyezik.</p>
+  <p> Ha egy függvény vagy objektum első külső deklarációja tartalmazza a <span class="k">static</span> specifikátort, akkor az azonosítónak belső csatolása van, máskülönben pedig külső csatolású. A csatolás fogalmát és jellegzetességeit az <a href="a.html#A11.2.">A11.2. pontban</a> tárgyaljuk.</p>
+  <p> Egy objektumra vonatkozó külső deklaráció egyben definíció is, ha a deklaráció tartalmaz kezdetiérték-adást. Ha egy külső objektum deklarációja nem tartalmaz kezdetiérték-adást és <span class="k">extern</span> specifikátort, akkor az egy ún. próbadefiníció. Ha egy objektum definíciója megjelenik a fordítási egységben, akkor az összes próbadefiníciót a fordítóprogram redundáns deklarációként kezeli. Ha az objektum nincs definiálva a fordítási egységben, akkor az összes rá vonatkozó próbadefiníció egyetlen, nulla kezdeti értékű definícióvá válik.</p>
+  <p> Minden objektumnak egy és csak egy definíciója kell hogy legyen. A belső csatolású objektumok esetén ez a szabály minden egyes fordítási egységre külön-külön érvényes, mivel a belső csatolású objektumok egy fordítási egységre nézve egyediek. Külső csatolású objektumok esetén ez a szabály a teljes programra vonatkozik.<br />
+    <br />
+  </p>
+  <div class="note"> Bár az egyszeri definiálás szabályát a könyv első kiadásában némiképp különböző formában fogalmaztuk meg, a hatás azonos az itt megfogalmazottal. Néhány gépi megvalósítás enyhít ezen a szabályon a próbadefiníció fogalmának általánosításával. Egy, a UNIX rendszerben szokásos és a szabvány általánosan használt kiterjesztéseként felfogható alternatíva szerint egy külső csatolású objektum összes próbadefinícióit a programot alkotó összes fordítási egységre együttesen kezelik, az itt megfogalmazott, fordítási egységenkénti kezelés helyett. Ilyen esetben, ha egy definíció bárhol a programban előfordul, akkor a próbadefiníciók puszta deklarációkká válnak, ha viszont nem jelenik meg a definíció, akkor az összes próbadefiníció nulla kezdeti értékű definícióvá válik.<br />
+  </div>
+  <br />
+  <br />
+  <h3><a name="A11." id="A11."></a>A11. Érvényességi tartomány és csatolás<br />
+  </h3>
+  Egy C nyelvű programot nem szükséges egyszerre lefordítani: a forrásprogram több, fordítási egységeket tartalmazó állományban tartható és az előre lefordított eljárások a könyvtárakból tölthetők be. A programot alkotó függvények közötti kommunikáció a függvényhívásokon és a külső adatok felhasználásán keresztül megy végbe.
+  <p> Ezért kétféle érvényességi tartományt kell megkülönböztetnünk: egy azonosító lexikális érvényességi tartományát, ami a program szövegének az a része, ahol az azonosító ismert és tulajdonságai meghatározottak, valamint a külső csatolású objektumokkal és függvényekkel kapcsolatos érvényességi tartományt, amely meghatározza a különálló fordítási egységekben lévő azonosítók közötti kapcsolatot.<br />
+  </p>
+  <h4><a name="A11.1." id="A11.1."></a>A11.1. Lexikális érvényességi tartomány<br />
+  </h4>
+  Az azonosítók számos névtér valamelyikébe sorolhatók és ezek a névterek egymástól függetlenek, az oda tartozó azonosítók nincsenek hatással a másik névtér azonosítóira. Ugyanaz az azonosító különböző célra, azonos érvényességi tartománnyal használható, ha különböző névtérbe tartozik. A C nyelvben többféle névtér létezik: objektumok, függvények, <span class="k">typedef</span> nevek, ill. felsorolt állandók; címkék; struktúrák, unionok és felsorolások címkéi; önállóan a struktúrák és unionok tagjai.<br />
+  <br />
+  <div class="note"> Ezek a szabályok többféle módon is különböznek a könyv első kiadásában közöltektől. A címkéknek az előzőekben nem volt saját névterük, a struktúrák és unionok címkéi önálló névteret alkottak és néhány gépi megvalósításban a felsorolások címkéi is. A különböző címkék azonos névtérbe helyezése új korlátozást jelent. A legfontosabb eltérés az előző kiadáshoz képest, hogy az egyes struktúrák és unionok a saját tagjaik számára önálló névteret képeznek, így ugyanaz a név megjelenhet különböző struktúrákban vagy unionokban. Ezt a szabályt már néhány éve általánosan alkalmazzák.<br />
+  </div>
+  <br />
+  <br />
+  Egy objektum vagy függvény azonosítójának lexikális érvényességi tartománya egy külső deklarációban a deklarátor befejezésével (lezárásával) kezdődik és a deklarációt tartalmazó fordítási egység végéig tart. Egy függvénydefinícióban szereplő paraméter érvényességi tartománya a függvénydefiniálás blokkjának kezdetén indul és végig a függvényben érvényes; egy függvénydeklarációban szereplő paraméter érvényességi tartománya viszont csak a deklarátor végéig terjed. Egy blokk fejrészében deklarált azonosító érvényességi tartománya a deklarátor végétől (lezárásától) a blokk végéig terjed. Egy címke érvényességi tartománya a teljes függvény, amelyben megjelenik. Egy struktúra, union vagy felsorolás címkéjének vagy egy felsorolt állandónak az érvényességi tartománya a típusspecifikátorban való megjelenésével kezdődik és a fordítási egység végéig (külső szintű deklaráció esetén) vagy a blokk végéig (függvényen belüli deklaráció esetén) tart.
+  <p> Ha egy azonosítót explicit módon deklarálunk egy blokk fejrészében, beleértve a függvényt alkotó blokkot is, akkor az azonosító bármilyen blokkon kívüli deklarációja a blokk végéig fel lesz függesztve.<br />
+  </p>
+  <h4><a name="A11.2." id="A11.2."></a>A11.2. Csatolás<br />
+  </h4>
+  Egy fordítási egységen belül ugyanazon belső csatolású objektum vagy függvény azonosítójának minden deklarációja ugyanazt a dolgot jelenti, és az objektum vagy függvény a fordítási egységre vonatkoztatva egyedi. Ugyanazon objektum vagy függvény külső csatolású azonosítójára vonatkozó összes deklaráció szintén ugyanazt a dolgot jelenti, és az objektum vagy függvény a teljes programban, bármely eljárás számára használható.
+  <p> Ahogyan ezt már az <a href="a.html#A10.2.">A10.2. pontban</a> elmondtuk, egy azonosító első külső deklarációja <span class="k">static</span> tárolásiosztály-specifikátor alkalmazása esetén belső csatolást, minden más specifikátor esetén pedig külső csatolást eredményez. Ha egy azonosító blokkon belüli deklarációja nem tartalmazza az <span class="k">extern</span> tárolásiosztály-specifikátort, akkor az azonosítónak nincs csatolása és a függvényre vonatkoztatva egyedi. Ha a deklaráció tartalmazza az <span class="k">extern</span> tárolásiosztály-specifikátort és egy, az azonosítóra vonatkozó külső deklaráció aktív a környező blokkra vett érvényességi tartományban, akkor az azonosító ugyanolyan csatolású, mint a külső deklaráció, és ugyanazt az objektumot vagy függvényt jelenti. Ha az érvényességi tartományban nincs külső deklaráció, akkor a csatolás külső.<br />
+  </p>
+  <h3><a name="A12." id="A12."></a>A12. Az előfeldolgozó rendszer<br />
+  </h3>
+  Az előfeldolgozó rendszer feladata a makrók kifejtése és behelyettesítése, a feltételes fordítás vezérlése, valamint a megnevezett állományok programba építése. A forrásprogram <span class="d">#</span> jellel kezdődő (előtte üreshely-karakterek használhatók) sorai az előfeldolgozó rendszernek szóló információkat tartalmaznak. Ezeknek a soroknak a szintaxisa független a C nyelv többi részétől, a programban bárhol megjelenhetnek és hatásuk (az érvényességi tartománytól függetlenül) a fordítási egység végéig tart. A sorokra tördelés lényeges, mivel az előfeldolgozó rendszer minden sort egyedileg analizál (bár több sor is összekapcsolható az <a href="a.html#A12.2.">A12.2. pontban</a> leírtak szerint). Az előfeldolgozó rendszer számára bármilyen nyelvi szintaktikai egység (token) egy önálló szintaktikai egységet alkot és egy karaktersorozat egy állománynevet ad meg (mint pl. az <span class="d">#include</span> direktívában, l. az <a href="a.html#A12.4.">A12.4. pontot</a>). A feldolgozás során minden karakter, ami nincs másképpen definiálva, szintén szintaktikai egységet képez. Az előfeldolgozó rendszernek szóló sorokban lévő, szóköztől és a vízszintes tabulátortól különböző üreshely-karakterek jelentése (hatása) nincs definiálva.
+  <p> Az előfeldolgozás több, egymástól elkülönülő, logikailag egymásra épülő fázisból áll, amelyek a konkrét gépi megvalósításban összevonhatók. A feldolgozás fázisai:<br />
+  </p>
+  <ol>
+    <li>Az előfeldolgozó rendszer az <a href="a.html#A12.1.">A12.1. pontban</a> leírt trigráf karaktersorozatokat helyettesíti a megfelelő karakterekkel. Amennyiben az operációs rendszer megköveteli, akkor újsor-karakterek épülnek be a forrásállomány egyes sorai közé. </li>
+    <li>Minden egyes backslash karakterből (<span class="m">\</span>) és az azt követő újsor-karakterből álló kombináció törlődik, amivel az összetartozó sorok egy sorrá egyesülnek (<a href="a.html#A12.2.">A12.2.</a>). </li>
+    <li>A program felbontása üreshely-karakterekkel elválasztott szintaktikai egységekre (tokenekre); a magyarázó szövegek helyettesítése egyetlen szóközzel. Ekkor az előfeldolgozást vezérlő direktívák végrehajtódnak és megtörténik a makrók (<a href="a.html#A12.3.">A12.3.</a> - A.12.10.) kifejtése. </li>
+    <li>A karakteres és karaktersorozat-állandókban lévő escape-sorozatokat a rendszer helyettesíti a megfelelő karakterekkel (<a href="a.html#A2.5.">A2.5.2.</a>, <a href="a.html#A2.6.">A2.6.</a>) és a szomszédos karaktersorozatállandók konkatenálódnak. </li>
+    <li>Az így előkészített program fordítása, ill. más programokkal és könyvtárakkal való összeszerkesztése. Ez a szükséges programok és adatok kigyűjtése, valamint a külső függvényekre és objektumokra való hivatkozások definíciójukkal történő összekapcsolása alapján megy végbe.</li>
+  </ol>
+  <h4><a name="A12.1." id="A12.1."></a>A12.1. Trigráf karaktersorozatok<br />
+  </h4>
+  A C nyelvű forrásprogramok a hétbites ASCII karakterkészletet használják, de létezik az ISO 646-1983 Invariáns Kódrendszer bővített változata is. Azért, hogy a programok a redukált karakterkészlettel is ábrázolhatók legyenek, a következő trigráf karaktersorozatokat a megfelelő karakterrel kell helyettesíteni:<br />
+  <pre>
+??=   #              ??(    [              ??&lt;    {
+??/   \              ??)    ]              ??&gt;    }
+??'   ^              ??!    |              ??-    ~
+</pre>
+  A helyettesítés minden más feldolgozási lépést megelőzően történik, és más ilyen helyettesítés nem fordul elő.<br />
+  <br />
+  <div class="note"> A trigráf karaktersorozatok bevezetése új az ANSI szabványban.<br />
+  </div>
+  <br />
+  <br />
+  <h4><a name="A12.2." id="A12.2."></a>A12.2. Sorok egyesítése<br />
+  </h4>
+  A sor végén elhelyezett backslash karakter (<span class="m">\</span>) azt jelzi, hogy az előfeldolgozó rendszernek szánt információ a következő sorban folytatódik. Az előfeldolgozó rendszer a program szintaktikai egységekre bontása előtt a <span class="m">\</span> karakter és az azt követő újsor-karakter törlésével ezeket a sorokat egyesíti.<br />
+  <h4><a name="A12.3." id="A12.3."></a>A12.3. Makrók definíciója és kifejtése<br />
+  </h4>
+  A programban előforduló<br />
+  <pre class="defit">
+<span class="d">#define</span> azonosító token_sorozat
+</pre>
+  alakú vezérlősor arra utasítja az előfeldolgozót, hogy az azonosító következő előfordulását helyettesítse a szintaktikai egységek (tokenek) megadott sorozatával. A szintaktikai egységeket megelőző és záró üreshely-karakterek törlődnek. Ugyanerre az azonosítóra vonatkozó második <span class="d">#define</span> sor hibajelzést eredményez, kivéve, ha a másodiknak megadott szintaktikai egység sorozat megegyezik az elsővel, az összes üreshely-karakterből álló elválasztásokat is figyelembe véve.
+  <p> A<br />
+  </p>
+  <pre class="defit">
+<span class="d">#define</span> azonosító ( azonosító_lista ) token_sorozat
+</pre>
+  alakú sor (ahol az első azonosító és a kezdő kerek zárójel között nincs szóköz!) egy makrót definiálnak az azonosítólistában megadott paraméterekkel. Csakúgy, mint az első alak esetén, a szintaktikai egységek előtt és után lévő üreshely-karakterek törlődnek, és a makrót csak úgy lehet újradefiniálni, ha az új és régi definícióban a paraméterek száma és leírása, valamint a tokenek sorozata megegyezik.
+  <p> Az<br />
+  </p>
+  <pre class="defit">
+<span class="d">#undef</span> azonosító
+</pre>
+  alakú vezérlősor hatására az előfeldolgozó rendszer „elfelejti” az azonosító korábbi, <span class="d">#define</span> sorral megadott definícióját. Egy ismeretlen azonosítóra kiadott <span class="d">#undef</span> direktíva nem jelent hibát.
+  <p> Amikor a másodiknak megadott forma szerint definiálunk egy makrót, akkor annak hívása a makró azonosítójából, az azt követő kerek nyitó zárójelből, szintaktikai egységek vesszővel elválasztott sorozatából és egy kerek végzárójelből áll. (Természetesen üreshely-karakterek megengedettek.) A hívás argumentumait szintaktikai egységek vesszővel elválasztott sorozata alkotja, a szövegben lévő vesszőket aposztrófok vagy zárójelek között kell elhelyezni, hogy ne elválasztó jelként hassanak. Az előfeldolgozó rendszer információgyűjtési fázisában az argumentumokra még nincs makrókifejtés. Híváskor az argumentumok számának meg kell egyezni a definícióban lévő paraméterek számával. Az argumentumok szétválasztása után az előfeldolgozó rendszer eltávolítja a bevezető és záró üreshely-karaktereket. Mindezek után az előfeldolgozó az egyes argumentumokból így előállított token-sorozattal helyettesíti a megfelelő paraméterazonosító minden egyes nem aposztrófok közötti előfordulását a makró helyettesítő token-sorozatában. Hacsak a helyettesítősorozatban a paramétert nem # előzi meg, vagy ## van előtte és utána, akkor az argumentum tokeneket a makróhívás szempontjából újra megvizsgálja, és ha szükséges, akkor a helyettesítő szöveg beiktatása előtt megtörténik a makrókifejtés.</p>
+  <p> A helyettesítési folyamatot két speciális operátor befolyásolja. Az első esetben, ha a helyettesítő token-sorozatban egy paraméter előfordulását közvetlenül a # előzi meg, akkor a megfelelő paraméter elé és után az idézőjel-karakter kerül, és mind a #, mind a paraméterazonosító helyettesítődik az idézőjelek közötti argumentummal. Minden egyes idézőjel vagy az argumentumban lévő karakteres állandóban, ill. karaktersorozat-állandóban előforduló <span class="m">\</span> karakter elé egy <span class="m">\</span> karakter iktatódik.<br />
+    A második esetben, ha valamelyik makró definíciója egy ## operátort tartalmaz, akkor a paraméter helyettesítése után az egyes ## jelek törlődnek (együtt annak két oldalán lévő üreshely-karakterekkel), aminek hatására a behelyettesített szöveg konkatenálódik a szomszédos tokennel és egy új tokent eredményez. Ha ezzel a módszerrel érvénytelen token jön létre, ill. ha az eredmény függ a ## operátorok feldolgozási sorrendjétől, akkor a hatás definiálatlan. A ## nem jelenhet meg egy helyettesítő token-sorozat kezdetén vagy végén.</p>
+  <p> Mindkét fajta makró feldolgozásakor a rendszer a helyettesített token-sorozatot ismételten átvizsgálja, hogy megtalálja az előfeldolgozó az esetleges további definiálatlan azonosítókat. Mindenesetre, ha egyszer egy azonosító egy adott kifejezésben helyettesítődött, akkor az nem helyettesítődik újra az újbóli átvizsgálás során, hanem változatlan marad.</p>
+  <p> Ha egy makrókifejtés végső értéke # jellel kezdődik, akkor azt az előfeldolgozó rendszer már nem tekinti direktívának.<br />
+    <br />
+  </p>
+  <div class="note"> A makrókifejtési folyamat részleteit az ANSI szabvány sokkal pontosabban írja le, mint a könyv első kiadása. A legfontosabb változás a korábbiakhoz képest a # és ## operátorok bevezetése, amelyekkel megoldható szövegek idézőjelek közé tétele, ill. konkatenálása. A szabvány néhány új szabálya, különösen a konkatenációra vonatkozóak, kissé bizarr (l. az alábbi példát).<br />
+  </div>
+  <br />
+  <br />
+  Például ez a lehetőség kihasználható a „manifesztálódott” állandók létrehozásánál, mint<br />
+  <pre>
+<span class="d">#define</span> TABMERET 100
+<span class="k">int</span> tabla[TABMERET];
+</pre>
+  esetén. A<br />
+  <pre>
+<span class="d">#define</span> ABSDIFF(a, b) ((a) &gt; (b) ? (a) - (b) : (b) - (a))
+</pre>
+  definíció egy makrót definiál, amely visszatér az argumentumai közötti különbség abszolút értékével. Eltérően egy ugyanezen feladatot ellátó függvénytől, itt az argumentumok és a visszatérési érték tetszőleges aritmetikai típusú vagy mutató lehet. További előnye a makrónak, hogy az argumentumok, amelyek mellékhatásokat okozhatnak, kétszer lesznek kiértékelve: egyszer az ellenőrzéshez és másodszor az érték előállításához. A<br />
+  <pre>
+<span class="d">#define</span> tempfile(dir) #dir &quot;/%s&quot;
+</pre>
+  definíció a <span class="m">tempfile(/usr/tmp)</span> makróhívást eredményezi, amelyben az<br />
+  <pre>
+&quot;/usr/trap&quot; &quot;/%s&quot;
+</pre>
+  egymást követő karaktersorozatok egyetlen karaktersorozattá olvadnak össze (konkatenálódnak). A<br />
+  <pre>
+<span class="d">#define</span> cat(x, y) x ## y
+</pre>
+  definíció után a <span class="m">cat(var, 123)</span> makróhívásban az argumentum <span class="m">varl23</span> lesz. Viszont a <span class="m">cat(cat (1,2), 3)</span> makróhívás definiálatlan eredményt ad, mivel a ## operátor jelenléte megvédi a külső makróhívás argumentumait a makrókifejtéstől. Így ez az elöfeldolgozó rendszerrel feldolgozva a<br />
+  <pre>
+cat (1, 2) 3
+</pre>
+  token karaktersorozatot eredményezi, és ebben a <span class="m">) 3</span> (ami az első argumentum utolsó és a második argumentum első tokenjének összekapcsolódása) nem legális token. Ha bevezetjük a<br />
+  <pre>
+<span class="d">#define</span> xcat(x, y) cat(x, z)
+</pre>
+  második szintű makródefiníciót, akkor a helyzet egyszerű lesz, az <span class="m">xcat (xcat (1, 2), 3)</span> már valóban az <span class="m">123</span> eredményt adja, mivel az <span class="m">xcat</span> kifejtése nem tartalmazza a ## operátort.
+  <p> Hasonló módon az <span class="m">ABSDIFF (ABSDIFF(a, b), c)</span> a várt, teljesen kifejtett eredményt adja.<br />
+  </p>
+  <h4><a name="A12.4." id="A12.4."></a>A12.4. Állományok beépítése<br />
+  </h4>
+  A<br />
+  <pre class="defit">
+<span class="d">#include</span> &lt;állománynév&gt;
+</pre>
+  alakú vezérlősor hatására a sor helyettesítődik a megadott nevű állomány teljes tartalmával. Az állománynévben nem szerepelhet a <span class="m">&gt;</span> vagy az újsor-karakter, és ha a <span class="m">&quot;</span>, <span class="m">'</span>, <span class="m">\</span> vagy <span class="m">/*</span> szerepel a névben, akkor az eredmény definiálhatatlan. A megadott nevű állományt a rendszer a gépi megvalósítástól függő helyen, soros módon fogja keresni. A<br />
+  <pre class="defit">
+<span class="d">#include</span> &quot;állománynév&quot;
+</pre>
+  vezérlősor ugyanúgy működik, mint az előző alak, csak az állomány keresése először az eredeti forrásállomány helyén indul, és ha ott sikertelen, akkor folytatódik az első alaknak megfelelő módon. Az állománynévben lévő <span class="m">'</span>, <span class="m">\</span> vagy <span class="m">/*</span> karakterek hatása itt is definiálatlan, viszont a <span class="m">&gt;</span> karakter szerepelhet az állománynévben. Végül a<br />
+  <pre class="defit">
+<span class="d">#include</span> token_sorozat
+</pre>
+  alakú direktíva hatására a rendszer a token sorozatot normális szövegkénti kifejtés után értelmezi. A kifejtésnek <span class="m">&lt;...&gt;</span> vagy <span class="m">&quot;...&quot;</span> alakot kell eredményezni, és a hatás a kapott eredménynek megfelelő lesz.
+  <p> A <span class="d">#include</span> direktívák egymásba ágyazhatók (tehát a beépített állomány tartalmazhat további <span class="d">#include</span> direktívákat).<br />
+  </p>
+  <h4><a name="A12.5." id="A12.5."></a>A12.5. Feltételes fordítás<br />
+  </h4>
+  Egy program meghatározott része feltételtől függően fordítható le az alábbi vázlatos szintaktikai leírás szerint:<br />
+  <pre class="defit">
+előfeldolgozó_feltételes_fordítás:
+      if_sor szöveg elif_rész else_rész<sub>opc</sub> <span class="d">#endif</span>
+
+if_sor:
+      <span class="d">#if</span> állandó_kifejezés
+      <span class="d">#ifdef</span> azonosító
+      <span class="d">#ifndef</span> azonosító
+
+elif_rész:
+      elif_sor szöveg
+      elif rész<sub>opc</sub>
+
+elif_sor
+      <span class="d">#elif</span> állandó_kifejezés
+
+else_rész:
+      else_sor szöveg
+      else_sor:
+      <span class="d">#else</span>
+</pre>
+  Az egyes direktívák (if-sor, elif-sor, else-sor és <span class="d">#endif</span>) egy sorban, önállóan jelennek meg. Az <span class="d">#if</span> direktívában és az azt követő <span class="d">#elif</span> direktívákban lévő állandó kifejezéseket a program sorban egymás után addig értékeli ki, amíg nem nulla értékű kifejezést talál. Nulla érték esetén a sorban következő szöveget törli, sikeres (nem nulla) esetben pedig normális módon feldolgozza. Szöveg alatt olyan tetszőleges információ – beleértve az előfeldolgozónak szánt direktívákat is – értendő, ami nem része a feltételes szerkezetnek. A szöveg rész üres is lehet. Ha az előfeldolgozó rendszer egy sikeres (nem nulla értékű kifejezést tartalmazó) <span class="d">#if</span> vagy <span class="d">#elif</span> sort talált és a szöveget feldolgozta, akkor a további <span class="d">#elif</span> és <span class="d">#else</span> sorokat, együtt a bennük elhelyezett szöveggel törli. Ha minden kifejezés nulla értékű és létezik <span class="d">#else</span>, akkor az <span class="d">#else</span> utáni szöveget dolgozza fel a szokásos módon. A feltétel inaktív részével vezérelt szöveg a feltételek beágyazásának ellenőrzését kivéve törlődik.
+  <p> Az <span class="d">#if</span> és <span class="d">#elif</span> után álló állandó kifejezést az előfeldolgozó rendszer egy közönséges makróhelyettesítési menettel dolgozza fel. Az előfeldolgozó a<br />
+  </p>
+  <pre class="defit">
+<span class="d">defined</span> azonosító
+</pre>
+  vagy<br />
+  <pre class="defit">
+<span class="d">defined</span> (azonosító)
+</pre>
+  alakú kifejezéseket a makrókra való ellenőrzés előtt <span class="m">1L</span> értékkel helyettesíti, ha az azonosító már definiálva van a számára és <span class="m">0L</span> értékkel, ha még nincs. A makrókifejtés után fennmaradó azonosítók (amelyek nem lettek definiálva) a <span class="m">0L</span> értékkel helyettesítődnek. A rendszer minden egyes egész típusú állandót az <span class="m">L</span> utótaggal egészíti ki, így az aritmetika <span class="k">long</span> vagy <span class="k">unsigned</span> <span class="k">long</span> típusú.
+  <p> A direktívákban szereplő állandó kifejezés (<a href="a.html#A7.19.">A7.19.</a>) egész típusú kell hogy legyen és nem szerepelhet benne <span class="k">sizeof</span>, kényszerített típuskonverzió, valamint felsorolt állandó. Az<br />
+  </p>
+  <pre class="defit">
+<span class="d">#ifdef</span> azonosító
+<span class="d">#ifndef</span> azonosító
+</pre>
+  alakú vezérlősorok egyenértékűek az<br />
+  <pre class="defit">
+<span class="d">#if</span> defined azonosító
+<span class="d">#if</span> ! defined azonosító
+</pre>
+  alakú vezérlősorokkal.<br />
+  Az <span class="d">#elif</span> a könyv első kiadása óta megjelent új direktíva, bár néhány előfeldolgozó rendszer már korábban is használta. Az előfeldolgozó rendszer defined operátora szintén új.<br />
+  <h4><a name="A12.6." id="A12.6."></a>A12.6. Sorvezérlés<br />
+  </h4>
+  A C nyelvű programokat létrehozó előfeldolgozó rendszerek számára hasznosak a<br />
+  <pre class="defit">
+<span class="d">#line</span> állandó &quot;állománynév&quot;
+<span class="d">#line</span> állandó
+</pre>
+  alakú vezérlősorok, amelyek hatására a fordítóprogram azt hiszi, hogy a következő forrássor sorszáma a decimális egész állandóval megadott érték és az aktuális bemeneti állomány az, amelynek a nevét az azonosítóval megadtuk. Ha az idézőjelek közötti állománynév hiányzik, akkor a korábban megjegyzett állománynév marad érvényben. A vezérlősorokban elhelyezett makrókat a sor értelmezése előtt kifejti a rendszer. Az ilyen vezérlősorok főképp diagnosztikai célra használhatók.<br />
+  <h4><a name="A12.7." id="A12.7."></a>A12.7. Hibaüzenet generálása<br />
+  </h4>
+  Az előfeldolgozó rendszernek kiadott<br />
+  <pre class="defit">
+<span class="d">#error</span> token sorozat<sub>opc</sub>
+</pre>
+  alakú vezérlősor hatására az előfeldolgozó rendszer a token sorozatot magában foglaló hibaüzenetet ír ki.<br />
+  <h4><a name="A12.8." id="A12.8."></a>A12.8. A pragma direktíva<br />
+  </h4>
+  Az előfeldolgozó rendszernek kiadott<br />
+  <pre class="defit">
+<span class="d">#pragma</span> token_sorozat<sub>opc</sub>
+</pre>
+  alakú vezérlősor hatására egy, a gépi megvalósítástól függő hatás jön létre. Az előfeldolgozó rendszer a fel nem ismert pragma direktívákat figyelmen kívül hagyja.<br />
+  <h4><a name="A12.9." id="A12.9."></a>A12.9. A nulldirektíva<br />
+  </h4>
+  Az előfeldolgozó rendszernek kiadott<br />
+  <pre>
+<span class="d">#</span>
+</pre>
+  alakú vezérlősor hatására nem történik semmi (nulldirektíva).<br />
+  <h4><a name="A12.10." id="A12.10."></a>A12.10. Előre definiált nevek<br />
+  </h4>
+  Néhány azonosító az előfeldolgozó rendszer számára előre definiálva van és kifejtésükkel speciális információ állítható elő. Ezek, valamint az előfeldolgozó hozzájuk tartozó kifejezésoperátorai <span class="d">defined</span> típusúak, nem lehetnek definiálatlanok és nem definálhatók újra. Az előre definiált nevek és jelentésük:<br />
+  <br />
+  <table>
+    <tr>
+      <td><span class="m">__LINE__<br />
+      &nbsp;</span></td>
+      <td>A forrásprogram éppen feldolgozás alatt álló aktuális sorának sorszámát tartalmazó decimális állandó.</td>
+    </tr>
+    <tr>
+      <td><span class="m">__FILE__<br />
+      &nbsp;</span></td>
+      <td>Az éppen fordítás alatt álló forrásállomány nevét tartalmazó karaktersorozatállandó.<br />
+      &nbsp;</td>
+    </tr>
+    <tr>
+      <td><span class="m">__DATE__<br />
+      &nbsp;</span></td>
+      <td>A fordítás dátumát <span class="m">&quot;Hon nn éééé&quot;</span> alakban tartalmazó karaktersorozatállandó.<br />
+      &nbsp;</td>
+    </tr>
+    <tr>
+      <td><span class="m">__TIME__<br />
+      &nbsp;</span></td>
+      <td>A fordítás időpontját <span class="m">&quot;óó:pp:ss&quot;</span> alakban tartalmazó karaktersorozatállandó.<br />
+      &nbsp;</td>
+    </tr>
+    <tr>
+      <td><span class="m">__STDC__<br />
+      &nbsp;</span></td>
+      <td>Állandó 1 érték. Ezzel az azonosítóval az volt a szándék, hogy az 1-nek definiált értékkel jelezze a szabványhoz illeszkedő gépi megvalósítást.</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  <div class="note"> Az <span class="ds">#error</span> és <span class="ds">#pragma</span> direktívák újak az ANSI szabványban. Az előre definiált előfeldolgozó makrók szintén újak, bár néhányat közülük az egyes gépi megvalósítások már korábban is használtak.<br />
+  </div>
+  <br />
+  <br />
+  <h3><a name="A13." id="A13."></a>A13. A C nyelv szintaktikájának összefoglalása<br />
+  </h3>
+  A következőkben összefoglaljuk a C nyelv korábbi részekben megadott szintaktikáját. Ez a leírás tartalmilag pontosan egyezik az A. Függelékben leírtakkal, csak a sorrendje más.
+  <p> A szintaktikai leírás nem definiálja az egész állandó, karakteres állandó, lebegőpontos állandó, azonosító, karaktersorozat- és felsorolt állandó terminális szimbólumokat, és a szövegben a programokhoz használt betűtípussal szedett szavak és szimbólumok szintén terminálisak. Az itt megadott szintaktikai leírás mechanikusan átalakítható egy automatikus szintaktikai elemző rendszerré. A leírás általában soronként tagolva adja meg az egyes lehetőségeket, de néhány helyen (helytakarékosságból) szükség volt az „egyike a következőknek:” szerkezetre, valamint az egyes lehetőségek megduplázására <i>opc</i> kiegészítéssel és kiegészítés nélkül. Még egy változás van a korábbiakhoz képest: a leírásból kihagytuk a <i>typedef_név:azonosító</i> szintaktikai egységet és helyette a <i>typedef_név</i> terminális szimbólumot használjuk, amivel a szintaktikai leírás a YACC elemző számára is elfogadhatóvá vált, egyetlen konfliktushelyzetet, az <span class="k">if-else</span> kétértelműséget leszámítva.<br />
+    <br />
+    A C nyelv szintaktikája:<br />
+  </p>
+  <pre class="defit">
+fordítási_egység:
+      külső_deklaráció 
+      fordítási_egység külső_deklaráció
+
+külső_deklaráció:
+      függvénydefiníció
+      deklaráció
+
+függvénydefiníció:
+      deklaráció_specifikátorokopc deklarátor deklarációs_lista<sub>opc</sub> összetett_utasítás
+
+deklaráció:
+      deklaráció_specifikátorok kezdeti_deklarátor_lista<sub>opc</sub>;
+
+deklarációs_lista: 
+      deklaráció 
+      deklarációs_lista deklaráció
+
+deklaráció_specifikátorok:
+      tárolási_osztály_specifikátor deklaráció_specifikátorok<sub>opc</sub>
+      típus_specifikátor deklaráció_specifikátorok<sub>opc</sub>
+      típus_minősítő deklaráció_specifikátorok<sub>opc</sub>
+
+tárolási_osztály_specifikátor; <span class="def">egyike a következőknek</span>:
+      <span class="k">auto</span> <span class="k">register</span> <span class="k">static</span> <span class="k">extern</span> <span class="k">typedef</span>
+      
+      típus_specifikátor: <span class="def">egyike a következőknek</span>:
+      <span class="k">void</span>  <span class="k">char</span>  <span class="k">short</span>  <span class="k">int</span>  <span class="k">long</span>  <span class="k">float</span>  <span class="k">double</span>  <span class="k">signed</span>  <span class="k">unsigned</span>
+      struktúra_vagy_union_specifikátor felsorolás_specifikátor typedef_név
+
+</pre>
+  <pre class="defit">
+típus_minősítő: <span class="def">egyike a következőknek</span>:
+      <span class="k">const</span>  <span class="k">volatile</span>
+
+struktúra_vagy_union_specifikátor:
+      struktúra_vagy_union azonosító<sub>opc</sub> { struktúra__deklarációs_lista } 
+      struktúra_vagy_union azonosító
+
+struktúra_vagy_union: <span class="def">egyike a következőknek</span>:
+      <span class="k">struct</span>  <span class="k">union</span>
+
+struktúra_deklarációs_lista: 
+      struktúra_deklaráció 
+      struktúra deklarációs_lista struktúra_deklaráció
+
+kezdeti_deklarátor_lista: 
+      kezdeti_deklarátor 
+      kezdeti deklarátor lista , kezdeti_deklarátor
+
+kezdeti_deklarátor: 
+      deklarátor 
+      deklarátor = kezdeti_érték
+
+struktúra_deklaráció:
+      specifikátor_minősítő_lista struktúra_deklarátor_lista ;
+
+specifikátor_minősítő_lista:
+      típus_specifikátor specifikátor_minősítő_lista<sub>opc</sub>
+      típus_minősítő specifikátor_minősítő_lista<sub>opc</sub>
+
+struktúra_deklarátor_lista: 
+      struktúra_deklarátor
+      struktúra_deklarátor_lista , struktúra_deklarátor
+
+struktúra_deklarátor: 
+      deklarátor 
+      deklarátor<sub>opc</sub> : állandó_kifejezés
+
+felsorolás_sepcifikátor:
+      <span class="k">enum</span> azonosító<sub>opc</sub> { felsorolás_lista } 
+      <span class="k">enum</span> azonosító
+</pre>
+  <pre class="defit">
+felsorolás_lista: 
+      felsorolt_elem
+      felsorolás_lista , felsorolt_elem
+
+felsorolt_elem: 
+      azonosító 
+      azonosító = állandó_kifejezés
+
+deklarátor:
+      mutató<sub>opc</sub> direkt deklarátor
+
+direkt_deklarátor: 
+      azonosító 
+      { deklarátor}
+      direkt_deklarátor [ állandó_kifejezés<sub>opc</sub> ]
+      direkt_deklarátor ( paraméter_típus_lista )
+      direkt_deklarátor ( azonosító lista<sub>opc</sub> )
+
+mutató:
+      * típus_minősítő_lista<sub>opc</sub>
+      * típus_minősítő_lista<sub>opc</sub> mutató
+
+típus_minősítő_lista: 
+      típus_minősítő 
+      típus_minősítő_lista típus_minősítő
+
+paraméter_típus_lista: 
+      paraméter_lista 
+      paraméter_lista , ...
+
+paraméter_lista:
+      paraméter_deklaráció
+      paraméter_lista, paraméter_deklaráció
+
+paraméter_deklaráció:
+      deklaráció_specifikátorok deklarátor 
+      deklaráció_specifikátorok absztrakt_deklarátor<sub>opc</sub>
+
+azonosító_lista: 
+      azonosító 
+      azonosító_lista , azonosító
+
+kezdeti érték:
+      értékadó_kifejezés 
+      { kezdetiérték-lista } 
+      { kezdetiérték-lista , }
+</pre>
+  <pre class="defit">
+kezdetiérték-lista:
+      kezdeti érték
+      kezdetiérték-lista , kezdeti érték
+
+típusnév:
+      specifikátor_minősítő_lista absztrakt_deklarátor<sub>opc</sub>
+
+absztrakt_deklarátor:
+      mutató
+      mutató<sub>opc</sub> direkt_absztrakt_deklarátor
+
+direkt_absztrakt_deklarátor:
+      (absztrakt_deklarátor)
+      direkt_absztrakt_deklarátor<sub>opc</sub> [ állandó kifejezés ]
+      direkt_absztrakt_deklarátor<sub>opc</sub> ( paraméter_típus_lista<sub>opc</sub>)
+
+typedef_név:
+      azonosító
+
+utasítás:
+      címkézett_utasítás
+      kifejezésutasítás
+      összetett_utasítás
+      kiválasztó_utasítás
+      iterációs_utasítás
+      vezérlésátadó-utasítás
+
+címkézett_utasítás:
+      azonosító: utasítás
+      <span class="k">case</span> állandó_kifejezés : utasítás
+      <span class="k">default</span> : utasítás
+
+kifejezésutasítás:
+      kifejezés<sub>opc</sub>;
+
+összetett_utasítás:
+      { deklarációs_lista<sub>opc</sub> utasítás_lista<sub>opc</sub> }
+</pre>
+  <pre class="defit">
+utasítás_lista:
+      utasítás
+      utasítás_lista utasítás
+
+kiválasztó_utasítás:
+      <span class="k">if</span> ( kifejezés ) utasítás
+      <span class="k">if</span> ( kifejezés) utasítás <span class="k">else</span> utasítás
+      <span class="k">switch</span> ( kifejezés ) utasítás
+
+iterációs_utasítás:
+      <span class="k">while</span> ( kifejezés ) utasítás
+      <span class="k">do</span> utasítás <span class="k">while</span> ( kifejezés);
+      <span class="k">for</span> { kifejezés<sub>opc</sub> ; kifejezés<sub>opc</sub> ; kifejezés<sub>opc</sub> ) utasítás
+
+vezérlésátadó_ utasítás:
+      <span class="k">goto</span> azonosító ;
+      <span class="k">continue</span> ;
+      <span class="k">break</span> ;
+      <span class="k">return</span> kifejezés<sub>opc</sub> ;
+
+kifejezés:
+      értékadó_kifejezés
+      kifejezés , értékadó_kifejezés
+
+értékadó_kifejezés:
+      feltételes_kifejezés
+      unáris_kifejezés értékadó_operátor értékadó_kifejezés
+
+értékadó_operátor: <span class="def">egyike a következőknek</span>:
+      <span class="m">= *= /= %= += -= &lt;&lt;= &gt;&gt;= &amp;= ^= |=</span>
+
+feltételes_kifejezés:
+      logikai_VAGY_kifejezés
+      logikai_VAGY_kifejezés ? kifejezés : feltételes_kifejezés
+</pre>
+  <pre class="defit">
+állandó_kifejezés:
+      feltételes_kifejezés
+
+logikai_VAGY_kifejezés:
+      logikai_ÉS_kifejezés
+      logikai_ VAGY_kifejezés || logikai_ÉS_kifejezés
+
+logikai_ÉS_kifejezés:
+      inkluzív_VAGY_kifejezés
+      logikai_ÉS_kifejezés &amp;&amp; inkluzív_VAGY_kifejezés
+
+inkluzív_VAGY_kifejezés:
+      kizáró_VAGY_kifejezés
+      inkluzív_VAGY_kifejezés | kizáró_VAGY_kifejezés
+
+kizáró_VAGY_kifejezés:
+      ÉS_kifejezés
+      kizáró_VAGY_kifejezés ^ ÉS_kifejezés
+
+ÉS_kifejezés:
+      egyenlőség_kifejezés
+      ÉS_kifejezés &amp; egyenlőség_kifejezés
+
+egyenlőség_kifejezés:
+      relációs_kifejezés
+      egyenlőség_kifejezés == relációs_kifejezés
+      egyenlőség_kifejezés != relációs_kifejezés
+
+relációs_kifejezés:
+      léptető_kifejezés
+      relációs_kifejezés &lt; léptető_kifejezés
+      relációs_kifejezés &gt; léptető_kifejezés
+      relációs_kifejezés &lt;= léptető_kifejezés
+      relációs_kifejezés &gt;= léptető_kifejezés
+
+léptető_kifejezés:
+      additív_kifejezés
+      léptető_kifejezés &lt;&lt; additív_kifejezés
+      léptető_kifejezés &gt;&gt; additív_kifejezés
+
+additív_kifejezés
+      multiplikatív_kifejezés
+      additív_kifejezés + multiplikatív_kifejezés
+      additív_kifejezés - multiplikatív_kifejezés
+</pre>
+  <pre class="defit">
+multiplikatív_kifejezés:
+      kényszerített_típuskonverziójú_kifejezés
+      multiplikatív_kifejezés * kényszerített_típuskonverziójú_kifejezés
+      multiplikatív_kifejezés / kényszerített_típuskonverziójú_kifejezés
+      multiplikatívJáfejezés % kényszerített_típuskonverziójú_kifejezés
+
+kényszerített_típuskonverziójú_kifejezés:
+      unáris_kifejezés:
+      ( típusnév ) kényszerített_típuskonverziójú_kifejezés
+
+unáris_kifejezés:
+      utótagos_kifejezés
+      ++ unáris_kifejezés
+      -- unáris_kifejezés
+      unáris_operátor kényszerített_típuskonverziójú_kifejezés
+
+      <span class="k">sizeof</span> unáris_kifejezés
+      <span class="k">sizeof</span> ( típusnév)
+
+unáris_operátor: <span class="def">egyike a következőknek</span>:
+      <span class="m">&amp; * + - ~ !</span>
+
+utótagos_kifejezés:
+      elsődleges_kifejezés
+      utótagos_kifejezés [ kifejezés ]
+      utótagos_kifejezés ( argumentum_kifejezés_lista<sub>opc</sub> )
+      utótagos_kifejezés . azonosító
+      utótagos_kifejezés -&gt; azonosító
+      utótagos_kifejezés ++
+      utótagos_kifejezés --
+
+elsődleges_kifejezés:
+      azonosító
+      állandó
+      karaktersorozat
+      ( kifejezés )
+
+argumentum_kifejezés_lista:
+      értékadó_kifejezés
+      argumentum_kifejezés_lista , értékadó_kifejezés
+
+állandó:
+      egész_állandó
+      karakteres_állandó
+      lebegőpontos_állandó
+      felsorolt_állandó
+</pre>
+  <br />
+  A következőkben az előfeldolgozó rendszer szintaktikai leírását összegezzük. A leírás megadja a vezérlősorok szerkezetét, de nem alkalmas mechanikus elemzésre. A leírásban használjuk a szövegszimbólumot, ami tetszőleges forrásprogramszöveget, az előfeldolgozó rendszernek szóló nem feltételes vezérlősorokat vagy az előfeldolgozónak szóló teljes feltételes konstrukciókat jelent.<br />
+  <br />
+  Az előfeldolgozó rendszer szintaktikája:<br />
+  <pre class="defit">
+vezérlősorok:
+      <span class="d">#define</span> azonosító token_sorozat
+      <span class="d">#define</span> azonosító ( azonosító , ... , azonosító ) token_sorozat
+      <span class="d">#undef</span> azonosító
+      <span class="d">#include</span> &lt;állománynév&gt;
+      <span class="d">#include</span> &quot;állománynév&quot;
+      <span class="d">#include</span> token_sorozat
+      <span class="d">#line</span> állandó &quot;állománynév&quot;
+      <span class="d">#line</span> állandó
+      <span class="d">#error</span> token_sorozat<sub>opc</sub>
+      <span class="d">#pragma</span> token_sorozat<sub>opc</sub>
+      <span class="d">#</span>
+
+előfeldolgozó_feltételes_fordítás:
+      if_sor szöveg elif_részek else_rész<sub>opc</sub> <span class="d">#endif</span>
+
+if_sor:
+      <span class="d">#if</span> állandó_kifejezés
+      <span class="d">#ifdef</span> azonosító
+      <span class="d">#ifndef</span> azonosító
+
+elif_részek:
+      elif_sor szöveg
+      elif_részek<sub>opc</sub>
+
+elif_sor:
+      <span class="d">#elif</span> állandó_kifejezés
+
+else_rész:
+      else_sor szöveg
+
+else_sor:
+      <span class="d">#else</span>
+</pre>
+  <br />
+  <br />
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="08.html">8. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="b.html">B. FÜGGELÉK</a>
+   </td>
+</tr>
+</table>
+
+
+</div>
+</body>
+</html>

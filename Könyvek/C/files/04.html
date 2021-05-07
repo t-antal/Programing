@@ -1,0 +1,923 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Függvények és a program szerkezete</title>
+<link href="krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<div id="main">
+
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="03.html">3. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="05.html">5. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+  <h2><a name="4. FEJEZET" id="4. FEJEZET"></a><i>4. FEJEZET:</i></h2>
+  <h2>Függvények és a program szerkezete<br />
+  </h2>
+  <br />
+  A függvényekkel a nagyobb számítási feladatok kisebb egységekre oszthatók, így a programozó felhasználhatja a már meglévő egységeket és nem kell minden alkalommal elölről kezdeni a munkát. A függvények a működésük részleteit gyakran elrejtik a program többi része elől, de jól megírt függvények esetén nincs is szükség ezekre a részletekre.
+  <p> A C nyelvet úgy tervezték meg, hogy a függvények hatékonyak és jól használhatók legyenek. A C nyelvű programok sokkal inkább több, kisebb függvényből állnak, mint egy nagyobból. A program egy vagy több forrásállományban helyezkedhet el. A forrásállományok egymástól függetlenül fordíthatók és a már korábban lefordított könyvtári függvényekkel együtt tölthetők be. Ennek menete az alkalmazott operációs rendszertől függ, ezért pillanatnyilag nem foglalkozunk vele.</p>
+  <p> Az ANSI szabvány a függvények deklarációja és definíciója terén változtatta meg leginkább a C nyelvet. Mint az <a href="01.html">1. fejezetben</a> már említettük, lehetővé vált az argumentumok típusának deklarálása a függvény deklarálásával egyidejűleg. A függvény definiálásának szintaxisa szintén megváltozott, ami lehetővé teszi a fordítóprogramnak, hogy a korábbi változatokhoz képest sokkal több hibát felderítsen. Az új szabvány további előnye, hogy helyesen deklarált argumentumok esetén létrejön a kényszerített automatikus típuskonverzió.</p>
+  <p> A szabvány tisztázza a nevek hatáskörének kérdését is, különösen azzal, hogy megköveteli az egyes külső objektumok egyszeri definícióját. Az inicializálás teljesen általánosan működik, és az automatikus tárolási osztályú tömbök, ill. struktúrák egyszerűen inicializálhatók.</p>
+  <p> A bevezetőben fontos megemlíteni, hogy a C előfeldolgozó rendszert is továbbfejlesztették. A feltételes fordítási direktívák korábbinál sokkal teljesebb készlete új lehetőségekkel bővült, ami elsősorban a makrokifejtés hatékonyabb vezérlésében jelentkezik, valamint abban, hogy a makro argumentumából aposztófokkal határolt karaktersorozat generálható.<br />
+    <br />
+  </p>
+  <h3><a name="4.1." id="4.1."></a>4.1. A függvényekkel kapcsolatos alapfogalmak<br />
+  </h3>
+  Az alapfogalmak bemutatásához írjunk egy programot, amely a bemenetére adott szöveg minden olyan sorát kiírja, amiben megtalálható egy adott minta (karaktersorozat). A program a UNIX grep segédprogramjának egy speciális változata. Például a következő szövegben keressük a „dal” mintát az egyes sorokban.*<br />
+  <pre class="def">
+Óh lakodalmi kar-dal,
+   éneklő diadal,
+ki is verseng e dallal,
+   oly édes, fiatal,
+hiába itt a harc, meddő a viadal.
+</pre>
+  <div class="note">*[A feladatot (mint általában eddig is) magyarítottuk. A példában szereplő versszak Percy Bysshe Shelley: Egy mezei pacsirtához című verséből van, Kosztolányi Dezső fordításában. (A fordító)]<br />
+  </div>
+  <br />
+  A program eredményül a következő szöveget hozza létre:<br />
+  <pre>
+Óh lakodalmi kar-dal,
+éneklő diadal,
+ki is verseng e dallal,
+hiába itt a harc, meddő a viadal.
+</pre>
+  A feladat három alapvető részre osztható, és így a program szerkezete:<br />
+  <pre>
+<span class="k">while</span> (<span class="defit">van további sor</span>)
+   <span class="k">if</span> (<span class="defit">a sor tartalmazza a mintát</span>)
+      <span class="defit">nyomtassuk ki</span>
+</pre>
+  Bár a teljes programot egyetlen egységként (egyetlen <span class="m">main</span> függvényként) is megírhatjuk, mégis célszerű a fenti programszerkezet előnyeit kihasználni és az egyes részeket önálló függvényként megírni. A három kis résszel könnyebben megbirkózunk, mint az egyetlen naggyal, mivel a lényegtelen részletkérdések „belevesznek” az egyes függvényekbe és a nem kívánt kölcsönhatások esélye minimális lesz. Ezenkívül bármely programrészt (függvényt) más programokban is felhasználhatjuk.
+  <p> A „van még további sor” feladatrészt az <a href="01.html">1. fejezetben</a> már megírt <span class="m">getline</span> függvénnyel, a „nyomtassuk ki” feladatrészt pedig a <span class="f">printf</span> függvénnyel valósítjuk meg. Ez azt jelenti, hogy csak azt a programrészt kell megírnunk, amely eldönti, hogy a keresett minta megtalálható-e a vizsgált sorban.</p>
+  <p> Ezt a programrészt az <span class="m">strindex(s, t)</span> függvénnyel oldjuk meg. A <span class="m">strindex</span> függvény első argumentuma (<span class="m">s</span>) a vizsgált sort tartalmazó karaktertömb, a második argumentuma (<span class="m">t</span>) a keresett mintát tartalmazó karaktertömb, és visszatérési értéke a <span class="m">t</span> tömb kezdetének s tömbbeli indexe, vagy <span class="m">-1</span>, ha <span class="m">s</span> nem tartalmazza a keresett mintát. Mivel egy C-beli tömb kezdetének indexe nulla, a visszaadott index nulla vagy pozitív lesz, ezért a <span class="m">-1</span> érték jól használható az extra esetek jelzésére. A későbbiekben, amikor majd a mintakereső program fejlettebb változatát írjuk, csak az <span class="m">strindex</span> függvényt cseréljük le egy intelligensebbre, és a program többi részét változatlanul hagyjuk. (A standard könyvtár tartalmazza az <span class="f">strstr</span> függvényt, amelynek feladata hasonló az <span class="m">strindex</span> függvényéhez, de nem a kezdőpont indexét, hanem egy mutatót ad értékül.)</p>
+  <p> A kezdeti programtervezés után már viszonylag gyorsan megírhatjuk a részletes programot. A szerkezetet követve jól látható az egyes részek egymáshoz kapcsolódása. Egyelőre ne a legáltalánosabb esettel kezdjük: a keresett minta literálisként megadott karaktersorozat legyen. Hamarosan visszatérünk még a karaktertömbök inicializálására és az <a href="05.html">5. fejezetben</a> megmutatjuk, hogyan tehetjük a keresett mintát a program futása közben megadható paraméterré. A mintakereső programban megadjuk a <span class="m">getline</span> függvény egy újabb változatát. Célszerű, ha ezt összehasonlítjuk az <a href="01.html">1. fejezetben</a> leírt változattal. Ezután lássuk a programot!<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#define</span> MAXSOR 1000 <span class="c">/* a sor maximális hossza */</span>
+
+<span class="k">int</span> getline(<span class="k">char</span> sor[ ], <span class="k">int</span> max);
+<span class="k">int</span> strindex(<span class="k">char</span> forras[ ], <span class="k">char</span> keresett[ ]);
+<span class="k">char</span> minta[ ] = &quot;dal&quot;; <span class="c">/* a keresett minta */</span>
+
+<span class="c">/* megkeresi a mintát tartalmazó összes sort */</span>
+main( )
+{
+   <span class="k">char</span> sor[MAXSOR];
+   <span class="k">int</span> talalt = 0;
+
+   <span class="k">while</span> (getline(sor, MAXSOR) &gt; 0)
+      <span class="k">if</span> (strindex(sor, minta) &gt;= 0) { 
+         <span class="f">printf</span>(&quot;%s&quot;, sor);
+         talalt++;
+      }
+   <span class="k">return</span> talalt;
+}
+<span class="c">/* getline: egy sort beolvas s-be és megadja a hosszát */</span>
+<span class="k">int</span> getline(<span class="k">char</span> s[], <span class="k">int</span> hatar)
+{
+   <span class="k">int</span> c, i;
+
+   i = 0;
+   <span class="k">while</span> (--hatar &gt; 0 &amp;&amp; (c = <span class="f">getchar</span>( )) != <span class="f">EOF</span>
+            &amp;&amp; c != '<span class="e">\n</span>')
+      s[i++] = c;
+   s[i] = '<span class="e">\0</span>';
+   <span class="k">return</span> i;
+}
+<span class="c">/* strindex: visszaadja t indexét s-ben, ill.
+-1-et, ha a keresett minta nincs a sorban */</span>
+<span class="k">int</span> strindex(<span class="k">char</span> s[ ], <span class="k">char</span> t[ ])
+{
+   <span class="k">int</span> i, j, k;
+
+   <span class="k">for</span> (i = 0; s[i] != '<span class="e">\0</span>'; i++) {
+      <span class="k">for</span> (j = i, k = 0; t[k] != '<span class="e">\0</span>' &amp;&amp; s[j] == t[k];
+            j++, k++)
+         ;
+   <span class="k">if</span> (k &gt; 0 &amp;&amp; t[k] == '<span class="e">\0</span>')
+      <span class="k">return</span> i;
+   }
+<span class="k">return</span> -1;
+}
+</pre>
+  A programban használt összes függvény definíciója
+  <pre class="defit">
+visszatérési-típus függvénynév (argumentumdeklarációk)
+{
+   deklarációk és utasítások
+}
+</pre>
+  alakú, és a definícióból egyes részek hiányozhatnak. A legegyszerűbb és legrövidebb függvény a<br />
+  <pre>
+dummy( ) { }
+</pre>
+  amely nem csinál semmit és nem ad vissza értéket. Az ilyen üres (semmit nem csináló) függvény beépítése a programba gyakran hasznos, ha a későbbi programfejlesztéshez le akarjuk foglalni egy függvény helyét. Ha a definícióból hiányzik a visszatérési típus, akkor a rendszer az <span class="k">int</span> alapfeltételezéssel él.
+  <p> A program lényegében nem más, mint változók és függvények definícióinak halmaza. A függvények közötti információcsere a függvény argumentumain és visszatérési értékén, valamint a külső változókon keresztül jön létre. A függvények a program forrásállományában tetszőleges sorrendben helyezkedhetnek el, és a forrásprogram több állományra bontható, de egy függvény nem vágható szét két forrásállományba.</p>
+  <p> A hívott függvény a hívó függvénynek a <span class="k">return</span> utasítással adhat vissza értéket. A <span class="k">return</span> utasítást tetszőleges kifejezés követheti. Általános alakja:<br />
+  </p>
+  <pre>
+<span class="k">return</span> <span class="defit">kifejezés</span>;
+</pre>
+  Ha szükséges, akkor a <i>kifejezés</i> típusa a visszatérési típusra konvertálódik. Gyakran a kifejezést zárójelbe tesszük, de ez opcionális.
+  <p> A hívó függvénynek jogában áll figyelmen kívül hagyni a visszatérési értéket, sőt nem kötelező a <span class="k">return</span> utáni kifejezés sem. Ez utóbbi esetben a hívott függvény nem ad vissza értéket a hívó függvénynek. A vezérlés akkor is érték nélkül tér vissza a hívó függvényhez, ha a végrehajtás kilép a függvényből, elérve a függvény végét jelző jobb oldali kapcsos zárójelet. Az ilyen kilépés nem tilos, de valószínűleg valamilyen hibát jelez, ha a függvény értéket ad vissza az egyik helyről és nem ad értéket a másik helyről történő visszatéréskor. Ha egy függvénynek nincs visszatérési értéke, akkor a (formálisan kapott) visszatérési érték határozatlan („szemét”).</p>
+  <p> Az előbbi mintakereső programunk a <span class="m">main</span>-ből való kilépéskor egy állapotjelzést ad, ami a találatok száma. Ezt az értéket a programot hívó környezet tetszőleges célra használhatja.</p>
+  <p> A több forrásállományba szétosztott C programok fordítási és betöltési folyamata rendszertől függő. Például a UNIX operációs rendszer alatt az <a href="01.html">1. fejezetben</a> már említett <span class="m">cc</span> paranccsal lehet a C programok fordítását vezérelni. Tegyük fel, hogy a három függvényünk három különböző állományban van, amelyek neve <span class="m">main.c</span>, <span class="m">getline.c</span> és <span class="m">strindex.c</span>. Ekkor a<br />
+  </p>
+  <pre>
+cc main.c getline.c strindex.c
+</pre>
+  parancs lefordítja a három forrásállományt, létrehozva ezzel a <span class="m">main.o</span>, <span class="m">getline.o</span> és <span class="m">strindex.o</span> tárgykódú állományokat, majd ezekből összeszerkeszti az <span class="m">a.out</span> nevű végrehajtható programállományt. Ha a fordítás közben hiba volt, pl. a <span class="m">main.c</span> állományban, akkor a hiba kijavítása után a <span class="m">main.c</span> állomány újra fordítható és összeszerkeszthető a korábban kapott tárgykódú állományokkal. Ez a<br />
+  <pre>
+cc main.c getline.o strindex.o
+</pre>
+  paranccsal érhető el. A <span class="m">cc</span> parancs a forráskódú és tárgykódú állományokat a <span class="m">.c</span> és <span class="m">.o</span> névkiterjesztések alapján különbözteti meg.<br />
+  <br />
+  <p><b>4.1.</b> gyakorlat. Írjuk meg az <span class="m">strindex(s, t)</span> függvénynek azt a változatát, amely a <span class="m">t</span> minta <span class="m">s</span>-beli legutolsó előfordulásának indexével, vagy ha <span class="m">t</span> nem található meg <span class="m">s</span>-ben, akkor <span class="m">-1</span>-gyel tér vissza!<br />
+    <br />
+  </p>
+  <h3><a name="4.2." id="4.2."></a>4.2. Nem egész értékkel visszatérő függvények<br />
+  </h3>
+  A korábban bemutatott példaprogramok függvényei egész típusú értékkel vagy érték nélkül (<span class="k">void</span> típus) tértek vissza. Mi van akkor, ha a függvénynek más típusú értékkel kell visszatérni? Számos matematikai függvény, mint az <span class="f">sqrt</span>, <span class="f">sin</span>, <span class="f">cos</span> stb. <span class="k">double</span> típusú értékkel tér vissza, más speciális függvények esetén más a visszatérési típus. Ennek megvalósítását bemutatandó írjuk meg az <span class="m">atof(s)</span> függvényt, amely az <span class="m">s</span> karaktertömbben megadott adatot kétszeres pontosságú lebegőpontos számmá alakítja. Az <span class="m">atof</span> a <a href="02.html">2.</a> és a <a href="03.html">3. fejezetben</a>, különböző változatokban bemutatott <span class="m">atoi</span> függvény kiterjesztése: lehetővé teszi az opcionálisan megadott előjel és tizedespont kezelését, valamint az egész, ill. törtrész megléte vagy hiánya esetén is használható. Mindezek ellenére ez a program nem egy minden igényt kielégítő bemeneti konverziós eljárás, egy ilyen eljárás megírása több helyet igényelne. A standard könyvtár tartalmaz egy <span class="f">atof</span> függvényt az <span class="m">&lt;stdlib.h&gt;</span> headerben.<br />
+  <pre>
+<span class="d">#include</span> &lt;ctype.h&gt;
+
+<span class="c">/* atof: az s karaktersorozat duplapontos számmá alakítása */</span>
+<span class="k">double</span> atof(<span class="k">char</span> s[ ])
+{
+   <span class="k">double</span> val, power;
+   <span class="k">int</span> i, sign;
+
+   <span class="k">for</span> (i = 0; <span class="f">isspace</span>(s[i]); i++)
+      <span class="c">/* az üres helyek átugrása */</span>
+      ;
+   sign = (s[i] == '-') ? -1 : 1;
+   <span class="k">if</span> (s[i] == '+' || s[i] == '-')
+      i++ ;
+   <span class="k">for</span> (val = 0.0; <span class="f">isdigit</span> (s[i]); i++)
+      val = 10.0 * val + (s[i] - '0');
+   <span class="k">if</span> (s[i] == '.')
+      i++;
+   <span class="k">for</span> (power = 1.0; <span class="f">isdigit</span>(s[i]); i++) {
+      val = 10.0 * val + (s[i] - '0');
+      power *= 10.0; 
+   }
+   <span class="k">return</span> sign * val / power;
+}
+</pre>
+  Először is az <span class="m">atof</span> függvénynek deklarálnia kell a visszatérési típusát, mivel az most nem <span class="k">int</span>. A visszatérési típus megadása a függvény neve előtt történik. Másodszor, és ez legalább ilyen fontos, a hívó eljárással is tudatni kell, hogy az <span class="m">atof</span> visszatérési értéke nem <span class="k">int</span> típusú. Ennek egyik módja, hogy az <span class="m">atof</span> függvényt explicit módon deklaráljuk a hívó eljárásban. A deklaráció módját a következő primitív kalkulátorprogramon keresztül mutatjuk be. A program soronként egy-egy számot olvas be, amely előtt előjel is lehet, majd a számokat összeadja és az eredményt minden adatbeolvasás után kiírja.<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#define</span> MAXSOR 100
+
+<span class="c">/* primitív kalkulátorprogram */</span>
+main( )
+{
+   <span class="k">double</span> sum, atof(<span class="k">char</span> [ ]);
+   <span class="k">char</span> sor[MAXSOR];
+   <span class="k">int</span> getline(<span class="k">char</span> sor[ ], <span class="k">int</span> max);
+
+   sum = 0;
+
+   <span class="k">while</span> (getline(sor, MAXSOR) &gt; 0)
+
+      <span class="f">printf</span>(&quot;<span class="e">\t</span>%g<span class="e">\n</span>&quot;, sum += atof(sor));
+   <span class="k">return</span> 0; 
+}
+</pre>
+  A<br />
+  <pre>
+<span class="k">double</span> sum, atof(<span class="k">char</span>[ ]);
+</pre>
+  deklaráció azt mondja ki, hogy a <span class="m">sum</span> egy <span class="k">double</span> típusú változó, valamint az <span class="m">atof</span> függvénynek egyetlen, <span class="k">char</span>[ ] típusú argumentuma van és visszatérési értéke is <span class="k">double</span> típusú.
+  <p> Az <span class="m">atof</span> függvényt következetesen, egymással összhangban kell deklarálni és definiálni. Ha egyetlen forrásállományon belül ellentmondás van az <span class="m">atof</span> típusa és a <span class="m">main</span>-beli hívásának típusa között, akkor ezt a hibát a fordítóprogram észreveszi és jelzi. De ha az <span class="m">atof</span> függvényt önállóan fordítjuk le (és legtöbbször így van), akkor a hiba nem derül ki. Az <span class="m">atof</span> visszatér a <span class="k">double</span> típusú eredménnyel, amit a <span class="m">main</span> <span class="k">int</span> típusúként kezel és ez értelmetlen eredményre vezet.</p>
+  <p> Az elmondottak alapján látszik, hogy a deklaráció és a definíció összhangjára vonatkozó szabályt komolyan kell venni. A típusillesztési hiba főképp olyankor fordul elő, ha nincs függvényprototípus, és a függvény a kifejezésbeli első előfordulásakor, implicit módon van deklarálva. Ilyen pl. a<br />
+  </p>
+  <pre>
+sum += atof(sor);
+</pre>
+  kifejezés. Ha egy korábban még nem deklarált név fordul elő egy kifejezésben és a nevet bal oldali kerek zárójel követi, akkor arról a rendszer a programkörnyezet alapján feltételezi, hogy függvény és a kifejezés megfelelő részét a függvény deklarációjának tekinti. A fordítóprogram ugyancsak feltételezi, hogy az így deklarált függvény egész típusú (<span class="k">int</span>) visszatérési értéket ad, viszont semmit sem tételez fel az argumentumairól. Abban az esetben, ha a függvénydeklarációban nincs argumentum, mint pl. a<br />
+  <pre>
+<span class="k">double</span> atof( );
+</pre>
+  deklarációban, akkor a fordítóprogram ismét nem tételez fel semmit az argumentumokról és a teljes paraméter-ellenőrzést kikapcsolja. Ennek az a célja, hogy az üres paraméterlistájú deklarációkat tartalmazó régebbi programok is lefordíthatok legyenek az új fordítóprogramokkal. Mindezek ellenére az üres paraméterlista nyújtotta lehetőségeket ne alkalmazzuk az új programokban.
+  <p> Ha adott a megfelelően deklarált <span class="m">atof</span> függvény, akkor azt felhasználva egyszerűen megírhatjuk az <span class="m">atoi</span> függvényt is (amely egy karaktersorozatot <span class="k">int</span> típusú számmá alakít):<br />
+  </p>
+  <pre>
+<span class="c">/* atoi: az s karaktersorozat egésszé alakítása */</span>
+<span class="k">int</span> atoi(<span class="k">char</span> s[ ])
+{
+   <span class="k">double</span> atof(<span class="k">char</span> s[ ]);
+   <span class="k">return</span> (<span class="k">int</span>) atof(s);
+}
+</pre>
+  Figyeljük meg a deklarációk szerkezetét és a <span class="k">return</span> utasítást! A<br />
+  <pre>
+<span class="k">return</span> <span class="defit">kifejezés</span>;
+</pre>
+  utasításban a kifejezés értéke a visszatéréskor automatikusan <span class="k">int</span> típusúvá konvertálódik, ami az <span class="m">atoi</span> típusa. Így az automatikus konverzió a <span class="k">double</span> típusú <span class="m">atof</span> értéke esetén is létrejön, ha az megjelenik a <span class="k">return</span> utasításban. Ezért a visszatéréskor megadott <span class="k">int</span> típuskijelölés felesleges, bár a fordítóprogram figyeli és felhasználja. A kényszerített típuskijelölést csak azért használtuk, hogy elkerüljük a fordítóprogram bármiféle figyelmeztető jelzését.<br />
+  <br />
+  <p><b>4.2.</b> gyakorlat. Bővítsük ki az <span class="m">atof</span> függvényt úgy, hogy az pl. az <span class="m">123.45e-6</span> alakú tudományos jelölésmódot is kezelni tudja! A bemeneti karaktersorozat a kitevő jelzésére <span class="m">e</span> vagy <span class="m">E</span> karaktereket használhatja és utána előjeles kitevő következhet.<br />
+    <br />
+  </p>
+  <h3><a name="4.3." id="4.3."></a>4.3. A külső változók<br />
+  </h3>
+  A C nyelvű program külső objektumok – változók vagy függvények – halmaza. A külső jelzőt a belső ellentéteként használjuk, ami a függvények belsejében definiált argumentumok és változók leírására alkalmas. A külső változókat a függvényen kívül definiáljuk, így elvileg több függvényben is felhasználhatók. A függvények maguk mindig külső típusúak, mivel a C nyelv nem engedi meg, hogy egy függvény belsejében újabb függvényt definiáljunk. Alapértelmezés szerint a külső változókra vagy függvényekre azonos néven való hivatkozás (még akkor is, ha külön fordított függvényből történik) mindig azonos dolgot jelent (a szabvány ezt a tulajdonságot <i>külső csatolásnak, external linkage</i>-nek nevezi). Ilyen értelemben a C külső változói analógak a FORTRAN <span class="m">COMMON</span> változóival vagy a Pascal programok legkülső blokkjában használt változókkal. A későbbiekben majd látni fogjuk, hogy hogyan lehet olyan külső változókat és függvényeket definiálni, amelyek csak egyetlen forrásállományban láthatók.
+  <p> Mivel a külső változók globálisan hozzáférhetők, jól használhatók a függvények argumentumai és visszatérési értékei helyett, azaz a függvények közti adatforgalomban. Bármely függvény hozzáférhet egy külső változóhoz a neve alapján, ha az valahol ezen a néven deklarálva volt.</p>
+  <p> Ha a függvények közötti adatforgalomhoz sok változó kell, akkor a külső változók használata kényelmesebb és hatékonyabb, mint a hosszú argumentumlista. De ahogy már az <a href="01.html">1. fejezetben</a> is említettük, ezt a megállapítást fenntartással kell fogadnunk, mivel a sok külső változó rontja a program áttekinthetőségét, és túl sok (sokszor nem kívánt) adatkapcsolathoz vezet.</p>
+  <p> A külső változók a nagyobb hatáskörük és élettartamuk miatt is hasznosak. Az automatikus változók csak a függvény belsejében léteznek: létrejönnek a függvénybe való belépéskor és megszűnnek a kilépéskor. A külső változók állandóak, értékük az egyik függvényhívástól a másikig megmarad. Így ha két függvény azonos adathalmazzal dolgozik (de egyik sem hívja a másikat), akkor kényelmesebb a közös adathalmazt külső változóként használni az argumentumlistán keresztüli körülményes adatátadás helyett.</p>
+  <p> Az eddigi gondolatokat vizsgáljuk meg egy nagyobb példán keresztül. A feladat egy kalkulátorprogram írása, amely már végrehajtja a <span class="m">+, -, *, /</span> alapműveleteket is. Az egyszerű megvalósíthatóság miatt a kalkulátor használja a fordított lengyel jelölésmódot a szokásos infix jelölésmód helyett. (Néhány zsebszámológép, valamint a Forth és Postcript programnyelvek is a fordított lengyel jelölésmódot használják.)</p>
+  <p> A fordított lengyel jelölésmódban az operátor az operandusok után következik. Az infix formában írt<br />
+  </p>
+  <pre>
+(1-2)*(4+5)
+</pre>
+  kifejezés fordított lengyel jelölésmódban<br />
+  <pre>
+12-45+*
+</pre>
+  tehát így kell majd a programnak beadni. A zárójelekre nincs szükség, a jelölésmód teljesen egyértelmű mindaddig, amíg tudjuk, hogy az egyes operátorok hány operandust várnak.
+  <p> A fordított lengyel jelölésmódot feldolgozó program megvalósítása nagyon egyszerű: az egyes operandusokat egy verembe tesszük, majd ha megérkezett az operátor, akkor a megfelelő számú (általában kettő) operandust kivesszük a veremből, alkalmazzuk rájuk az operátort, majd az eredményt visszatesszük a verembe. A fenti példában először <span class="m">1</span>, majd <span class="m">2</span> kerül a verembe, amiből az első az operátor megérkezése után helyettesítődik az eredménnyel (<span class="m">-1</span>-gyel). Ezután a <span class="m">4</span> és <span class="m">5</span> kerül a verembe, amit az összegükkel (<span class="m">9</span>-cel) helyettesítünk. Most a veremben <span class="m">-1</span> és <span class="m">9</span> van, amit a szorzatukkal helyettesítünk. A műveletsor befejeztével a verem tetején lévő értéket kivesszük és kiírjuk. A műveletsor a bemenetre adott sor végét elérve zárul.</p>
+  <p> A program lényegében egy ciklusból áll, amely végrehajtja az egyes operátorokkal és operandusokkal a megfelelő műveleteket. A program váza:<br />
+  </p>
+  <pre>
+<span class="k">while</span> (<span class="defit">a következő operandus vagy operátor nem állományvége-jel</span>)
+   <span class="k">if</span>(<span class="defit">szám</span>)
+      <span class="defit">tedd a verembe</span>
+   <span class="k">else</span> <span class="k">if</span> (<span class="defit">operátor</span>)
+      <span class="defit">vedd elő az operandusokat</span>
+      <span class="defit">hajtsd végre a műveletet</span>
+      <span class="defit">tedd az eredményt a verembe</span>
+   <span class="k">else</span> <span class="k">if</span> (<span class="defit">újsor-jel</span>)
+      <span class="defit">vedd ki a verem tetején lévő elemet és írd ki</span>
+   <span class="k">else</span>
+      <span class="defit">hiba</span>
+</pre>
+  Egy adat verembe helyezése (push) és kivétele (pop) nagyon egyszerű művelet, de a hibafigyeléssel és hiba utáni helyreállítással már viszonylag hosszú programrészt ad, amit a programon belül többször ismételni kellene, ezért inkább önálló függvényként valósítottuk meg azokat. Szintén önálló függvény a következő bemeneti operátor vagy operandus beolvasását végző rész.
+  <p> Egy fontos programtervezési kérdésről még nem döntöttünk: hol legyen a verem és melyik eljárások kezelhetik közvetlenül a vermet. Egy lehetőség, hogy a verem a <span class="m">main</span> függvényben van, és az adatokat a verembe író, ill. onnan kiolvasó eljárásoknak paraméterként átadjuk a vermet, ill. az aktuális veremmutatót. A <span class="m">main</span> függvénynek nem kell tudni a vermet vezérlő változókról, csak a verembe írást, ill. az onnan való olvasást kell vezérelnie. Ezért úgy döntöttünk, hogy a verem és minden vele kapcsolatos információ legyen külső változó, amelyhez csak a push és pop függvény férhet hozzá, a <span class="m">main</span> nem.</p>
+  <p> Ezt az elgondolást utasítások formájában egyszerűen felírhatjuk. Arra gondolva, hogy a program egyetlen forrásállományban van, a szerkezete valahogy így fog kinézni:<br />
+  </p>
+  <pre>
+<span class="d">#include</span><span class="defit">-ok</span>
+<span class="d">#define</span><span class="defit">-ok</span>
+
+<span class="defit">a</span> main <span class="defit">függvény-deklarációi</span>
+
+main ( ) {...}
+
+<span class="defit">külső változók a</span> push <span class="defit">és</span> pop <span class="defit">számára</span>
+
+<span class="k">void</span> push(<span class="k">double</span> f) {...}
+<span class="k">double</span> pop(<span class="k">void</span>) {...}
+
+<span class="k">int</span> getop(<span class="k">char</span> s[]) {...}
+
+<span class="defit">a</span> getop <span class="defit">függvény által hívott eljárások</span>
+</pre>
+  A későbbiekben majd megmutatjuk, hogy a program hogyan osztható két vagy több forrásállományra.
+  <p> A <span class="m">main</span> függvény ciklusa egy nagy <span class="k">switch</span> utasítást tartalmaz, amely az operandusok és operátorok jellege szerint választja szét a feladatokat. Ez talán tipikusabb alkalmazása a <span class="k">switch</span> utasításnak; mint a <a href="03.html#3.4.">3.4. pontban</a> bemutatott példa.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;stdlib.h&gt; <span class="c">/* az atof miatt */</span>
+
+<span class="d">#define</span> MAXOP 100 <span class="c">/* az operandus vagy operátor
+                  max. hossza */</span>
+<span class="d">#define</span> SZAM '0' <span class="c">/* jelzi, hogy számot talált */</span>
+
+<span class="k">int</span> getop(<span class="k">char</span>[ ]);
+<span class="k">void</span> push (<span class="k">double</span>);
+<span class="k">double</span> pop(<span class="k">void</span>);
+
+<span class="c">/*fordított lengyel jelölésmóddal működő kalkulátorprogram */</span>
+main( )
+{
+   <span class="k">int</span> tipus;
+   <span class="k">double</span> op2;
+   <span class="k">char</span> s[MAXOP];
+
+   <span class="k">while</span> ((tipus = getop(s)) != <span class="f">EOF</span>) {
+      <span class="k">switch</span> (tipus) {
+         <span class="k">case</span> SZAM:
+            push(<span class="f">atof</span>(s));
+            <span class="k">break</span>;
+         <span class="k">case</span> '+':
+            push(pop( ) + pop ( ));
+            <span class="k">break</span>;
+         <span class="k">case</span> '*':
+            push (pop( ) * pop( ));
+            <span class="k">break</span>;
+         <span class="k">case</span> '-':
+            op2 = pop( );
+            push(pop( ) - op2);
+            <span class="k">break</span>;
+         <span class="k">case</span> '/':
+            op2 = pop( );
+            <span class="k">if</span>(op2 != 0.0)
+               push(pop( ) / op2);
+            <span class="k">else</span>
+               <span class="f">printf</span>(&quot;Hiba: osztás nullával<span class="e">\n</span>&quot;);
+            <span class="k">break</span>;
+         <span class="k">case</span> '<span class="e">\n</span>':
+            <span class="f">printf</span>(&quot;<span class="e">\t</span>%.8g<span class="e">\n</span>&quot;, pop( ));
+            <span class="k">break</span>;
+         <span class="k">default</span>:
+            <span class="f">printf</span> (&quot;Hiba: ismeretlen parancs %s<span class="e">\n</span>&quot;, s);
+            <span class="k">break</span>;
+      }
+   }
+   <span class="k">return</span> 0;
+}
+</pre>
+  Mivel a <span class="m">+</span> és <span class="m">*</span> kommutatív operátorok, ezért mindegy, hogy a veremből kivett operandusokat milyen sorrendben dolgozzuk fel, viszont a <span class="m">-</span> és <span class="m">/</span> esetén a bal és jobb oldali operandusok nem cserélhetők fel. Ezért a<br />
+  <pre>
+push(pop( ) - pop( )); <span class="c">/* HIBÁS!*/</span>
+</pre>
+  utasításban a <span class="m">pop</span> hívási sorrendek definiálatlanok lehetnek. A művelet helyes sorrendben való végrehajtása érdekében a veremből elsőnek kivett értéket egy átmeneti tárolóba kell helyezni, mint a <span class="m">main</span> is teszi. A verembe írást, ill. az onnan való olvasást végző függvények:<br />
+  <pre>
+<span class="d">#define</span> MAXVAL 100
+<span class="c">/* a val tömbbel kialakított verem max. mélysége */</span>
+
+<span class="k">int</span> sp = 0; <span class="c">/* a verem következő szabad helye */</span>
+<span class="k">double</span> val[MAXVAL]; <span class="c">/* a verem tömbje */</span>
+
+<span class="c">/* push: f értékét a verembe teszi */</span>
+<span class="k">void</span> push(<span class="k">double</span> f)
+{
+   <span class="k">if</span>(sp &lt; MAXVAL)
+      val[sp++] = f;
+   <span class="k">else</span>
+      <span class="f">printf</span>(&quot;Hiba: a verem megtelt, nem írható ki %g<span class="e">\n</span>&quot;, f);
+}
+
+<span class="c">/* pop: kiolvas egy adatot a veremből és visszatér az értékkel */</span>
+<span class="k">double</span> pop(<span class="k">void</span>)
+{
+   <span class="k">if</span> (sp &gt; 0)
+      <span class="k">return</span> val[--sp];
+   <span class="k">else</span> {
+      <span class="f">printf</span> ( &quot;Hiba: a verem üres<span class="e">\n</span>&quot;);
+      <span class="k">return</span> 0.0;
+   }
+}
+</pre>
+  Egy változó külső tárolási osztályú, ha bármelyik függvényen kívül definiáljuk. így a verem és a verem indexe, amelyet a <span class="m">push</span> és a <span class="m">pop</span> közösen használ, ezeken függvényeken kívül lett definiálva. Mivel a definiálás a <span class="m">push</span> és a <span class="m">pop</span> függvényekkel együtt történt, a verem változóihoz a <span class="m">main</span> közvetlenül nem fér hozzá, azok a számára láthatatlanok.
+  <p> Most nézzük a <span class="m">getop</span> függvényt, amelynek feladata a következő operátor vagy operandus előkészítése. A megoldás egyszerű: olvasni kell a bemeneti karaktersorozatot és a szóközöket, ill. tabulátorokat át kell ugrani. Ha a következő értékes karakter nem számjegy vagy tizedespont, akkor annak értékével vissza kell térni a hívó függvénybe, egyébként pedig össze kell gyűjteni a számjegyeket (amelyek között előfordulhat a tizedespont is) és vissza kell térni a <span class="m">SZAM</span> értékkel, ami jelzi, hogy egy szám van összegyűjtve. A teljes <span class="m">getop</span> függvény:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;ctype.h&gt;
+
+<span class="k">int</span> getch(<span class="k">void</span>);
+<span class="k">void</span> ungetch(<span class="k">int</span>);
+
+<span class="c">/*getop: megadja a következő operátort
+vagy számot (operandust) */</span>
+<span class="k">int</span> getop(<span class="k">char</span> s[ ])
+{
+   <span class="k">int</span> i, c;
+
+   <span class="k">while</span>((s[0] = c = getch( )) == ' ' || c == '<span class="e">\t</span>')
+      ;
+   s[1] = '<span class="e">\0</span>';
+   <span class="k">if</span> (!<span class="f">isdigit</span>(c) &amp;&amp; c != '.')
+      <span class="k">return</span> c; <span class="c">/* nem szám */</span>
+   i = 0;
+   <span class="k">if</span>(<span class="f">isdigit</span>(c)) <span class="c">/*összegyűjti az egészrészt*/</span>
+      <span class="k">while</span>(<span class="f">isdigit</span>(s[++i] = c = getch( )))
+         ;
+   <span class="k">if</span> (c == '.') <span class="c">/* összegyűjti a törtrészt */</span>
+      <span class="k">while</span>(<span class="f">isdigit</span>(s[++i] = c = getch()))
+         ;
+   s[i] ='<span class="e">\0</span>';
+
+   <span class="k">if</span>(c != <span class="f">EOF</span>)
+      ungetch(c);
+   <span class="k">return</span> SZAM;
+}
+</pre>
+  Mit csinál a <span class="m">getch</span> és <span class="m">ungetch</span> függvény? Gyakran a programban nem lehet megállapítani, hogy mikor olvastunk eleget a bemenetről, csak ha már túl sokat olvastunk. Itt egy ilyen eset, amikor a számokat gyűjtjük össze: amíg az első nem szám karaktert meg nem találtuk, addig a szám még nem teljes. De amikor a program beolvassa az első nem szám karaktert, akkor már túlfutott az olvasással, erre a karakterre még nincs felkészülve.
+  <p> A probléma megoldható, ha lehetőségünk van a feleslegesen beolvasott karaktert „nem beolvasottá” tenni. Így, ha a program bármikor egy karakterrel többet olvasott, akkor ezt a karaktert „visszateheti” és a fennmaradó karaktersorozat úgy viselkedik, mintha ezt a karaktert soha nem olvastuk volna be. Szerencsére a „nem beolvasottá” tétel egyszerűen szimulálható egy együttműködő függvénypárral. A <span class="m">getch</span> fogja szolgáltatni a vizsgálathoz a következő bejövő karaktert, az <span class="m">ungetch</span> pedig elvégzi a karakter „visszaírását” a bemenetre, így a következő <span class="m">getch</span> hívás ismét ezt a karaktert veszi elő.</p>
+  <p> A két függvény együttműködése nagyon egyszerű: az <span class="m">ungetch</span> a „visszaírandó” karaktert a két függvény által közösen használt pufferba (karakteres tömbbe) helyezi. A <span class="m">getch</span> ebből a pufferből olvas, ha van benne valami és hívja a <span class="f">getchar</span> függvényt, ha a puffer üres. Az aktuális karakter pufferbeli helye egy indexváltozóval adható meg.</p>
+  <p> Mivel a puffert és az indexváltozót a <span class="m">getch</span> és az <span class="m">ungetch</span> közösen használja és értéküket a két hívás között is meg kell tartani, ezért a két függvényre nézve külső változók. A <span class="m">getch</span> és <span class="m">ungetch</span> függvények, valamint a közös változók:<br />
+  </p>
+  <pre>
+<span class="d">#define</span> BUFSIZE 100
+
+<span class="k">char</span> buf[BUFSIZE]; <span class="c">/*az ungetch puffere */</span>
+<span class="k">int</span> bufp = 0; <span class="c">/* a puffer következő szabad helye */</span>
+
+<span class="k">int</span> getch(<span class="k">void</span>) <span class="c">   /* a következő (esetleg korábban
+                  visszaírt) karakter bevétele */</span> 
+{
+   <span class="k">return</span> (bufp &gt; 0) ? buf[--bufp] : <span class="f">getchar</span>( ); 
+}
+
+<span class="k">void</span> ungetch(<span class="k">int</span> c) <span class="c">/* visszaír egy karaktert a bemenetre */</span> 
+{
+   <span class="k">if</span>(bufp &gt;= BUFSIZE)
+      <span class="f">printf</span>(&quot;ungetch: puffertúlcsordulás<span class="e">\n</span>&quot;);
+   <span class="k">else</span>
+      buf[bufp++] = c;
+}
+</pre>
+  A standard könyvtárban is található egy <span class="f">ungetc</span> nevű függvény, amely egyetlen karaktert „ír vissza” a bemenetre. Erre a <a href="07.html">7. fejezetben</a> még visszatérünk. A példánkban egy karakteres puffer helyett egy tömböt használtunk, ami sokkal általanosabb megközelítése a problémának.<br />
+  <br />
+  <p><b>4.3.</b> gyakorlat. Adott a kalkulátorprogram váza. Bővítsük ezt ki a modulus (<span class="m">%</span>) operátorral és gondoskodjunk a negatív számok (egyoperandusú <span class="m">-</span>) kezeléséről!</p>
+  <p><b>4.4.</b> gyakorlat. Bővítsük a programot új parancsokkal! Az egyik parancs írja ki a verem tetején lévő elemet anélkül, hogy az a veremből eltűnne, a másik cserélje meg a verem tetején lévő két elemet, a harmadik készítsen másolatot a verem tetején lévő elemről, a negyedik pedig törölje a vermet.</p>
+  <p> <b>4.5.</b> gyakorlat. Tegyük lehetővé, hogy a kalkulátorprogramunk hozzáférjen olyan könyvtári függvényekhez, mint <span class="f">sin</span>, <span class="f">exp</span> és <span class="f">pow</span>. Ezek a függvények a <span class="m">&lt;math.h&gt;</span> headerben vannak, aminek a leírása a <a href="b.html#B4.">B. Függelék 4. pontjában</a> található.</p>
+  <p> <b>4.6.</b> gyakorlat. Bővítsük úgy a programot, hogy képes legyen változók kezelésére is. (Ezt könnyű megvalósítani, ha 26 változót engedünk meg, és minden változó nevéül az angol ábécé egy betűjét választjuk.) Rendeljünk egy változót a legutoljára kiírt értékhez is.</p>
+  <p> <b>4.7.</b> gyakorlat. Írjunk <span class="m">ungets(s)</span> néven függvényt, amely egy teljes karaktersorozatot „visszaír” a bemenetre! Az <span class="m">ungets</span> függvény kezelje közvetlenül a <span class="m">buf</span> és <span class="m">bufp</span> változókat, vagy egyszerűen csak használja az <span class="m">ungetch</span> függvényt?</p>
+  <p> <b>4.8.</b> gyakorlat. Tegyük fel, hogy soha nem akarunk egynél több karaktert „visszaírni” a bemenetre. Módosítsuk ennek megfelelően a <span class="m">getch</span> és <span class="m">ungetch</span> függvényeket!</p>
+  <p> <b>4.9.</b> gyakorlat. A példában használt <span class="m">getch</span> és <span class="m">ungetch</span> függvények nem kezelik helyesen a „visszaírt” <span class="f">EOF</span> karaktert. Határozzuk meg a helyes <span class="f">EOF</span> kezelés módját és egészítsük ki ezzel a programtervet!</p>
+  <p> <b>4.10.</b> gyakorlat. Tegyük fel, hogy egy <span class="m">getline</span> függvénnyel a teljes bemeneti sort egyszerre olvassuk be. Ekkor nincs szükség a <span class="m">getch</span> és <span class="m">ungetch</span> függvényekre. Gondoljuk át, hogy ez hogyan módosítja a kalkulátorprogramot!<br />
+    <br />
+  </p>
+  <h3><a name="4.4." id="4.4."></a>4.4. Az érvényességi tartomány szabályai<br />
+  </h3>
+  A C nyelvű programban szereplő összes függvényt és külső változó definíciót nem szükséges egyszerre fordítani, a forrásprogram több független állományban tartható és a korábban már lefordított részek a könyvtárból betölthetők. Ezzel kapcsolatban a következő fontos kérdések merülnek fel:<br />
+  <ul>
+    <li>Hogyan lehet a deklarációkat úgy megírni, hogy a változók a fordítás során megfelelően deklaráltak legyenek?</li>
+    <li>Hogyan kell a deklarációkat elrendezni ahhoz, hogy betöltéskor a program minden része megfelelően kapcsolódjon egymáshoz?</li>
+    <li>Hogyan szervezzük meg a deklarációkat, hogy mindegyik csak egyszer forduljon elő?</li>
+    <li>Hogyan lehet a külső változókat inicializálni?</li>
+  </ul>
+  A kérdések megválaszolásához szervezzük át a kalkulátorprogramunkat úgy, hogy az több forrásállományban legyen. Gyakorlatilag a kalkulátorprogram túl kicsi ahhoz, hogy értelmesen részekre bontsuk, de mégis jól mutatja a teendőket nagyobb programok esetén.
+  <p> Egy név érvényességi tartománya (hatásköre) az a programrész, amiben a nevet használhatjuk. A függvény kezdetén deklarált automatikus változó érvényességi tartománya az a függvény, amelyben deklarálták. A helyi (lokális) változók neve más függvényben ismeretlen. Ugyanez igaz a függvények paramétereire is, mivel ezek valójában helyi változók.</p>
+  <p> A külső változók vagy függvények érvényességi tartománya a deklaráció helyén kezdődik és az éppen fordított forrásállomány végéig tart. Például, ha a <span class="m">main</span>, <span class="m">sp</span>, <span class="m">val</span>, <span class="m">push</span> és <span class="m">pop</span> egy állományban van definiálva az előbbi sorrendben, vagyis<br />
+  </p>
+  <pre>
+main( ) {...}
+
+<span class="k">int</span> sp = 0;
+
+<span class="k">double</span> val[MAXVAL];
+
+<span class="k">void</span> push(<span class="k">double</span> f) {...}
+
+<span class="k">double</span> pop(<span class="k">void</span>) {...}
+</pre>
+  akkor az <span class="m">sp</span> és <span class="m">val</span> változók egyszerűen, a nevük megadásával használhatók a <span class="m">push</span> és <span class="m">pop</span> függvényekben, külön deklarációra nincs szükség. Ugyanakkor ezek a nevek (a <span class="m">push</span> és <span class="m">pop</span> függvénynevekkel együtt) ismeretlenek a <span class="m">main</span> számára.
+  <p> Másrészről, ha egy külső változóra a definiálása előtt hivatkozunk, vagy más forrásállományban definiáltuk, mint ahol használjuk, akkor kötelező az <span class="k">extern</span> deklaráció.</p>
+  <p> Fontos, hogy megkülönböztessük a külső változók <i>deklarálását</i> és <i>definiálását</i>. A deklaráció a változó tulajdonságait (elsősorban a típusát) írja le, a definíció viszont ezenkívül még tárterületet is rendel hozzá. Ha az<br />
+  </p>
+  <pre>
+<span class="k">int</span> sp;
+<span class="k">double</span> val[MAXVAL];
+</pre>
+  sorok bármely függvényen kívül jelennek meg, akkor <i>definiálják</i> az <span class="m">sp</span> és <span class="m">val</span> külső változókat, tárterületet rendelnek hozzájuk és a forrásállomány további része számára deklarációként is működnek. Másrészt az<br />
+  <pre>
+<span class="k">extern</span> <span class="k">int</span> sp;
+<span class="k">extern</span> <span class="k">double</span> val[ ];
+</pre>
+  sorok a forrásállomány további része számára <i>deklarálják</i>, hogy <span class="m">sp</span> <span class="k">int</span> típusú és hogy <span class="m">val</span> <span class="k">double</span> típusú tömb (amelynek méretét máshol adjuk meg), de nem rendelnek tárterületet ezekhez a változókhoz.
+  <p> A külső változókat csak a forrásállományok egyikében kell <i>definiálni</i>, a többi állományban csak <span class="k">extern</span> deklaráció van, amelyen keresztül ezek a változók elérhetők. (A definíciót tartalmazó állományban is lehet <span class="k">extern</span> deklaráció.) A tömbök méretét a definícióban kell megadni, de opcionálisan szerepelhet az <span class="k">extern</span> deklarációban is.</p>
+  <p> A külső változók inicializálása csak a definícióval együtt történhet.</p>
+  <p> Bár nem nagyon valószínű, de tegyük fel, hogy a <span class="m">push</span> és <span class="m">pop</span> függvényeket az egyik forrásállományban definiáltuk és inicializáltuk. Ekkor az összekapcsolásukhoz az alábbi definíciók és deklarációk szükségesek:<br />
+  </p>
+  <pre>
+<span class="defit">Az 1. állományban:</span>
+   <span class="k">extern</span> <span class="k">int</span> sp;
+   <span class="k">extern</span> <span class="k">double</span> val[ ];
+   <span class="k">void</span> push(<span class="k">double</span> f) {...}
+   <span class="k">double</span> pop(<span class="k">void</span>) {...}
+
+<span class="defit">A 2. állományban:</span>
+   <span class="k">int</span> sp = 0;
+   <span class="k">double</span> val[MAXVAL];
+</pre>
+  Mivel az <i>1. állományban</i> az <span class="k">extern</span> deklarációk a függvénydefiníciókon kívül vannak, ezért a teljes <i>1. állomány</i> számára elegendő ez a deklaráció. Ugyanez a szervezés szükséges akkor is, ha az <span class="m">sp</span> és <span class="m">val</span> definícióját egy állományban megelőzi a rájuk való hivatkozás.<br />
+  <br />
+  <h3><a name="4.5." id="4.5."></a>4.5. A header állományok<br />
+  </h3>
+  Most ismét foglalkozzunk a kalkulátorprogramunk több állományba osztásával, mintha az egyes részek sokkal nagyobbak lennének. A <span class="m">main</span> függvény menne a <span class="m">main.c</span> nevű állományba; a <span class="m">push</span>, <span class="m">pop</span> és a változóik egy másik, <span class="m">stack.c</span> nevű állományba; a <span class="m">getop</span> a <span class="m">getop.c</span> nevű állományba; végül a <span class="m">getch</span> és <span class="m">ungetch</span> a negyedik, <span class="m">getch.c</span> nevű állományba.
+  <p> Azért választottuk szét az egyes részeket egymástól, mert egy tényleges programban is külön lefordított könyvtárakat használunk.</p>
+  <p> Most már csak egy nehézséget kell megoldanunk: a definíciók és deklarációk szétosztását az egyes állományok között. Amennyire csak lehetséges, igyekszünk a definíciókat és deklarációkat centralizálni, hogy csak egy példányt kelljen karbantartani és figyelemmel kísérni. Ennek megfelelően ezt a közös definíciós-deklarációs részt egy <span class="m">calc.h</span> nevű <i>header állományba</i> helyezzük és szükség esetén <span class="m">include</span> utasítással hozzáfűzzük a programhoz. (A <span class="d">#include</span> utasítást a <a href="04.html#4.11.">4.11. pontban</a> tárgyaljuk részletesen.) Az így létrejövő programszerkezet látható a 96. oldalon.<br />
+    <br />
+  </p>
+  <table style="font-family:Courier New; font-size: 12pt; color: #000000;" width="600">
+    <tr>
+      <td></td>
+      <td valign="top"><div align="center"> calc.h<br />
+          <br />
+        </div>
+        <div style="border:solid #000000 2px; text-align:left"> <span class="d">#define</span>&nbsp;SZAM&nbsp;'0'<br />
+          <span class="k">void</span>&nbsp;push(<span class="k">double</span>);<br />
+          <span class="k">double</span>&nbsp;pop(<span class="k">void</span>);<br />
+          <span class="k">int</span>&nbsp;getop(<span class="k">char</span>[]);<br />
+          <span class="k">int</span>&nbsp;getch(<span class="k">void</span>);<br />
+          <span class="k">void</span>&nbsp;ungetch(<span class="k">int</span>);<br />
+        </div>
+        <br />
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td valign="top"><div align="center"> main.c<br />
+          <br />
+        </div>
+        <div style="border:solid #000000 2px; text-align:left"> <span class="d">#include</span>&nbsp;&lt;stdio.h&gt;<br />
+          <span class="d">#include</span>&nbsp;&lt;stdlib.h&gt;<br />
+          <span class="d">#include</span>&nbsp;&quot;calc.h&quot;<br />
+          <span class="d">#define</span>&nbsp;MAXOP&nbsp;100<br />
+          main()&nbsp;{<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          }<br />
+        </div></td>
+      <td valign="top"><div align="center"> getop.c<br />
+          <br />
+        </div>
+        <div style="border:solid #000000 2px; text-align:left"> <span class="d">#include</span>&nbsp;&lt;stdio.h&gt;<br />
+          <span class="d">#include</span>&nbsp;&lt;ctype.h&gt;<br />
+          <span class="d">#include</span>&nbsp;&quot;calc.h&quot;<br />
+          getop()&nbsp;{<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          }<br />
+        </div></td>
+      <td valign="top"><div align="center"> stack.c<br />
+          <br />
+        </div>
+        <div style="border:solid #000000 2px; text-align:left"> <span class="d">#include</span>&nbsp;&lt;stdio.h&gt;<br />
+          <span class="d">#include</span>&nbsp;&quot;calc.h&quot;<br />
+          <span class="d">#define</span>&nbsp;MAXVAL&nbsp;100<br />
+          <span class="k">int</span>&nbsp;sp&nbsp;=&nbsp;0;<br />
+          <span class="k">double</span>&nbsp;val[MAXVAL];<br />
+          <span class="k">void</span>&nbsp;push(<span class="k">double</span>)&nbsp;{<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          }<br />
+          <span class="k">double</span>&nbsp;push(<span class="k">void</span>)&nbsp;{<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          }<br />
+        </div></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td valign="top"><div align="center"> getch.c<br />
+          <br />
+        </div>
+        <div style="border:solid #000000 2px; text-align:left"> <span class="d">#include</span>&nbsp;&lt;stdio.h&gt;<br />
+          <span class="d">#define</span>&nbsp;BUFSIZE&nbsp;100<br />
+          <span class="k">char</span>&nbsp;buf[BUFSIZE];<br />
+          <span class="k">int</span>&nbsp;bufp&nbsp;=&nbsp;0;<br />
+          <span class="k">int</span>&nbsp;getch(<span class="k">void</span>)&nbsp;{<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          }<br />
+          <span class="k">void</span> ungetch(<span class="k">int</span>)&nbsp;{<br />
+          &nbsp;&nbsp;&nbsp;...<br />
+          }<br />
+        </div></td>
+      <td></td>
+    </tr>
+  </table>
+  <br />
+  Az a kívánság, hogy minden egyes programrész csak a feladatához szükséges információkhoz férjen hozzá, valamint a gyakorlati megvalósíthatóság között kompromisszumos döntést kell hozni, de mindenesetre több header állomány kézbentartása nagyon nehéz feladat. Közepes programméretekig valószínűleg a legjobb megoldás, ha egyetlen header állományba foglalunk mindent, ami az egyes programrészek együttműködéséhez szükséges, és csak nagyon nagy programoknál alkalmazunk bonyolultabb szervezést és több header állományt.<br />
+  <br />
+  <h3><a name="4.6." id="4.6."></a>4.6. A statikus változók<br />
+  </h3>
+  A <span class="m">stack.c</span> állomány <span class="m">sp</span> és <span class="m">val</span> változói, valamint a <span class="m">getch.c</span> állomány <span class="m">buf</span> és <span class="m">bufp</span> változói az egyes forrásállományokban lévő függvények saját változói, és bárhol máshol nem hozzáférhetők. A külső változókra vagy függvényekre alkalmazott <span class="k">static</span> deklaráció az objektum érvényességi tartományát az éppen fordított forrásállomány fennmaradó részére korlátozza. Így a külső változók <span class="k">static</span> deklarálása jó lehetőséget nyújt az <span class="m">ungetch-getch</span> függvénypár <span class="m">buf</span> és <span class="m">bufp</span> változóihoz hasonló változók (amelyeknek a közös használat miatt külső változóknak kell lenni) más függvények vagy programrészek előli elrejtésére (pl. a fenti példában a <span class="m">getch</span> vagy <span class="m">ungetch</span> felhasználói nem látják a <span class="m">buf</span> vagy <span class="m">bufp</span> változókat, bár azok külső változók).
+  <p> A statikus tárolási osztály a normális deklaráció elé írt <span class="k">static</span> szóval deklarálható. Ha, mint a következő példában, a két változó és a két függvény egyetlen forrásállományból lesz lefordítva, akkor semmilyen más függvény nem férhet a <span class="m">buf</span> és <span class="m">bufp</span> változókhoz, és neveik ugyanezen program más forrásállományaiban szabadon használhatók.<br />
+  </p>
+  <pre>
+<span class="k">static</span> <span class="k">char</span> buf[BUFSIZE]; <span class="c">  /* az ungetch puffere */</span>
+<span class="k">static</span> <span class="k">int</span> bufp = 0; <span class="c">    /*a következő szabad hely a
+                           pufferban */</span>
+<span class="k">int</span> getch(<span class="k">void</span>) { ... }
+<span class="k">void</span> ungetch(<span class="k">int</span> c) { ... }
+</pre>
+  A <span class="m">push</span> és <span class="m">pop</span> veremkezelési műveletei ugyanígy elrejthetők, ha az <span class="m">sp</span> és <span class="m">val</span> változókat <span class="k">static</span> típusúnak deklaráljuk.
+  <p> A külső statikus deklarációt leggyakrabban változókra alkalmazzák, de függvényekre is használható. Normális körülmények közt a függvények nevei globálisak, a teljes program számára ismertek. Ha egy függvényt <span class="k">static</span> tárolási osztályúnak deklarálunk, akkor a neve a deklarációt tartalmazó forrásállományon kívül nem ismert.</p>
+  <p> A statikus tárolási osztály a belső változókra is alkalmazható. A belső statikus változók a megfelelő függvényre nézve lokálisak, csakúgy, mint az automatikus változók, de ellentétben azokkal állandóan megmaradnak (az automatikus változók a függvény hívásakor jönnek létre és a függvényből visszatérve megszűnnek). Ez azt jelenti, hogy a belső <span class="k">static</span> deklarálású változók a függvény saját, állandó tárolóhelyei lehetnek.<br />
+    <br />
+  </p>
+  <p><b>4.11.</b> gyakorlat. Módosítsuk a <span class="m">getop</span> függvényt úgy, hogy ne kelljen használnia az <span class="m">ungetch</span> függvényt! Segítség: használjunk belső statikus változót!<br />
+    <br />
+  </p>
+  <h3><a name="4.7." id="4.7."></a>4.7. Regiszterváltozók<br />
+  </h3>
+  A <span class="k">register</span> deklaráció azt tudatja a fordítóprogrammal, hogy az így deklarált változót nagyon gyakran fogjuk használni. Az elképzelés az, hogy a <span class="k">register</span> deklarálású változót a számítógép regiszterébe helyezzük, ami kisebb méretű és gyorsabb programot eredményez. A fordítóprogramnak lehetősége van figyelmen kívül hagyni a deklarációt. A <span class="k">register</span> deklaráció általános alakja:<br />
+  <pre>
+<span class="k">register</span> <span class="k">int</span> x;
+<span class="k">register</span> <span class="k">char</span> c;
+</pre>
+  A <span class="k">register</span> tárolási osztály csak automatikus változókra és függvények formális paramétereire írható elő. Ez utóbbi eset<br />
+  <pre>
+f(<span class="k">register</span> <span class="k">unsigned</span> m, <span class="k">register</span> <span class="k">long</span> n)
+{
+   <span class="k">register</span> <span class="k">int</span> i;
+   ...
+}
+</pre>
+  módon valósítható meg.
+  <p> A gyakorlatban a regiszterváltozókra az alkalmazott hardver miatt megszorítások érvényesek. Egy függvényen belül csak néhány változó lehet regiszteres és csak bizonyos típusú változók. A felesleges <span class="k">register</span> deklarációk nem okoznak problémát, mivel a felesleges számú vagy nem megengedett típusú változók deklarálásából a <span class="k">register</span> szó törlődik. További megszorítás, hogy nem hivatkozhatunk a regiszterváltozó címére (ezzel a kérdéssel az <a href="05.html">5. fejezetben</a> még foglalkozunk), függetlenül attól, hogy aktuálisan egy regiszterben helyezkedik-e el vagy sem. A regiszterváltozókra vonatkozó specialitások és korlátozások gépről gépre változnak.<br />
+    <br />
+  </p>
+  <h3><a name="4.8." id="4.8."></a>4.8. Blokkstruktúra<br />
+  </h3>
+  A Pascalhoz vagy hasonló nyelvekhez viszonyítva a C nyelv nem egy blokkstrukturált nyelv, mivel a függvények nem definiálhatók más függvények belsejében. Másrészről viszont a függvények belsejében a változók blokkstrukturált módon deklarálhatók. A változó deklarációja (és vele együtt az inicializálása) <i>bármelyik</i> összetett utasítást kezdő bal oldali kapcsos zárójel után következhet, nem csak a függvény kezdetén. Az így deklarált változók rejtve maradnak a külső blokkok azonos nevű változói elől, és csak addig léteznek, amíg a vezérlés el nem jut a blokk záró, jobb oldali kapcsos zárójeléig. Például az<br />
+  <pre>
+<span class="k">if</span> (n &gt; 0) {
+   <span class="k">int</span> i; <span class="c">/* itt új i változót deklarálunk */</span>
+   <span class="k">for</span> (i = 0; i &lt; n; i++)
+      ...
+}
+</pre>
+  programrészben az <span class="m">i</span> változó érvényességi tartománya az <span class="k">if</span> utasítás igaz feltételhez tartozó ága, és nincs semmiféle kapcsolata a blokkon kívüli <span class="m">i</span> változóval. Egy adott blokkban a deklarációval együtt inicializált automatikus változó a blokkba való minden belépéskor újra inicializálódik. A <span class="k">static</span> tárolási osztályúnak deklarált változó csak a blokkba való első belépéskor inicializálódik.
+  <p> Az automatikus változók (beleértve a formális paramétereket is) szintén rejtve maradnak az azonos nevű külső változók és függvények elől. Nézzük a következő deklarációkat:<br />
+  </p>
+  <pre>
+<span class="k">int</span> x;
+<span class="k">int</span> y;
+
+f(<span class="k">double</span> x)
+{
+   <span class="k">double</span> y;
+   ...
+}
+</pre>
+  A függvény belsejében <span class="m">x</span>-re paraméterként hivatkozhatunk és <span class="k">double</span> típusú, ezzel szemben a függvényen kívül külső tárolási osztályú, <span class="k">int</span> típusú változó. Ugyanez igaz az <span class="m">y</span>-ra is.
+  <p> A bemutatott példák ellenére érdemesebb elkerülni az azonos nevű, eltérő érvényességi tartományú változónevek használatát, mivel túl nagy a hibázás lehetősége.<br />
+    <br />
+  </p>
+  <h3><a name="4.9." id="4.9."></a>4.9. Változók inicializálása<br />
+  </h3>
+  Az inicializálásról már többször beszéltünk, de mindig csak érintőlegesen, más téma kapcsán. Ebben a pontban összegezzük az inicializálás szabályait, figyelembe véve a tárolási osztályokról eddig elmondottakat.
+  <p> Explicit inicializálás hiányában a külső és statikus változók kezdeti értéke garantáltan nulla lesz, az automatikus és regiszterváltozók kezdeti értéke viszont határozatlan.</p>
+  <p> Skaláris változók a definíciójukkal együtt inicializálhatók, a nevüket követő egyenlőségjel után írt kifejezéssel. Például:<br />
+  </p>
+  <pre>
+<span class="k">int</span> x = 1;
+<span class="k">char</span> aposztrof = '<span class="e">\'</span>';
+<span class="k">long</span> nap = 1000L * 60L * 60L * 24L;
+      <span class="c">/* egy nap hossza ms-ban */</span>
+</pre>
+  Külső és statikus változók esetén a kezdeti érték csak állandó kifejezéssel adható meg és az inicializálás csak egyszer, a program végrehajtásának kezdete előtt jön létre. Automatikus és regiszterváltozók esetén az inicializálás minden alkalommal megtörténik, amikor a vezérlés a függvényre vagy blokkra kerül.
+  <p> Automatikus vagy regiszterváltozók esetén a kezdeti érték nem csak állandó lehet, kezdeti értékként megengedett bármilyen, korábban definiált értékű változót vagy függvényhívást tartalmazó kifejezés is. Például a <a href="03.html#3.3.">3.3. pontban</a> leírt bináris kereső program inicializáló része<br />
+  </p>
+  <pre>
+<span class="k">int</span> binsearch(<span class="k">int</span> x, <span class="k">int</span> v[ ], <span class="k">int</span> n)
+{
+   <span class="k">int</span> also = 0;
+   <span class="k">int</span> felso = n - 1;
+   <span class="k">int</span> kozep;
+   ...
+}
+</pre>
+  alakban is írható az ott látott<br />
+  <pre>
+<span class="k">int</span> also, felso, kozep;
+
+also = 0;
+felso = n - 1;
+</pre>
+  alak helyett. Az automatikus változók ilyen inicializálása lényegében az értékadó utasítás rövidítéseként fogható fel. Ízlés dolga, hogy az inicializálás melyik alakját részesítjük előnyben. A könyvben általában az explicit értékadást használjuk, mivel a deklarációban elhelyezett kezdeti érték nehezebben vehető észre, a program pedig nehezebben követhető.
+  <p> Tömbök szintén inicializálhatók a deklarációjukkal együtt, a deklarációt követő egyenlőségjel után kapcsos zárójelbe írt kezdetiérték-listával. A lista egyes elemeit vessző választja el. Például a hónapokban lévő napok számát tartalmazó napok tömb az<br />
+  </p>
+  <pre>
+<span class="k">int</span> napok[ ] = {31, 28, 31, 30, 31, 30, 31,
+                31, 30, 31, 30, 31};
+</pre>
+  módon inicializálható. Ha a tömb mérete a deklarációból hiányzik, akkor a fordítóprogram a kezdeti értékek leszámolásával meghatározza a tömb hosszát (a fenti példában a tömb hossza <span class="m">12</span>).
+  <p> Ha a tömb deklarált méreténél kevesebb kezdeti értéket adunk meg, akkor a külső, statikus és automatikus tárolási osztály esetén a hiányzó elemek nulla kezdeti értéket kapnak. Hibát csak az okoz, ha a kezdeti értékek száma nagyobb, mint a tömb mérete. Más nyelvekkel ellentétben nincs mód arra, hogy egy kezdeti értéket ismétlési tényezővel több elemhez is hozzárendeljünk, vagy hogy egy tömb közbenső eleméhez kezdeti értéket rendeljünk anélkül, hogy a többi elem értéket kapna.</p>
+  <p> A karaktertömbök inicializálása speciális módon megy végbe: a hozzárendelt karaktersorozat kapcsos zárójelek és elválasztó vesszők nélkül adható meg. Például:<br />
+  </p>
+  <pre>
+<span class="k">char</span> minta[ ] = &quot;dal&quot;;
+</pre>
+  adható meg, ami a vele egyenértékű<br />
+  <pre>
+<span class="k">char</span> minta[ ] = {'d', 'a', 'l', '<span class="e">\0</span>'};
+</pre>
+  alak rövidebb változata. Ebben az esetben a tömbnek négy eleme van, a három karakter és a <span class="m">'<span class="e">\0</span>'</span> végjelzés.<br />
+  <br />
+  <h3><a name="4.10." id="4.10."></a>4.10. Rekurzió<br />
+  </h3>
+  A C nyelv függvényei rekurzívan használhatók: egy függvény közvetlenül vagy közvetetten hívhatja saját magát. Vizsgáljuk meg a számot, mint karaktersorozatot kiíró programunkat. Ahogy elmondtuk, a számjegyek rossz sorrendben keletkeznek, az alacsonyabb helyiértékű számjegy előbb áll rendelkezésünkre, mint a magasabb helyiértékű, amivel a kiírást kezdeni kellene. A probléma megoldására két lehetőség van. Az egyik, hogy a számjegyeket a keletkezésük sorrendjében egy tömbbe tároljuk, majd fordított sorrendben írjuk ki (így működött a <a href="03.html#3.6.">3.6. pontban</a> bemutatott <span class="m">itoa</span> példaprogramunk is). A másik lehetőség egy rekurzív program, amelyben a printd függvény először saját magát hívja meg, hogy feldolgozhassa a magasabb helyiértékű számjegyeket, majd utána írja csak ki az utolsó számjegyet. Ez a változat is hibás eredményt adhat a legnagyobb negatív szám esetén. A <span class="m">printd</span> függvény programja:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* printd: n szám kiírása decimális formában */</span>
+<span class="k">void</span> printd(int n)
+{
+   <span class="k">if</span> (n &lt; 0) {
+      <span class="f">putchar</span> ('-');
+      n = -n;
+   }
+   <span class="k">if</span> (n / 10)
+      printd(n/10);
+   <span class="f">putchar</span> (n % 10 + '0');
+}
+</pre>
+  Amikor egy függvény rekurzívan hívja saját magát, minden híváskor az automatikus változók új készletével kezdi a munkát. Ez az új változókészlet teljesen független a korábbi hívásokkor keletkező készletektől. Így pl. a <span class="m">printd(123)</span> esetén a <span class="m">printd</span> első hívásakor az <span class="m">n = 123</span> argumentumot kapja, amiből <span class="m">n = 12</span> argumentumot ad át a második <span class="m">printd</span> híváskor és <span class="m">n = 1</span> argumentumot a harmadik híváskor. A harmadik híváskor a <span class="m">printd</span> kiírja az <span class="m">1</span> értéket, visszatér a második hívási szintre, ahol kiírja a <span class="m">2</span> értéket, végül visszatérve az első hívási szintre kiíródik a <span class="m">3</span> érték és a folyamat befejeződik.
+  <p> Egy másik jó példa a rekurzióra a quicksort rendező algoritmus, amit C. A. R. Hoare 1962-ben dolgozott ki. Az algoritmus lényege, hogy adott egy tömb, amelynek egy elemét kiválasztjuk, a többi elemet pedig két részhalmazra osztjuk úgy, hogy az egyikbe a kiválasztott elemnél nagyobb vagy azzal egyenlő, a másikba pedig az annál kisebb elemek kerüljenek. Ezt az eljárást ezután rekurzívan alkalmazzuk a két részhalmazra. Amikor egy részhalmaz kettőnél kevesebb elemet tartalmaz, már nem szükséges tovább rendezni és leállítjuk a rekurziót.</p>
+  <p> Az itt ismertetett quicksort programunk nem a lehetséges leggyorsabb változat, de mindenesetre az egyik legegyszerűbb. A programban a részhalmazokra (résztömbökre) osztáshoz a középső elemet használjuk.<br />
+  </p>
+  <pre>
+<span class="c">/* qsort: a v[bal] ... v[jobb] tömb rendezése növekvő sorrendbe */</span>
+<span class="k">void</span> qsort(<span class="k">int</span> v[ ], <span class="k">int</span> bal, <span class="k">int</span> jobb)
+{
+   <span class="k">int</span> i, utolso;
+   <span class="k">void</span> swap(<span class="k">int</span> v[ ], <span class="k">int</span> i, <span class="k">int</span> j);
+
+   <span class="k">if</span> (bal &gt;= jobb) <span class="c">/* semmit nem csinál, ha */</span>
+      <span class="k">return</span>; <span class="c">/* kettőnél kevesebb elemből áll */</span>
+
+   swap(v, bal, (bal + jobb)/2); <span class="c">/* a kiválasztott */</span>
+   utolso = bal; <span class="c">/* elemet a v[0] helyre rakja */</span>
+
+   <span class="k">for</span> (i = bal + 1; i &lt;= jobb; i++) <span class="c">/* felbontás */</span>
+      <span class="k">if</span> (v[i] &lt; v[bal])
+         swap (v, ++utolso, i);
+
+   swap(v, bal, utolso); <span class="c">/* a kiválasztott elem helyretétele */</span>
+   qsort(v, bal, utolso-1);
+   qsort(v, utolso+1, jobb); 
+}
+</pre>
+  A felcserélő műveletet önálló, <span class="m">swap</span> nevű függvényként írtuk meg, mivel a <span class="m">qsort</span> három helyen is használja.<br />
+  <pre>
+<span class="c">/* swap: v[i] és v[j] felcserélése */</span>
+<span class="k">void</span> swap(<span class="k">int</span> v[ ], <span class="k">int</span> i, <span class="k">int</span> j)
+{
+   <span class="k">int</span> temp;
+
+   temp = v[i];
+   v[i] = v[j];
+   v[j] = temp;
+}
+</pre>
+  A standard könyvtár tartalmazza a <span class="m">qsort</span> egy általános változatát, amellyel bármilyen típusú objektumok rendezhetők.
+  <p> A rekurzióval tényleges tárterületet nem tudunk megtakarítani (csak a forrásprogram lesz rövidebb), mivel az éppen feldolgozott értékek számára egy veremtárat kell fenntartani. A rekurzív program nem is gyorsabb, viszont előnye, hogy a program szövege tömörebb és a rekurzív programot gyakran egyszerűbb megírni, ill. megérteni, mint a nem rekurzív változatot. A rekurzió különösen kényelmes a rekurzívan definiált adatstruktúrák (pl. fák) esetén, és ezzel a kérdéssel a <a href="06.html#6.5.">6.5. pontban</a> még foglalkozunk.<br />
+    <br />
+  </p>
+  <p><b>4.12.</b> gyakorlat. A <span class="m">printd</span> függvényben alkalmazott elgondolást felhasználva írjuk meg az <span class="m">itoa</span> függvény rekurzív változatát! A függvény rekurzív hívásokkal alakítson egy egész számot karaktersorozattá.</p>
+  <p> <b>4.13.</b> gyakorlat. Írjuk meg az s karaktersorozatot helyben megfordító <span class="m">reverse(s)</span> függvény rekurzív változatát!<br />
+    <br />
+  </p>
+  <h3><a name="4.11." id="4.11."></a>4.11. A C előfeldolgozó rendszer<br />
+  </h3>
+  A C nyelv a fordítás önálló első meneteként beiktatható előfeldolgozó rendszerrel bizonyos nyelvi kiterjesztéseket tesz lehetővé. A leggyakrabban használt lehetőség, hogy a fordítás során egy másik állomány tartalmát is beépíthetjük a forrásprogramunkba az <span class="d">#include</span> paranccsal és hogy a <span class="d">#define</span> paranccsal lehetőségünk van egy kulcsszót tetszőleges karaktersorozattal helyettesíteni. Ebben a pontban további lehetőségként még a feltételes fordítással és az argumentumot tartalmazó makrókkal fogunk foglalkozni.<br />
+  <br />
+  <h4>4.11.1. Állományok beépítése<br />
+  </h4>
+  Az állománybeépítés egyszerű lehetőséget kínál a <span class="d">#define</span> utasítással létrehozott definíciókból, deklarációkból és más elemekből összeállított részek kezelésére. A programban bárhol előforduló<br />
+  <pre>
+<span class="d">#include</span> <span class="defit">&quot;állománynév&quot;</span>
+</pre>
+  vagy<br />
+  <pre>
+<span class="d">#include</span> <span class="defit">&lt;állománynév&gt;</span>
+</pre>
+  alakú programsor a fordítás során kicserélődik a megadott nevű állomány tartalmával. Ha az állománynév idézőjelek között volt, akkor az adott állomány keresése ott kezdődik, ahol a rendszer a forrásprogramot megtalálta. Ha a keresett állomány ott nem található vagy a nevét csúcsos zárójelek között adtuk meg, akkor a keresés egy géptől és rendszertől függő szabály szerint állományról állományra folytatódik. Az így beépített állomány maga is tartalmazhat <span class="d">#include</span> sorokat.
+  <p> Gyakran több <span class="d">#include</span> sor van a forrásállomány elején, amely az egész program számára közös <span class="d">#define</span> utasításokat és a külső változók <span class="k">extern</span> deklarációit tartalmazó állományokat vagy a könyvtári függvények prototípus-deklarációihoz való hozzáférést lehetővé tevő header állományokat (mint pl. az <span class="m">&lt;stdio.h&gt;</span>) építi be a programba. (Szigorúan véve a headerek nem szükségképpen állományok, a kezelésük módja géptől és rendszertől függ.)</p>
+  <p> Az <span class="d">#include</span> nagy programok deklarációinak összefogására használható előnyösen. Alkalmazásával garantálható, hogy minden forrásállomány azonos definíciókat és változódeklarációkat használ, amivel kizárható néhány nagyon csúnya hiba. Természetesen, ha egy beépített állományt megváltoztatunk, akkor az összes azt felhasználó állományt újra kell fordítani.<br />
+    <br />
+  </p>
+  <h4>4.11.2. Makróhelyettesítés<br />
+  </h4>
+  Egy definíció általánosan<br />
+  <pre>
+<span class="d">#define</span> <span class="defit">név helyettesítő szöveg</span>
+</pre>
+  alakú, és hatására a makróhelyettesítés egyik legegyszerűbb formája indul el: a névvel megadott kulcsszó minden előfordulási helyére beíródik a helyettesítő szöveg. A <span class="d">#define</span> utasításban szereplő névre ugyanazok a szabályok érvényesek, mint a változók neveire, a helyettesítő szöveg pedig tetszőleges lehet. Általában a helyettesítő szöveg a sor utasítás után fennmaradó része, de hosszú definíciók több sorban is folytathatók, ha az egyes sorok végére a <span class="m">\</span> jelet írjuk. A <span class="d">#define</span> utasítással definiált név érvényességi tartománya a definíció helyétől az éppen fordított állomány végéig terjed. Egy definícióban felhasználhatunk korábbi definíciókat is. A helyettesítés csak az önálló kulcsszavakra (nevekre) vonatkozik és nem terjed ki az idézőjelek közötti karaktersorozatokra sem. Például hiába egy definiált név az, hogy <span class="m">YES</span>, nem jön létre a helyettesítés a <span class="f">printf</span><span class="m">(&quot;YES&quot;)</span> utasításban vagy a <span class="m">YESMAN</span> szövegben.
+  <p> A definícióban bármely névhez bármilyen helyettesítő szöveg hozzárendelhető. Például a<br />
+  </p>
+  <pre>
+<span class="d">#define</span> orokos <span class="k">for</span>(;;) <span class="c">/* végtelen ciklus */</span>
+</pre>
+  sor egy új szót, az <span class="m">orokos</span>-t (örökös) definiálja a végtelen ciklust előidéző <span class="k">for</span> utasításra.
+  <p> Lehetőség van argumentumot tartalmazó makrók definiálására is, így a helyettesítő szöveg a különböző makróhívásoknál más és más lesz. Példaképp definiáljuk a <span class="m">max</span> nevű makrót a következő módon:<br />
+  </p>
+  <pre>
+<span class="d">#define</span> max (A, B) ((A) &gt; (B) ? (A) : (B))
+</pre>
+  Ez a sor hasonlít egy függvényhíváshoz, de nem az, hanem a <span class="m">max</span> makrósoron belüli kifejtése, amelyben a formális paraméter (itt <span class="m">A</span> vagy <span class="m">B</span>) a megfelelő aktuális argumentummal lesz helyettesítve. Így az a programsor, hogy<br />
+  <pre>
+x = max (p + q, r + s);
+</pre>
+  azzal a sorral helyettesítődik, hogy<br />
+  <pre>
+x = ((p + q) &gt; (r + s) ? (p + q) : (r + s));
+</pre>
+  Mindaddig, amíg az argumentumokat következetesen kezeljük, a makró bármilyen adattípus esetén helyes eredményt fog adni, tehát különböző adattípusukhoz nincs szükség különböző <span class="m">max</span> makróra (szemben a függvényekkel, ahol minden adattípushoz saját függvénynek kell tartozni).
+  <p> Ha jól megfigyeljük a <span class="m">max</span> makró kifejtését, akkor észrevehetünk benne egy csapdát. A kifejezést kétszer értékeli ki, ami az inkrementáló-dekrementáló operátorok vagy adatbevitel és adatkivitel esetén hibát (mellékhatást) okoz. Például a<br />
+  </p>
+  <pre>
+max(i++, j++) <span class="c">/* Hibás!!! */</span>
+</pre>
+  sorban a kifejtés hatására a nagyobbik argumentum kétszer inkrementálódik. Ügyelnünk kell a zárójelek használatára is, mert megváltozhat a végrehajtási sorrend. Nézzük meg mi történik, amikor a<br />
+  <pre>
+<span class="d">#define</span> square(x) x * x <span class="c">/* Hibás!!! */</span>
+</pre>
+  makrót <span class="m">square(z + 1)</span> alakban hívjuk! A kifejtés után a kifejezésben az <span class="m">x</span> helyére <span class="m">z + 1</span> kerül, így a kifejezés <span class="m">z + l*z + 1</span> lesz, ami nyilvánvalóan hibás.
+  <p> Mindezek ellenére a makrók használata nagyon hasznos. Ennek jó gyakorlati példája, hogy az <span class="m">&lt;stdio.h&gt;</span> headerben a <span class="f">getchar</span> és <span class="f">putchar</span> gyakran makróként van definiálva, amivel elkerülhető, hogy futás közben minden egyes karakter feldolgozásánál egy járulékos függvényhívás következzen be. Számos függvény a <span class="m">&lt;ctype.h&gt;</span> headerben is makróként van definiálva.</p>
+  <p> A nevek korábbi definíciója megszüntethető az <span class="d">#undef</span> paranccsal, így elérhető, hogy az<br />
+  </p>
+  <pre>
+<span class="d">#undef</span> <span class="f">getchar</span>
+<span class="k">int</span> getchar(<span class="k">void</span>) { ... }
+</pre>
+  esetben a <span class="m">getchar</span> tényleg egy függvény legyen és ne a makró.
+  <p> Alapesetben a formális paramétereket nem helyettesíti az előfeldolgozó az idézőjelek közötti karaktersorozatban. Ha viszont a helyettesítő szövegben a paraméter nevét egy <span class="m">#</span> jel előzi meg, akkor a makró kifejtésében az aktuális argumentummal helyettesített paramétert tartalmazó idézőjelek közötti karaktersorozat jelenik meg. Az így kapott karaktersorozatok konkatenációval kombinálhatók. Az előbbieket jól példázza a debug funkcióhoz kidolgozott kiíró makró:<br />
+  </p>
+  <pre>
+<span class="d">#define</span> dprint(kif) <span class="f">printf</span>(#kif &quot; = %g<span class="e">\n</span>&quot;, kif)
+</pre>
+  Ha ezt a makrót a<br />
+  <pre>
+dprint(x/y);
+</pre>
+  formában hívjuk, akkor a makró a<br />
+  <pre>
+<span class="f">printf</span>(&quot;x/y&quot; &quot; = %g<span class="e">\n</span>&quot;, x/y);
+</pre>
+  alakban fejtődik ki, és a karaktersorozatok konkatenálódnak, aminek hatására a végső alakja<br />
+  <pre>
+<span class="f">printf</span>(&quot;x/y = %g<span class="e">\n</span>&quot;, x/y);<br />
+</pre>
+  lesz.
+  <p> Az aktuális argumentumon belül az<span class="m"> &quot; </span>a<span class="e"> \&quot; </span>, és a<span class="m"> \ </span>a<span class="e"> \\ </span>karakterekkel helyettesítődik, így az eredmény egy legális karakteres állandó lesz.</p>
+  <p> A C előfeldolgozó <span class="m">##</span> operátorának hatására a makrókifejtés alatt konkatenálódnak az aktuális argumentumok. Ha a helyettesítő szövegben a paraméter mellett <span class="m">##</span> van, akkor a kifejtés során a paraméter helyettesítődik az aktuális argumentummal, eltávolítódik mellőle a <span class="m">##</span> és a körülötte lévő üres hely (szóközök), majd ezután újra megvizsgálódik a teljes szöveg. A működést a <span class="m">paste</span> makrón mutatjuk be, amely konkatenálja a két argumentumát:<br />
+  </p>
+  <pre>
+<span class="d">#define</span> paste(elso, hatso) elso ## hatso
+</pre>
+  A makrót <span class="m">paste(nev, 1)</span> formában használva a <span class="m">nev1</span> szöveg generálódik.
+  <p> A <span class="m">##</span> operátor beágyazott alkalmazásának szabályai elég bonyolultak, a részleteket az <a href="a.html">A. Függelékben</a> találhatjuk.<br />
+    <br />
+  </p>
+  <p><b>4.14.</b> gyakorlat. Definiáljunk egy <span class="m">swap(t, x, y)</span> makrót, amely felcseréli a két <span class="m">t</span> típusú argumentumát! (A megoldásban segítségünkre lesz a blokkstruktúra.)<br />
+    <br />
+  </p>
+  <h4>4.11.3. Feltételes fordítás<br />
+  </h4>
+  Az előfeldolgozási folyamat közben kiértékelt feltételes utasításokkal lehetőségünk van magának az előfeldolgozásnak feltételektől függő vezérlésére is. Ennek hatására szelektíven iktathatunk be sorokat a programba, a fordítás (előfeldolgozás) során kiértékelt feltételek értékétől függően.
+  <p> Az <span class="d">#if</span> sor hatására az utána álló állandó egész kifejezés (amely nem tartalmaz <span class="k">sizeof</span>, <span class="k">enum</span> vagy kényszerített típusú [<span class="m">cast</span>] állandókat) kiértékelődik, és ha ennek értéke nem nulla, akkor a következő sorok az első <span class="d">#endif</span>, <span class="d">#elif</span> vagy <span class="d">#else</span> utasításig beépülnek a programba. (Az előfeldolgozó <span class="d">#elif</span> utasítása hasonló a C <span class="k">else</span> <span class="k">if</span> utasításához.) A <span class="m">defined (<i>név</i>)</span> kifejezés értéke <span class="m">1</span> az <span class="d">#if</span> utasításban, ha a <i>név</i> már definiálva volt, és <span class="m">0</span> különben.</p>
+  <p> Például, ha biztosak szeretnénk lenni abban, hogy a <span class="m">hdr.h</span> állomány tartalma csak egyszer, de egyszer legalább beépül a programba, akkor a <span class="m">hdr.h</span> állomány beépítési helyének környezetébe az alábbi utasításokat kell elhelyezni:<br />
+  </p>
+  <pre>
+<span class="d">#if</span> !defined(HDR)
+<span class="d">#define</span> HDR
+
+<span class="c">/* ide épül be a hdr.h tartalma */</span>
+
+<span class="d">#endif</span>
+</pre>
+  A <span class="m">hdr.h</span> első beépülése a programba definiálja a <span class="m">HDR</span> nevet, ezért a következő beépülési kísérletnél a név már definiált, így az előfeldolgozó átugorja az <span class="d">#endif</span>-ig terjedő részt. Hasonló módon lehet megakadályozni más állományok többszöri beépítését is. Ha ezt a szerkezetet következetesen használjuk, akkor az egyes header állományok saját maguk beépíthetik a számukra szükséges további header állományokat anélkül, hogy a felhasználónak bármit is tudnia kellene a headerek kapcsolatáról. Az alábbi vizsgálatsorozatban a <span class="m">SYSTEM</span> név dönti el, hogy melyik headerváltozatot kell a programba beépíteni:<br />
+  <pre>
+<span class="d">#if</span> SYSTEM == SYSV
+   <span class="d">#define</span> HDR &quot;sysv.h&quot;
+<span class="d">#elif</span> SYSTEM == BSD
+   <span class="d">#define</span> HDR &quot;bsd.h&quot;
+<span class="d">#elif</span> SYSTEM == MSDOS
+   <span class="d">#define</span> HDR &quot;msdos.h&quot;
+<span class="d">#else</span>
+   <span class="d">#define</span> HDR &quot;<span class="k">default</span>.h&quot;
+<span class="d">#endif</span>
+<span class="d">#include</span> HDR
+</pre>
+  Az <span class="d">#ifdef</span> és <span class="d">#ifndef</span> sorok speciális vizsgálatot végeznek: azt ellenőrzik, hogy az adott név definiált-e vagy sem. Ezek felhasználásával az első példát úgy is írhattuk volna hogy<br />
+  <pre>
+<span class="d">#ifndef</span> HDR
+<span class="d">#define</span> HDR
+
+<span class="c">/* ide épül be a hdr.h tartalma */</span>
+
+<span class="d">#endif</span>
+</pre>
+  <br />
+  <br />
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="03.html">3. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="05.html">5. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+</div>
+</body>
+</html>

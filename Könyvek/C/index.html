@@ -1,0 +1,398 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>KERNIGHAN-RITCHIE: A C programozási nyelv</title>
+<link href="files\krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+  <div align="center"> <img src="files/img/cover.jpg" width="300" height="429" border="0" alt="files/img/cover.jpg" /> <br />
+    <br />
+    <h3>BRIAN W. KERNIGHAN – DENNIS M. RITCHIE<br />
+    </h3>
+    <h1>A C programozási nyelv<br />
+    </h1>
+    <h3>Az ANSI szerint szabványosított változat<br />
+    </h3>
+  </div>
+  <br />
+  <br />
+  <br />
+  <div class="note">
+    <center>
+      MŰSZAKI KÖNYVKIADÓ, BUDAPEST
+    </center>
+    <br />
+    <br />
+    <br />
+    <br />
+    A könyv „A Magyar Műszaki Könyvkiadásért Alapítvány” támogatásával készült.<br />
+    Az eredeti mű:<br />
+    B. W. Kernighan – D. M. Ritchie<br />
+    The C Programming Language<br />
+    Second Edition<br />
+    Original English language edition published by<br />
+    Copyright &copy; 1988, 1978 by Bell Telephone Laboratories, Incorporated <br />
+    All Rights Reserved<br />
+    <br />
+    &copy; Hungarian translation Molnár Ervin, 1994<br />
+    &copy; Hungarian edition Műszaki Könyvkiadó<br />
+    <br />
+    ETO: 519.682 C <br />
+    ISBN 963 16 0552 3<br />
+    <br />
+    Kiadja a Műszaki Könyvkiadó<br />
+    Felelős kiadó: Bérezi Sándor ügyvezető igazgató<br />
+    Felelős szerkesztő: Molnár Ervin<br />
+    Franklin Nyomda és Kiadó Kft.<br />
+    Felelős vezető: a nyomda ügyvezető igazgatója<br />
+    Műszaki szerkesztő: Uszinger Ágnes<br />
+    A borítót tervezte: Kováts Tibor<br />
+    A könyv formátuma: B/5<br />
+    Ívterjedelme: 26,75 (A5)<br />
+    Azonossági szám: 10 220/50<br />
+    A kézirat lezárva: 1996. szeptember<br />
+    Készült az MSZ 5601:1983 és 5602:1983 szerint<br />
+  </div>
+  <br />
+  <br />
+  <center>
+    <a name="Tartalom" id="Tartalom"></a><h2>Tartalom<br />
+    </h2>
+  </center>
+  <br />
+  <h5><a href="#Előszó1">Előszó</a> az átdolgozott könyv magyar nyelvű kiadásához<br /></h5>
+  <h5><a href="#Előszó2">Előszó</a> az angol nyelvű második kiadáshoz<br /></h5>
+  <h5><a href="#Előszó3">Előszó</a> a könyv angol nyelvű első kiadásához<br /></h5>
+  <h5><a href="#Bevezetés">Bevezetés</a><br /></h5>
+  <h4><a href="files/01.html">1. FEJEZET</a>: Alapismeretek<br />
+  </h4>
+  <blockquote> <a href="files/01.html#1.1.">1.1.</a> Indulás<br />
+    <a href="files/01.html#1.2.">1.2.</a> Változók és aritmetikai kifejezések<br />
+    <a href="files/01.html#1.3.">1.3.</a> A for utasítás<br />
+    <a href="files/01.html#1.4.">1.4.</a> Szimbolikus állandók<br />
+    <a href="files/01.html#1.5.">1.5.</a> Karakteres adatok bevitele és kivitele<br />
+    <a href="files/01.html#1.6.">1.6.</a> Tömbök<br />
+    <a href="files/01.html#1.7.">1.7.</a> Függvények<br />
+    <a href="files/01.html#1.8.">1.8.</a> Argumentumok – az érték szerinti hívás<br />
+    <a href="files/01.html#1.9.">1.9.</a> Karaktertömbök<br />
+    <a href="files/01.html#1.10.">1.10.</a> A változók érvényességi tartománya és a külső változók<br />
+    <br />
+  </blockquote>
+  <h4><a href="files/02.html">2. FEJEZET</a>: Típusok, operátorok és kifejezések<br />
+  </h4>
+  <blockquote> <a href="files/02.html#2.1.">2.1.</a> Változónevek<br />
+    <a href="files/02.html#2.2.">2.2.</a> Adattípusok és méretek<br />
+    <a href="files/02.html#2.3.">2.3.</a> Állandók<br />
+    <a href="files/02.html#2.4.">2.4.</a> Deklarációk<br />
+    <a href="files/02.html#2.5.">2.5.</a> Aritmetikai operátorok<br />
+    <a href="files/02.html#2.6.">2.6.</a> Relációs és logikai operátorok<br />
+    <a href="files/02.html#2.7.">2.7.</a> Típuskonverziók<br />
+    <a href="files/02.html#2.8.">2.8.</a> Inkrementáló és dekrementáló operátorok<br />
+    <a href="files/02.html#2.9.">2.9.</a> Bitenkénti logikai operátorok<br />
+    <a href="files/02.html#2.10.">2.10.</a> Értékadó operátorok és kifejezések<br />
+    <a href="files/02.html#2.11.">2.11.</a> Feltételes kifejezések<br />
+    <a href="files/02.html#2.12.">2.12.</a> A precedencia és a kifejezés kiértékelési sorrendje<br />
+    <br />
+  </blockquote>
+  <h4><a href="files/03.html">3. FEJEZET</a>: Vezérlési szerkezetek<br />
+  </h4>
+  <blockquote> <a href="files/03.html#3.1.">3.1.</a> Utasítások és blokkok<br />
+    <a href="files/03.html#3.2.">3.2.</a> Az if-else utasítás<br />
+    <a href="files/03.html#3.3.">3.3.</a> Az else-if utasítás<br />
+    <a href="files/03.html#3.4.">3.4.</a> A switch utasítás<br />
+    <a href="files/03.html#3.5.">3.5.</a> Ciklusszervezés while és for utasítással<br />
+    <a href="files/03.html#3.6.">3.6.</a> Ciklusszervezés do-while utasítással<br />
+    <a href="files/03.html#3.7.">3.7.</a> A break és continue utasítások<br />
+    <a href="files/03.html#3.8.">3.8.</a> A goto utasítás és a címkék<br />
+  </blockquote>
+  <h4><a href="files/04.html">4. FEJEZET</a>: Függvények és a program szerkezete<br />
+  </h4>
+  <blockquote> <a href="files/04.html#4.1.">4.1.</a> A függvényekkel kapcsolatos alapfogalmak<br />
+    <a href="files/04.html#4.2.">4.2.</a> Nem egész értékkel visszatérő függvények<br />
+    <a href="files/04.html#4.3.">4.3.</a> A külső változók<br />
+    <a href="files/04.html#4.4.">4.4.</a> Az érvényességi tartomány szabályai<br />
+    <a href="files/04.html#4.5.">4.5.</a> A header állományok<br />
+    <a href="files/04.html#4.6.">4.6.</a> A statikus változók<br />
+    <a href="files/04.html#4.7.">4.7.</a> Regiszterváltozók<br />
+    <a href="files/04.html#4.8.">4.8.</a> Blokkstruktúra<br />
+    <a href="files/04.html#4.9.">4.9.</a> Változók inicializálása<br />
+    <a href="files/04.html#4.10.">4.10.</a> Rekurzió<br />
+    <a href="files/04.html#4.11.">4.11.</a> A C előfeldolgozó rendszer<br />
+    <br />
+  </blockquote>
+  <h4><a href="files/05.html">5. FEJEZET</a>: Mutatók és tömbök<br />
+  </h4>
+  <blockquote> <a href="files/05.html#5.1.">5.1.</a> Mutatók és címek<br />
+    <a href="files/05.html#5.2.">5.2.</a> Mutatók és függvényargumentumok<br />
+    <a href="files/05.html#5.3.">5.3.</a> Mutatók és tömbök<br />
+    <a href="files/05.html#5.4.">5.4.</a> A címaritmetika<br />
+    <a href="files/05.html#5.5.">5.5.</a> Karaktermutatók és függvények<br />
+    <a href="files/05.html#5.6.">5.6.</a> Mutatótömbök és mutatókat megcímző mutatók<br />
+    <a href="files/05.html#5.7.">5.7.</a> Többdimenziós tömbök<br />
+    <a href="files/05.html#5.8.">5.8.</a> Mutatótömbök inicializálása<br />
+    <a href="files/05.html#5.9.">5.9.</a> Mutatók és többdimenziós tömbök<br />
+    <a href="files/05.html#5.10.">5.10.</a> Parancssor-argumentumok<br />
+    <a href="files/05.html#5.11.">5.11.</a> Függvényeket megcímző mutatók<br />
+    <a href="files/05.html#5.12.">5.12.</a> Bonyolultabb deklarációk<br />
+    <br />
+  </blockquote>
+  <h4><a href="files/06.html">6. FEJEZET</a>: Struktúrák<br />
+  </h4>
+  <blockquote> <a href="files/06.html#6.1.">6.1.</a> Alapfogalmak<br />
+    <a href="files/06.html#6.2.">6.2.</a> Struktúrák és függvények<br />
+    <a href="files/06.html#6.3.">6.3.</a> Struktúratömbök<br />
+    <a href="files/06.html#6.4.">6.4.</a> Struktúrákat kijelölő mutatók<br />
+    <a href="files/06.html#6.5.">6.5.</a> Önhivatkozó struktúrák<br />
+    <a href="files/06.html#6.6.">6.6.</a> Keresés táblázatban<br />
+    <a href="files/06.html#6.7.">6.7.</a> A typedef utasítás<br />
+    <a href="files/06.html#6.8.">6.8.</a> Unionok<br />
+    <a href="files/06.html#6.9.">6.9.</a> Bitmezők<br />
+    <br />
+  </blockquote>
+  <h4><a href="files/07.html">7. FEJEZET</a>: Adatbevitel és adatkivitel<br />
+  </h4>
+  <blockquote> <a href="files/07.html#7.1.">7.1.</a> A standard adatbevitel és adatkivitel<br />
+    <a href="files/07.html#7.2.">7.2.</a> A formátumozott adatkivitel – a printf függvény<br />
+    <a href="files/07.html#7.3.">7.3.</a> A változó hosszúságú argumentumlisták kezelése<br />
+    <a href="files/07.html#7.4.">7.4.</a> Formátumozott adatbevitel – a scanf függvény<br />
+    <a href="files/07.html#7.5.">7.5.</a> Hozzáférés adatállományokhoz<br />
+    <a href="files/07.html#7.6.">7.6.</a> Hibakezelés – az stderr és exit függvények<br />
+    <a href="files/07.html#7.7.">7.7.</a> Szövegsorok beolvasása és kiírása<br />
+    <a href="files/07.html#7.8.">7.8.</a> További könyvtári függvények<br />
+    <br />
+  </blockquote>
+  <h4><a href="files/08.html">8. FEJEZET</a>: Kapcsolódás a UNIX operációs rendszerhez<br />
+  </h4>
+  <blockquote> <a href="files/08.html#8.1.">8.1.</a> Az állományleírók<br />
+    <a href="files/08.html#8.2.">8.2.</a> Alacsony szintű adatbevitel és adatkivitel – a read és write függvények<br />
+    <a href="files/08.html#8.3.">8.3.</a> Az open, creat, close és unlink rendszerhívások<br />
+    <a href="files/08.html#8.4.">8.4.</a> A véletlenszerű hozzáférés – az lseek függvény<br />
+    <a href="files/08.html#8.5.">8.5.</a> Példa: az fopen és getc függvények megvalósítása<br />
+    <a href="files/08.html#8.6.">8.6.</a> Példa: katalógusok kiíratása<br />
+    <a href="files/08.html#8.7.">8.7.</a> Példa: tárterület-lefoglaló program<br />
+    <br />
+  </blockquote>
+  <h4><a href="files/a.html">A. FÜGGELÉK</a>: Referencia-kézikönyv<br />
+  </h4>
+  <blockquote>
+    <h5><a href="files/a.html#A1.">A1.</a> Bevezetés<br />
+    </h5>
+    <h5><a href="files/a.html#A2.">A2.</a> Lexikális megállapodások<br />
+    </h5>
+    <blockquote> <a href="files/a.html#A2.1.">A2.1.</a> Szintaktikai egységek<br />
+      <a href="files/a.html#A2.2.">A2.2.</a> Megjegyzések<br />
+      <a href="files/a.html#A2.3.">A2.3.</a> Azonosítók<br />
+      <a href="files/a.html#A2.4.">A2.4.</a> Kulcsszavak<br />
+      <a href="files/a.html#A2.5.">A2.5.</a> Állandók<br />
+      <a href="files/a.html#A2.6.">A2.6.</a> Karaktersorozat-állandók<br />
+    </blockquote>
+    <h5><a href="files/a.html#A3.">A3.</a> A szintaxis jelölése<br />
+    </h5>
+    <h5><a href="files/a.html#A4.">A4.</a> Az azonosítók értelmezése<br />
+    </h5>
+    <blockquote> <a href="files/a.html#A4.1.">A4.1.</a> A tárolási osztály<br />
+      <a href="files/a.html#A4.2.">A4.2.</a> Alapvető adattípusok<br />
+      <a href="files/a.html#A4.3.">A4.3.</a> Származtatott adattípusok<br />
+      <a href="files/a.html#A4.4.">A4.4.</a> Típusminősítők<br />
+    </blockquote>
+    <h5><a href="files/a.html#A5.">A5.</a> Az objektumok és a balérték<br />
+    </h5>
+    <h5><a href="files/a.html#A6.">A6.</a> Típuskonverziók<br />
+    </h5>
+    <blockquote> <a href="files/a.html#A6.1.">A6.1.</a> Az egész-előléptetés<br />
+      <a href="files/a.html#A6.2.">A6.2.</a> Egészek konverziója<br />
+      <a href="files/a.html#A6.3.">A6.3.</a> Egész és lebegőpontos mennyiségek<br />
+      <a href="files/a.html#A6.4.">A6.4.</a> Lebegőpontos típusok konverziója<br />
+      <a href="files/a.html#A6.5.">A6.5.</a> Aritmetikai típuskonverziók<br />
+      <a href="files/a.html#A6.6.">A6.6.</a> Mutatók és egész mennyiségek<br />
+      <a href="files/a.html#A6.7.">A6.7.</a> A void típus<br />
+      <a href="files/a.html#A6.8.">A6.8.</a> A void típushoz tartozó mutatók<br />
+    </blockquote>
+    <h5><a href="files/a.html#A7.">A7.</a> Kifejezések<br />
+    </h5>
+    <blockquote> <a href="files/a.html#A7.1.">A7.1.</a> Mutatógenerálás<br />
+      <a href="files/a.html#A7.2.">A7.2.</a> Elsődleges kifejezések<br />
+      <a href="files/a.html#A7.3.">A7.3.</a> Utólagos kifejezések<br />
+      <a href="files/a.html#A7.4.">A7.4.</a> Egyoperandusú operátorok<br />
+      <a href="files/a.html#A7.5.">A7.5.</a> Kényszerített típusmódosító<br />
+      <a href="files/a.html#A7.6.">A7.6.</a> Multiplikatív operátorok<br />
+      <a href="files/a.html#A7.7.">A7.7.</a> Additív operátorok<br />
+      <a href="files/a.html#A7.8.">A7.8.</a> Léptető operátorok<br />
+      <a href="files/a.html#A7.9.">A7.9.</a> Relációs operátorok<br />
+      <a href="files/a.html#A7.10.">A7.10.</a> Egyenlőségoperátorok<br />
+      <a href="files/a.html#A7.11.">A7.11.</a> Bitenkénti ÉS operátor<br />
+      <a href="files/a.html#A7.12.">A7.12.</a> Bitenkénti kizáró VAGY operátor<br />
+      <a href="files/a.html#A7.13.">A7.13.</a> Bitenkénti inkluzív VAGY operátor<br />
+      <a href="files/a.html#A7.14.">A7.14.</a> Logikai ÉS operátor<br />
+      <a href="files/a.html#A7.15.">A7.15.</a> Logikai VAGY operátor<br />
+      <a href="files/a.html#A7.16.">A7.16.</a> Feltételes operátor<br />
+      <a href="files/a.html#A7.17.">A7.17.</a> Értékadó kifejezések<br />
+      <a href="files/a.html#A7.18.">A7.18.</a> Vesszőoperátor<br />
+      <a href="files/a.html#A7.19.">A7.19.</a> Állandó kifejezések<br />
+    </blockquote>
+    <h5><a href="files/a.html#A8.">A8.</a> Deklarációk<br />
+    </h5>
+    <blockquote> <a href="files/a.html#A8.1.">A8.1.</a> Tárolásiosztály-specifikátorok<br />
+      <a href="files/a.html#A8.2.">A8.2.</a> Típusspecifikátorok<br />
+      <a href="files/a.html#A8.3.">A8.3.</a> Struktúrák és unionok deklarációja<br />
+      <a href="files/a.html#A8.4.">A8.4.</a> Felsorolások<br />
+      <a href="files/a.html#A8.5.">A8.5.</a> Deklarátorok<br />
+      <a href="files/a.html#A8.6.">A8.6.</a> A deklarátorok jelentése<br />
+      <a href="files/a.html#A8.7.">A8.7.</a> Kezdetiérték-adás<br />
+      <a href="files/a.html#A8.8.">A8.8.</a> Típusnevek<br />
+      <a href="files/a.html#A8.9.">A8.9.</a> A typedef<br />
+      <a href="files/a.html#A8.10.">A8.10.</a> Típusekvivalenciák<br />
+    </blockquote>
+    <h5><a href="files/a.html#A9.">A9.</a> Utasítások<br />
+    </h5>
+    <blockquote> <a href="files/a.html#A9.1.">A9.1.</a> Címkézett utasítások<br />
+      <a href="files/a.html#A9.2.">A9.2.</a> Kifejezésutasítások<br />
+      <a href="files/a.html#A9.3.">A9.3.</a> Összetett utasítás<br />
+      <a href="files/a.html#A9.4.">A9.4.</a> Kiválasztó utasítások<br />
+      <a href="files/a.html#A9.5.">A9.5.</a> Iterációs utasítások<br />
+      <a href="files/a.html#A9.6.">A9.6.</a> Vezérlésátadó utasítások<br />
+    </blockquote>
+    <h5><a href="files/a.html#A10.">A10.</a> Külső deklarációk<br />
+    </h5>
+    <blockquote> <a href="files/a.html#A10.1.">A10.1.</a> Függvénydefiníciók<br />
+      <a href="files/a.html#A10.2.">A10.2.</a> Külső deklarációk<br />
+    </blockquote>
+    <h5><a href="files/a.html#A11.">A11.</a> Érvényességi tartomány és csatolás<br />
+    </h5>
+    <blockquote> <a href="files/a.html#A11.1.">A11.1.</a> Lexikális érvényességi tartomány.<br />
+      <a href="files/a.html#A11.2.">A11.2.</a> Csatolás<br />
+    </blockquote>
+    <h5><a href="files/a.html#A12.">A12.</a> Az előfeldolgozó rendszer<br />
+    </h5>
+    <blockquote> <a href="files/a.html#A12.1.">A12.1.</a> Trigráf karaktersorozatok<br />
+      <a href="files/a.html#A12.2.">A12.2.</a> Sorok egyesítése<br />
+      <a href="files/a.html#A12.3.">A12.3.</a> Makrók definíciója és kifejtése<br />
+      <a href="files/a.html#A12.4.">A12.4.</a> Állományok beépítése<br />
+      <a href="files/a.html#A12.5.">A12.5.</a> Feltételes fordítás<br />
+      <a href="files/a.html#A12.6.">A12.6.</a> Sorvezérlés<br />
+      <a href="files/a.html#A12.7.">A12.7.</a> Hibaüzenet generálása<br />
+      <a href="files/a.html#A12.8.">A12.8.</a> A pragma direktíva<br />
+      <a href="files/a.html#A12.9.">A12.9.</a> A nulldirektíva<br />
+      <a href="files/a.html#A12.10.">A12.10.</a> Előre definiált nevek<br />
+    </blockquote>
+    <h5><a href="files/a.html#A13.">A13.</a> A C nyelv szintaktikájának összefoglalása<br />
+    </h5>
+    <br />
+  </blockquote>
+  <h4><a href="files/b.html">B. FÜGGELÉK</a>: A standard könyvtár<br />
+  </h4>
+  <blockquote> <h5><a href="files/b.html#B1.">B1.</a> Adatbevitel és adatkivitel: az &lt;stdio.h&gt; header<br /></h5>
+    <blockquote> <a href="files/b.html#B1.1.">B1.1.</a> Állománykezelő műveletek<br />
+      <a href="files/b.html#B1.2.">B1.2.</a> Formátumozott adatkivitel<br />
+      <a href="files/b.html#B1.3.">B1.3.</a> Formátumozott adatbevitel<br />
+      <a href="files/b.html#B1.4.">B1.4.</a> Karakteres adatbevitelt és adatkivitelt kezelő függvények<br />
+      <a href="files/b.html#B1.5.">B1.5.</a> A közvetlen adatbevitel és adatkivitel függvényei<br />
+      <a href="files/b.html#B1.6.">B1.6.</a> Állományon belül pozicionáló függvények<br />
+      <a href="files/b.html#B1.7.">B1.7.</a> Hibakezelő függvények<br />
+    </blockquote>
+    <h5><a href="files/b.html#B2.">B2.</a> Karakteres vizsgálatok: a &lt;ctype.h&gt; header<br /></h5>
+    <h5><a href="files/b.html#B3.">B3.</a> Karaktersorozat-kezelő függvények: a &lt;string.h&gt; header<br /></h5>
+    <h5><a href="files/b.html#B4.">B4.</a> Matematikai függvények: a &lt;math.h&gt; header<br /></h5>
+    <h5><a href="files/b.html#B5.">B5.</a> Kiegészítő rendszerfüggvények: az &lt;stdlib.h&gt; header<br /></h5>
+    <h5><a href="files/b.html#B6.">B6.</a> Programdiagnosztika: az &lt;assert.h&gt; header<br /></h5>
+    <h5><a href="files/b.html#B7.">B7.</a> Változó hosszúságú argumentumlisták kezelése: az &lt;stdarg.h&gt; header<br /></h5>
+    <h5><a href="files/b.html#B8.">B8.</a> Nem lokális vezérlésátadások: a &lt;setjmp.h&gt; header<br /></h5>
+    <h5><a href="files/b.html#B9.">B9.</a> Jelzések kezelése: a &lt;signal.h&gt; header<br /></h5>
+    <h5><a href="files/b.html#B10.">B10.</a> Dátumot és időt kezelő függvények: a &lt;time.h&gt; header<br /></h5>
+    <h5><a href="files/b.html#B11.">B11.</a> A gépi megvalósításban definiált határértékek: a &lt;limits.h&gt; és &lt;float.h&gt; headerek<br /></h5>
+  </blockquote>
+  <br />
+  <h4><a href="files/c.html">C. FÜGGELÉK</a>: A C nyelv szabvány bevezetéséből adódó változásai<br />
+  </h4>
+  <br />
+  <hr />
+  <br />
+  <h3><a name="Előszó1" id="Előszó1"></a>Előszó az átdolgozott könyv magyar nyelvű kiadásához</h3>
+  <br />
+  A könyv fordítójával és szerkesztőjével együtt több más számítógépes szakember is Kernighan-Ritchie: A C programozási nyelv című könyvéből sajátította el a C nyelv alapjait. A sikert jelzi, hogy szakmai körökben a „C könyv” hivatkozás mindenki számára egyértelműen Kernighan és Ritchie könyvét jelentette, valamint az is, hogy az 1978-as angol kiadás után 1985-ben megjelent első magyar nyelvű kiadást még két további követte.
+  <p> A szerzők tevőleges részvételével az ANSI a C nyelvet 1989-ben szabványosította, ami – a C nyelv filozófiáját változatlanul hagyva – számos módosítással járt. A szerzők emiatt úgy döntöttek, hogy az új szabályok és lehetőségek figyelembevételével könyvüket átírják és kibővítik. Ennek a javított kiadásnak a magyar nyelvű változatát adjuk most közre. A könyv új, javított és átdolgozott kiadása valóban jobb, teljesebb és használhatóbb a korábbinál, és mindezek alapján várható, hogy újabb programozógenerációk tankönyve és munkájuk során kézikönyve lesz. <br />
+    <br />
+  </p>
+  <h3><a name="Előszó2" id="Előszó2"></a>Előszó az angol nyelvű második kiadáshoz</h3>
+  <br />
+  A számítástechnikában jelentős forradalom ment végbe <i>A C programozási nyelv</i> című könyv első, 1978-as megjelenése óta: a nagy teljesítményű számítógépek még nagyobb teljesítményűek lettek és a személyi számítógépek teljesítőképessége megközelítette az egy évtizeddel korábbi nagy számítógépekét. Az eltelt időszakban a C programozási nyelv is megváltozott – bár csak kisebb mértékben – és már lényegesen szélesebb körben használatos, mint kezdetben, amikor a UNIX operációs rendszer nyelve volt.
+  <p>A C növekvő népszerűsége, a nyelv elmúlt időszakban bekövetkezett fejlődése és a különböző C fordítók nem kellően átgondolt megvalósítása igazolja a nyelv első kiadásához képest pontosabb és korszerűbb definiálásának szükségességét. 1983-ban az Amerikai Nemzeti Szabványügyi Hivatal (ANSI) létrehozott egy bizottságot, amelynek feladata „a C nyelv egyértelmű és géptől független definiálása” volt, megtartva annak alapfilozófiáját. A munka eredménye a C nyelv ANSI szabványa lett.</p>
+  <p> A szabványos megfogalmazásra – különösen a struktúrák értékadása és kiértékelése vonatkozásában – az első kiadás már utalt, de a részletes leírást nem tartalmazta. A szabványos megfogalmazás egy új függvénydeklarálási módot tartalmaz, ami lehetővé teszi a definíciók keresztellenőrzését. Az új megfogalmazás egy standard könyvtárat is kijelöl, amelyben a be- és kivitelt kezelő függvények, a tárkezelési eljárások, karakterláncokat kezelő függvények és más, hasonló közhasznú eljárások találhatók. Az új kiadásban pontosan megadjuk az egyes nyelvi elemek viselkedését, és ezzel egy időben explicit módon megadjuk, hogy a nyelv mely vonatkozásai maradnak géptől függetlenek.</p>
+  <p> A C programozási nyelv második kiadása a C nyelvnek az ANSI szabványban definiált leírását tartalmazza. Bár megjelöltük azokat a helyeket, ahol a nyelv megváltozott, mégis a könyv megírásához kizárólag az új megfogalmazás szerinti írásmódot választottuk. A legtöbb helyen ez nem okoz számottevő eltérést és a legszembetűnőbb változást főleg a függvénydeklarációk és -definíciók mutatják. A modern C fordítóprogramok már támogatják a szabvány legtöbb jellegzetességét.</p>
+  <p> Ebben a kiadásban is megpróbáltuk megtartani az első kiadás tömörségét. A C nem egy „nagy” nyelv, nem igényel terjedelmes könyvet. Az új kiadásban igyekeztünk jobban megvilágítani a C nyelvű programozásban központi szerepet játszó kritikusabb elemeket, mint pl. a mutatókat. Az eredeti példákat szintén finomítottuk, ill. sok fejezethez új példákat is adtunk, így például a bonyolult deklarációk kezelésével foglalkozó részt programokkal bővítettük, hogy a deklarációkat szavakba öntsük, ill. a leírást példaprogramokkal illusztráljuk. Csakúgy, mint az első kiadásban, az összes példát számítógéppel olvasható formában készítettük el és közvetlenül a szövegből kiemelve ellenőriztük.</p>
+  <p> A könyv A. Függeléke a referencia-kézikönyv, ami nem maga a szabvány, de mégis összetömörítve tartalmazza a lényeget. Ez azt jelenti, hogy a programozó számára könnyen érthető, de egy fordítóprogram írásához definícióként nem használható – ezt a szerepet csak a szabvány töltheti be megfelelően. A B. Függelék a standard könyvtár jellemzőinek összefoglalása, és szintén csak programozói referenciaként használható, nem pedig az implementáláshoz. A C. Függelék az eredeti C változathoz képesti változásokat tartalmazza.</p>
+  <p> Mint azt az első kiadás előszavában már elmondtuk, a C nyelvet – megismerése után – egyre szívesebben használják. Egy évtizeddel több tapasztalat birtokában még mindig ugyanez a véleményünk. Reméljük, hogy ez a könyv segíteni fog a C nyelv tanulásánál és hatékony alkalmazásánál.</p>
+  <p> Mély hálával tartozunk a könyv második kiadásának elkészítését segítő barátainknak. Jon Bentley, Doug Gwyn, Doug McIlroy, Peter Nelson és Rob Pike a nyers kézirat majdnem minden oldalához értékes tanácsokat és javaslatokat adtak. Hálásak vagyunk Al Ahónak, Dennis Allisonnak, Joe Campbellnek, G. R. Emlinnek, Karen Fortgangnak, Allen Holubnak, Andrew Hume-nak, Dave Kristolnak, John Lindermannak, Dave Prossernek, Gene Spaffordnak és Chris Van Wyknek a kézirat gondos átolvasásáért. Szintén köszönetet szeretnénk mondani Bill Cheswicknek, Mark Kernighannek, Andy Koenignek, Robin Lake-nek, Tom Londonnak, Jim Reedsnek, Clovis Tondonak és Peter Weinbergernek az értékes javaslataikért. Dave Prosser számos, az ANSI szabvánnyal kapcsolatos részletkérdést válaszolt meg. Széles körben használtuk Bjarne Stroustrup C++ fordítóprogramját a példaprogramok helyi ellenőrzéséhez, és Dave Kristol bocsátotta rendelkezésünkre ANSI C fordítóprogramját a végső ellenőrzéshez. Rich Drechsler nagy segítséget nyújtott a könyv szedésében.</p>
+  <p> Őszintén köszönjük mindannyiuk áldozatos munkáját.<br />
+    <br />
+    <br />
+  </p>
+  <div align="right"> Brian W. Kernighan<br />
+    Dennis M. Ritchie<br />
+  </div>
+  <br />
+  <br />
+  <h3><a name="Előszó3" id="Előszó3"></a>Előszó a könyv angol nyelvű első kiadásához</h3>
+  <br />
+  A C általános célú programozási nyelv, amelyre a tömör utasításformák, a bőséges utasításkészlet és a korszerű vezérlési és adatstruktúrák jellemzőek. A C sem egy nagyon magas szintű nyelv, sem egy „nagy” nyelv, és nem egy meghatározott alkalmazási területhez készült. Mindezek ellenére a megkötések hiánya és a teljesen általános jelleg miatt a C nyelv számos, magas szintű programozási nyelvvel támogatott alkalmazási területen is kényelmesen és hatékonyan használható.
+  <p> A C nyelvet eredetileg Dennis Ritchie a DEC PDP-11 UNIX operációs rendszeréhez tervezte, és a gép operációs rendszere, a C fordítóprogram, valamint az összes UNIX alkalmazói program (beleértve ezen könyv megírásához és nyomdai előkészítéséhez használt programot is) C nyelven íródott. A PDP-11-re írt változat után más gépekhez, pl. az IBM System/370-hez, a Honeywell 6000-hez és az Interdata 8/32-höz is elkészült a C fordítóprogram. Mivel a C nyelv nem kötődik egyetlen hardverhez vagy rendszerhez sem, ezért egyszerűen írhatunk olyan programokat, amelyek változtatás nélkül futtathatók bármelyik, C fordítóprogrammal ellátott gépen.</p>
+  <p> Könyvünk elsősorban azokat a tanulókat segíti, akik a C nyelvű programozást az Alapismeretek fejezet áttanulmányozása után máris megkezdhetik. A könyv további fejezetei a C nyelv főbb elemeit ismertetik, majd egy referencia-kézikönyv következik. Az egyes témakörök ismertetése elsősorban példaprogramok megértésén, írásán és módosításán alapszik, amit jobb módszernek tartunk, mint a szabályok tételes megfogalmazását. A példaprogramok többsége teljes, önálló program és nem pedig programrészlet. Az összes példát számítógéppel olvasható formában írtuk és közvetlenül a szövegből kiemelve ellenőriztük.</p>
+  <p> A nyelv hatékony használatának ismertetésén kívül – ahol lehetséges volt – igyekeztünk a stílusos, áttekinthető programozást segítő algoritmusokat és programozási elveket is bemutatni.</p>
+  <p> A könyv nem bevezető a programozástechnikába, hanem feltételezi, hogy az olvasó tisztában van olyan alapfogalmakkal, mint változó, értékadás, ciklus, függvény. Mindezek ellenére a könyvből a kezdő is elsajátíthatja a C nyelvű programozást, de esetenként szüksége lehet gyakorlottabb kollégái segítségére.</p>
+  <p> Tapasztalataink szerint a C nyelv számos alkalmazási terület programjainak kellemes, kifejező és rugalmas megfogalmazására alkalmas. Egyszerűen megtanulható, és elsajátítása után mindenki egyre szívesebben használja. Reméljük, hogy könyvünk jól fogja segíteni a C nyelv hatékony használatát. </p>
+  <p>A könyv megírása feletti örömünkhöz nagyban hozzájárultak barátaink hasznos kritikai megjegyzései és javaslatai. Különösen hálásak vagyunk Mike Bianchinak, Jim Blue-nak, Stu Feldmannak, Doug McIlroynak, Bill Roome-nak, Bob Rosinnak és Larry Roslernek a kézirat több változatának gondos átolvasásáért. Köszönetet kell mondanunk Al Ahónak, Steve Bourne-nek, Dan Dvoraknak, Chuck Haley-nek, Debbi Haley-nek, Marion Harrisnek, Rick Holtnak, Steve Johnsonnak, John Mashey-nek, Bob Mitzének, Ralph Muhának, Peter Nelsonnak, Elliot Pinsonnak, Bili Plaugernek, Jerry Spivacknak, Ken Thompsonnak és Peter Weinbergernek a különböző munkafázisokban adott hasznos tanácsaikért. Köszönjük Mike Lesknek és Joe Ossannának a kézirat szedésénél és nyomdai előkészítésénél nyújtott segítségüket.<br />
+    <br />
+  </p>
+  <div align="right"> Brian W. Kernighan<br />
+    Dennis M. Ritchie<br />
+  </div>
+  <br />
+  <br />
+  <h3><a name="Bevezetés" id="Bevezetés"></a>Bevezetés</h3>
+  <br />
+  A C olyan általános célú programozási nyelv, ami szorosan kapcsolódik a UNIX operációs rendszerhez, mivel magát az operációs rendszert és a felügyelete alatt futó programok többségét is C nyelven írták. Mindezek ellenére a nyelv nem kötődik szorosan egyetlen operációs rendszerhez vagy számítógéphez sem. A C nyelvet rendszerprogramozási nyelvnek is szokás nevezni, mivel jól használható fordítóprogramok és operációs rendszerek írására, de ugyancsak hatékonyan használható különböző területek alkalmazói programjainak írásához.
+  <p> A C nyelv fontosabb alapötleteinek többsége a Martin Richards által kidolgozott BCPL nyelvből ered. A BCPL C nyelvre gyakorolt hatása közvetetten, a B nyelven keresztül jelentkezik, amelyet Ken Thompson 1970-ben fejlesztett ki a DEC PDP-7 számítógépének első UNIX rendszeréhez. A BCPL és a B nyelvek „típus nélküli” nyelvek, ellentétben a C nyelvvel, amelyben számos adattípus alkalmazható. A C nyelv alapadattípusai a karakterek, valamint a különböző méretű egész és lebegőpontos számok. Ezekhez járul a származtatott adattípusok hierarchiája, amelyekbe a mutatók, tömbök, struktúrák és unionok tartoznak. A kifejezések operátorokból és operandusokból állnak, és bármely kifejezés – beleértve az értékadást vagy a függvényhívást is – lehet önálló utasítás. A mutatókkal végzett műveletekhez a nyelv egy géptől független címaritmetikát használ.</p>
+  <p> A C nyelv tartalmazza a strukturált programozáshoz szükséges vezérlési szerkezeteket: az összetartozó utasításokat egyetlen csoportba foglaló utasítás-zárójelet, a döntési szerkezetet (<span class="k">if</span>-<span class="k">else</span>), a lehetséges esetek egyikének kiválasztását (<span class="k">switch</span>), az elöltesztelt ciklust (<span class="k">while</span>, <span class="k">for</span>) és a hátultesztelt ciklust (<span class="k">do</span>), valamint a ciklusból való feltétel nélküli kilépést (<span class="k">break</span>).</p>
+  <p> A függvények értéke visszatéréskor az alapadattípusok egyike, ill. struktúra, <span class="k">union</span> vagy mutató lehet. Bármely függvény rekurzívan hívható és lokális változói általában „automatikusak”, vagyis a függvény minden hívásakor újra generálódnak. A függvénydefiníciók nem ágyazhatók egymásba, de a változók blokkstruktúrában is definiálhatók. Egy C program függvényei önálló forrásállományban is elhelyezhetők és külön is fordíthatók. A függvények változói belső (internal), külső, de csak egyetlen forrásállományban ismert (external) vagy a teljes programban ismert (globális) típusúak lehetnek.</p>
+  <p> A C nyelvű programok fordításához egy előfeldolgozó menet is kapcsolódik, ami lehetővé teszi a program szövegében a makrohelyettesítést (más forrásállományokat is beleértve), valamint a feltételes fordítást.</p>
+  <p> A C viszonylag alacsony szintű nyelv. Ezt a kijelentést nem pejoratív értelemben használjuk, hanem egyszerűen csak azt akarjuk kifejezni vele, hogy a C nyelv – a legtöbb számítógéphez hasonlóan – karakterekkel, számokkal és címekkel dolgozik. Ezek az alapobjektumok az adott számítógépen értelmezett aritmetikai és logikai műveletekkel kombinálhatók és mozgathatók.</p>
+  <p> A C nyelv nem tartalmaz műveleteket az összetett objektumok (karakterláncok, halmazok, listák, tömbök) közvetlen kezelésére, vagyis hiányzanak a teljes tömb vagy karakterlánc manipulálására alkalmas műveletek, bár a struktúrák egy egységenkénti másolása megengedett. A nyelvben csak a statikus és a függvények lokális változóihoz használt verem típusú tárfoglalási lehetőség létezik, és nincs a más nyelvekben megszokott heap vagy garbage collection (a felszabaduló tárterületeket összegyűjtő és hasznosító mechanizmus) típusú dinamikus tárkezelés. Végül pedig a C nyelvben nincs adatbeviteli és adatkiviteli lehetőség, azaz nincs READ vagy WRITE utasítás, valamint nincsenek beépített állományelérési módszerek sem. Mindezeket a magasabb szintű tevékenységeket explicit függvényhívásokkal kell megvalósítani. A legtöbb C implementáció szerencsére már tartalmazza ezen tevékenységek megfelelő gyűjteményét, az ún. standard könyvtárat.</p>
+  <p> További jellemzője a C nyelvnek, hogy csak egy tevékenységi sorrendnek megfelelő vezérlő szerkezeteket – ellenőrzés, ciklus, utasításcsoport, alprogram – tartalmaz és nem teszi lehetővé a multiprogramozást, a párhuzamos műveletvégzést, a folyamatok szinkronizálását vagy a korutinok (párhuzamos rutinok) alkalmazását.</p>
+  <p> Bár ezen lehetőségek némelyikének hiánya komoly hiányosságnak tűnik („Két karakterlánc összehasonlításához egy függvény szükséges?”), a nyelv szigorú korlátozása valójában előnyös. Mivel a C viszonylag „kis” nyelv, ezért tömören leírható és gyorsan megtanulható. A programozótól elvárható, hogy ismerje és értse, valamint szabályosan használja a teljes nyelvet.</p>
+  <p> Éveken keresztül <i>A C programozási nyelv</i> első kiadásában szereplő referencia-kézikönyv volt a C nyelv definíciója. 1983-ban az Amerikai Nemzeti Szabványügyi Intézet (ANSI) létrehozott egy bizottságot a C nyelv modern, átfogó definiálására. Az így kapott definíció a C ANSI szabványa vagy röviden az ANSI C, amely 1988-ban vált teljessé. A modern fordítóprogramok ma már a szabvány előírásainak többségét támogatják.</p>
+  <p> A szabvány az eredeti referencia-kézikönyvön alapszik. A nyelv viszonylag keveset változott, mivel a szabvány megalkotásakor az egyik célkitűzés az volt, hogy a már meglévő programok többsége változatlanul használható legyen vagy ennek hiányában a fordítóprogram legalább figyelmeztessen a változásra.</p>
+  <p> A legtöbb programozó számára a legfontosabb eltérést a függvények deklarálásának és definiálásának megváltozott szintaktikája jelenti. A függvénydeklaráció új változata magában foglalja a függvény argumentumainak leírását. Ez a járulékos információ megkönnyíti a fordítóprogram számára az argumentumok hibás illesztéséből adódó hibák detektálását. Tapasztalataink szerint ez hasznos bővítése volt a nyelvnek.</p>
+  <p> Van néhány további, kisebb változás is a nyelvben: a struktúrák értékadása és kiértékelése, amelyet széles körben használtak, most a nyelv hivatalos részévé vált. A lebegőpontos számítások egyszeres (single) pontossággal is elvégezhetők. Az aritmetika tulajdonságait, különösen az előjel nélküli adattípusok esetén, tisztázta az új szabvány. Az előfeldolgozó (preprocesszor) rendszer sokkal kimunkáltabb lett. Ezen változások zöme csak kis mértékben érinti a legtöbb programozót.</p>
+  <p> A szabvány másik jelentős vonatkozása a C könyvtár kialakítása. Ez olyan függvényeket tartalmaz, amelyek többek között lehetővé teszik az operációs rendszerhez való hozzáférést (pl. állományok olvasása és írása), a formátumozott adatbevitelt és adatkivitelt, a tárkiosztás szervezését, a karakterláncokkal végzett műveleteket. Az ún. szabványos fejek (headerek) gyűjteménye lehetővé teszi a függvény- és adattípusdeklarációk egységes kezelését. Ezt a könyvtárat használó programok kompatibilis módon fognak együttműködni a befogadó rendszerrel. A könyvtár jelentős része a UNIX rendszer standard I/O könyvtárát modellezi. Ezt a könyvtárat a könyv első kiadásában már leírtuk, és széles körben használták más rendszerekhez is. A legtöbb programozó ebben sem talál sok változást.</p>
+  <p> Mivel a C nyelvben alkalmazott adattípusok és vezérlési szerkezetek alkalmazását a legtöbb számítógép közvetlenül támogatja, az önmagában zárt programok formájában megvalósított futtatási könyvtár kicsi. A standard könyvtár függvényeit csak explicit módon hívjuk, így minden további nélkül elhagyhatók, ha nincs szükség rájuk. A függvények többsége C nyelven íródott és – az operációs rendszerhez tartozó részek kivételével – más gépre is átvihető.</p>
+  <p> A C nyelv sokféle számítógép adottságaihoz illeszkedik, mégis bármilyen konkrét számítógép felépítésétől független, ezért viszonylag kis fáradsággal írhatunk hordozható, azaz változtatás nélkül különféle számítógépeken futtatható, C programokat. A szabvány a hordozhatóságot explicit módon megköveteli, és azon számítógép jellemzésére, amelyen a program futtatható egy paraméterhalmazt ír elő.</p>
+  <p> A C nem nevezhető erősen típusos nyelvnek, de a fejlődése során a típusellenőrzés erősödött. A C eredeti definíciója, eléggé el nem ítélhető módon, megengedte a mutatók és az egész típusú adatok keverését. Ezt a hiányosságot már régen kiküszöbölték, és a szabvány már megköveteli a megfelelő deklarációt és az explicit típuskonverziót, amit a jó fordítóprogramok ki is kényszerítenek. A függvénydeklaráció új formája a másik olyan lépés, ami a típusellenőrzés szigorodása irányába mutat. A fordítóprogramok a legtöbb típusillesztési hibára figyelmeztetnek és inkompatíbilis adatok között nincs automatikus típuskonverzió. Bárhogyan is nézzük, a C megtartotta az alapfilozófiáját, miszerint a programozónak csak tudnia kell, hogy mit csinál, és a C nyelv csak azt igényli, hogy a szándékát egyértelműen fogalmazza meg.</p>
+  <p> A C, hasonlóan más nyelvekhez, nem hibátlan. Némelyik művelet rossz precedencia szerint megy végbe és a szintaxis néhány helyen jobb is lehetne. Mindezek ellenére a C különböző programozási területeken rendkívül hatásos és kifejező nyelvnek bizonyult.</p>
+  <p> Végezetül még néhány szót szeretnénk szólni a könyv felépítéséről: az 1. fejezet a C nyelv főbb részeinek áttekintése, aminek az a célja, hogy az olvasó a lehető leghamarabb elkezdhesse a programok írását. Véleményünk szerint egy új nyelv megtanulásának legjobb módja, ha az adott nyelven programokat írunk. Az 1. fejezet feltételezi, hogy az olvasó rendelkezik az alapvető programozástechnikai ismeretekkel, ezért nem foglalkozunk azzal, hogy mi a számítógép vagy mi a fordítás, és nem magyarázzuk pl. az <span class="m">n=n+1</span> típusú kifejezések értelmezését sem. Ahol lehetőség volt rá, megpróbáltunk hasznos programozási módszereket bemutatni, de a könyvet nem az adatstruktúrák és algoritmusok kézikönyvének szántuk, így ahol kénytelenek voltunk választani, inkább a nyelv leírására helyeztük a hangsúlyt.</p>
+  <p> A 2-tól a 6. fejezetig terjedő részben az 1. fejezetben leírtaknál részletesebben és precízebben mutatjuk be a C nyelv egyes elemeit. A hangsúly itt is a teljes példaprogramokon van, az egyes elemeket illusztráló részletek helyett. A 2. fejezet az alapvető adattípusokkal, operátorokkal és kifejezésekkel foglalkozik. A 3. fejezet a vezérlési szerkezeteket (<span class="k">if-else</span>, <span class="k">switch</span>, <span class="k">while</span>, <span class="k">for</span> stb). tekinti át. A 4. fejezet témája a függvények és a program szerkezete, a külső változókkal és az érvényességi tartománnyal kapcsolatos problémák, valamint a több forrásállományú feldolgozás kérdései. Érintőlegesen itt tárgyaljuk az előfeldolgozó (preprocesszor) rendszert is. Az 5. fejezet a mutatókkal és a címaritmetikával, a 6. fejezet pedig a struktúrákkal és unionokkal foglalkozik.</p>
+  <p> A 7. fejezet témája az operációs rendszer felé közös csatlakozási felületet adó standard könyvtár. Ezt a könyvtárat az ANSI szabvány definiálja és minden C nyelv használatát lehetővé tevő számítógép támogatja, ezért az adatbevitelt és adatkivitelt, ill. más operációsrendszer-hívásokat tartalmazó programok változtatás nélkül átvihetők az egyik rendszerről a másikra.</p>
+  <p> A 8. fejezet a C nyelvű programok és a UNIX operációs rendszer közti kapcsolatot írja le, a hangsúlyt az adatbevitelre és -kivitelre, az állománykezelésre és a tárkiosztásra helyezve. A fejezet néhány része UNIX-specifikus, de más operációs rendszer alatt dolgozó programozók is haszonnal olvashatják, mivel megtudható belőle, hogy hogyan alakítható ki a standard könyvtár adott változata vagy hogyan érhető el a programok hordozhatósága.</p>
+  <p> Az A. Függelék a nyelv referencia-kézikönyve, és mint ilyen, tartalmazza a C nyelv szintaktikájának és szemantikájának ANSI szabvány szerinti hivatalos leírását. Ez a rész elsősorban a C fordítóprogramok írásához nyújt segítséget. A referencia-kézikönyv a nyelv definícióját nagyon tömör formában adja meg. A B. Függelék a standard könyvtárra vonatkozó ismeretek összefoglalása és szintén inkább a felhasználóknak, mint a könyvtárat megvalósítani akaróknak szól. A C. Függelék az ANSI szabvány eredeti nyelvtől való eltéréseit foglalja össze. Kétséges esetekben a szabványt és a saját fordítóprogramunkat tekintettük mérvadónak. </p>
+<br>
+<br>
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href=""></a>
+   </td>
+   <td width="200px" align="center">
+         <a href="#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="files/01.html">1. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>

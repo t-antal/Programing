@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1607427865 source:d:\szemÉlyes\egyetem\programozás\kódok\matrix\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
+1607435948 source:d:\szemelyes\egyetem\programozas\code\matrix\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+

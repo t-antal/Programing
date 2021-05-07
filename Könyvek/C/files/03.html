@@ -1,0 +1,483 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Vezérlési szerkezetek</title>
+<link href="krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<div id="main">
+
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="02.html">2. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="04.html">4. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+  <h2><a name="3. FEJEZET" id="3. FEJEZET"></a><i>3. FEJEZET:</i></h2>
+  <h2>Vezérlési szerkezetek<br />
+  </h2>
+  <br />
+  Egy nyelv vezérlésátadó utasításai az egyes műveletek végrehajtási sorrendjét határozzák meg. A korábbi példákban már találkoztunk a legfontosabb vezérlési szerkezetekkel. Ebben a fejezetben teljessé tesszük a képet és a korábbiaknál pontosabban írjuk le az egyes szerkezetek tulajdonságait.<br />
+  <br />
+  <h3><a name="3.1." id="3.1."></a>3.1. Utasítások és blokkok<br />
+  </h3>
+  Egy olyan kifejezés, mint <span class="m">x = 0</span>, <span class="m">i++</span> vagy <span class="m"><span class="f">printf</span>(...)</span> utasítássá válik, ha egy pontosvesszőt írunk utána. Pl:<br />
+  <pre>
+x = 0;
+i++;
+<span class="f">printf</span>(...);
+</pre>
+  A C nyelvben a pontosvessző az utasításlezáró jel (terminátor), szemben a Pascal nyelvvel, ahol elválasztó szerepe van.
+  <p> A <span class="m">{}</span> kapcsos zárójelekkel deklarációk és utasítások csoportját fogjuk össze egyetlen <i>összetett utasításba</i> vagy <i>blokkba</i>, ami szintaktikailag egyenértékű egyetlen utasítással. A kapcsos zárójelek használatára jó példa a függvények utasításait összefogó zárójelpár, vagy az <span class="k">if</span>, <span class="k">else</span>, <span class="k">while</span>, <span class="k">for</span>, ill. hasonló utasítások utáni utasításokat összefogó zárójelpár. A változók <i>bármelyik</i> blokk belsejében deklarálhatók, erről bővebben a <a href="04.html">4. fejezetben</a> írunk. A blokk végét jelző jobb kapcsos zárójel után soha nincs pontosvessző.<br />
+    <br />
+  </p>
+  <h3><a name="3.2." id="3.2."></a>3.2. Az if-else utasítás<br />
+  </h3>
+  Az <span class="k">if</span>-<span class="k">else</span> utasítást döntés kifejezésére használjuk. Formálisan az utasítás szintaxisa a következő:<br />
+  <pre>
+<span class="k">if</span> <span class="defit">(kifejezés)</span>
+   <span class="defit">1. utasítás</span>
+<span class="k">else</span>
+   <span class="defit">2. utasítás</span>
+</pre>
+  ahol az <span class="k">else</span> rész opcionális. Az utasítás először kiértékeli a kifejezést, és ha ennek értéke igaz (azaz a kifejezés értéke nem nulla), akkor az 1. utasítást hajtja végre. Ha a kifejezés értéke hamis (azaz nulla) és van <span class="k">else</span> rész, akkor a 2. utasítás hajtódik végre.
+  <p> Mivel az <span class="k">if</span> egyszerűen csak a kifejezés számértékét vizsgálja, ezért lehetőség van a program rövidítésére. A legnyilvánvalóbb ilyen lehetőség, ha az<br />
+  </p>
+  <pre>
+<span class="k">if</span> (<span class="defit">kifejezés</span> != 0)
+</pre>
+  helyett az<br />
+  <pre>
+<span class="k">if</span> (<span class="defit">kifejezés</span>)
+</pre>
+  utasítást írjuk. Egyes esetekben ez a forma természetes és nyilvánvaló, máskor viszont elég áttekinthetetlenné teszi a programot.<br />
+  Mivel az <span class="k">if</span>-<span class="k">else</span> szerkezet <span class="k">else</span> ága opcionális egymásba ágyazott <span class="k">if</span>-<span class="k">else</span> szerkezeteknél, hiányzó <span class="k">else</span> ágak esetén nem világos, hogy a meglévő <span class="k">else</span> ág melyik <span class="k">if</span> utasításhoz tartozik. Például az<br />
+  <pre>
+<span class="k">if</span> (n &gt; 0)
+   <span class="k">if</span> (a &gt; b)
+      z = a;
+   <span class="k">else</span>
+      z = b;
+</pre>
+  programrészletben az <span class="k">else</span> a belső <span class="k">if</span> utasításhoz tartozik, amit a programrész tagolása is mutat. Általános szabályként megfogalmazhatjuk, hogy az <span class="k">else</span> mindig a hozzá legközelebb eső, <span class="k">else</span> ág nélküli <span class="k">if</span> utasításhoz tartozik. Ha nem így szeretnénk, akkor a kívánt összerendelés kapcsos zárójelekkel érhető el, mint pl. az<br />
+  <pre>
+<span class="k">if</span> (n &gt; 0) {
+   <span class="k">if</span> (a &gt; b)
+      z = a;
+}
+<span class="k">else</span>
+   z = b;
+</pre>
+  szerkezetben. A nem egyértelmű helyzet különösen zavaró az olyan szerkezetekben, mint az<br />
+  <pre>
+<span class="k">if</span> (n &gt;= 0)
+   <span class="k">for</span> (i = 0; i &lt; n; i++)
+      <span class="k">if</span> (s[i] &gt; 0) { 
+         <span class="f">printf</span>(&quot;...&quot;);
+         <span class="k">return</span> i;
+      }
+<span class="k">else</span> <span class="c">/* ez így hibás */</span>
+   <span class="f">printf</span>(&quot;hiba: n értéke negatív<span class="e">\n</span>&quot;) ;
+</pre>
+  A tagolás egyértelműen mutatja a szándékot, de a fordítóprogram ezt nem veszi figyelembe, és minden figyelmeztető jelzés nélkül a belső <span class="k">if</span> utasításhoz kapcsolja az <span class="k">else</span> ágat. Az ilyen hibák nagyon nehezen deríthetők fel, és legegyszerűbben úgy kerülhetjük el azokat, ha a beágyazott <span class="k">if</span> utasítást kapcsos zárójelekkel határoljuk.
+  <p> Vegyük észre, hogy a <span class="m">z=a</span> értékadás után az<br />
+  </p>
+  <pre>
+<span class="k">if</span> (a &gt; b)
+   z = a;
+<span class="k">else</span>
+   z = b;
+</pre>
+  szerkezetben pontosvessző van. Ennek az az oka, hogy az <span class="k">if</span> utasítást egy újabb <i>utasítás</i> követi (a <span class="m">z=a</span>), amit pontosvesszővel kell zárni.<br />
+  <br />
+  <h3><a name="3.3." id="3.3."></a>3.3. Az else-if utasítás<br />
+  </h3>
+  Az<br />
+  <pre>
+<span class="k">if</span> (<span class="defit">kifejezés</span>)
+   <span class="defit">utasítás</span>
+<span class="k">else</span> <span class="k">if</span> (<span class="defit">kifejezés</span>)
+   <span class="defit">utasítás</span>
+<span class="k">else</span> <span class="k">if</span> (<span class="defit">kifejezés</span>)
+   <span class="defit">utasítás</span>
+<span class="k">else</span> <span class="k">if</span> (<span class="defit">kifejezés</span>)
+   <span class="defit">utasítás</span>
+.
+.
+.
+<span class="k">else</span>
+   <span class="defit">utasítás</span>
+</pre>
+  szerkezet olyan gyakran fordul elő, hogy mindenképpen megérdemli a részletesebb elemzést. Ez a szerkezet adja a többszörös döntések (elágazások) programozásának egyik legáltalánosabb lehetőségét. A szerkezet úgy működik, hogy a gép sorra kiértékeli a <i>kifejezéseket</i> és ha bármelyik ezek közül igaz, akkor végrehajtja a megfelelő <i>utasítást</i>, majd befejezi az egész vizsgáló láncot. Itt is, mint bárhol hasonló esetben, az utasítás helyén kapcsos zárójelek között elhelyezett blokk is állhat.
+  <p> A szerkezet utolsó (<span class="k">if</span> nélküli) <span class="k">else</span> ága alapértelmezés szerint a „fentiek közül egyik sem” esetet kezeli. Néha ilyenkor semmit sem kell csinálni, ezért a szerkezetet záró<br />
+  </p>
+  <pre>
+<span class="k">else</span>
+   <span class="defit">utasítás</span>
+</pre>
+  ág hiányozhat, vagy valamilyen lehetetlen eset érzékelésével hibaellenőrzésre használható.
+  <p> A következő példában egy háromirányú elágazás (döntés) látható. A feladat, hogy írjunk egy bináris keresést végző függvényt, amely egy rendezett <span class="m">v</span> tömbben megkeresi az <span class="m">x</span> értéket és megadja annak helyét (indexét). A függvény <span class="m">x</span> előfordulási helyével (ami <span class="m">0</span> és <span class="m">n-1</span> közé eshet) tér vissza, ha <span class="m">x</span> megtalálható <span class="m">v</span> elemei között és <span class="m">-1</span> értékkel, ha nem.</p>
+  <p> A bináris keresési algoritmus az <span class="m">x</span> bemeneti értéket először összehasonlítja a rendezett <span class="m">v</span> tömb középső elemével. Ha <span class="m">x</span> kisebb a középső elemnél, akkor a keresés a táblázat alsó felében, ha nem, akkor a felső felében folytatódik. Mindkét esetben a következő lépés, hogy <span class="m">x</span>-et összehasonlítjuk a táblázat megfelelő felében (alsó vagy felső) lévő középső elemmel. A két egyenlő részre osztás addig folytatódik, amíg a keresett elemet meg nem találtuk, vagy a tartomány mérete nulla nem lesz (üres tartomány). A <span class="m">binsearch</span> kereső függvénynek három argumentuma lesz, a keresett <span class="m">x</span>, a rendezett <span class="m">v</span> tömb és a tömb elemeinek <span class="m">n</span> száma. A program:<br />
+  </p>
+  <pre>
+<span class="c">/* binsearch: megkeresi x értékét a növekvő irányba
+rendezett v[0]...v[n-1] tömbben */</span>
+<span class="k">int</span> binsearch(<span class="k">int</span> x, <span class="k">int</span> v[ ], <span class="k">int</span> n)
+{
+   <span class="k">int</span> also, felso, kozep;
+
+   also = 0;
+   felso = n - 1;
+   <span class="k">while</span> (also &lt;= felso) {
+      kozep = (also + felso) / 2;
+      <span class="k">if</span> (x &lt; v[kozep])
+         felso = kozep - 1;
+      <span class="k">else</span> <span class="k">if</span> (x &gt; v[kozep])
+         also = kozep + 1;
+      <span class="k">else</span> <span class="c">/* megtalálta */</span>
+         <span class="k">return</span> kozep;
+   }
+   <span class="k">return</span> -1; <span class="c">/* nem találta meg */</span> 
+}
+</pre>
+  A program minden lépésében az alapvető döntés az, hogy <span class="m">x</span> kisebb, nagyobb vagy egyenlő a <span class="m">v[kozep]</span> középső eleménél, és ezt a döntési sort egyszerűen valósíthatjuk meg az <span class="k">else</span>-<span class="k">if</span> szerkezettel.<br />
+  <br />
+  <p><b>3.1.</b> gyakorlat. A bináris kereső program a ciklus belsejében két vizsgálatot végez, de egy is elegendő lenne (a futási idő csökkentése érdekében érdemes minden lehetséges műveletet a ciklusmagon kívül elvégezni). Írja meg a program olyan változatát, amelyben a cikluson belül csak egy vizsgálat van és hasonlítsa össze a kétféle változat futási idejét!<br />
+    <br />
+  </p>
+  <h3><a name="3.4." id="3.4."></a>3.4. A switch utasítás<br />
+  </h3>
+  A <span class="k">switch</span> utasítás is a többirányú programelágaztatás egyik eszköze. Az utasítás úgy működik, hogy összehasonlítja egy kifejezés értékét több egész értékű állandó kifejezés értékével, és az ennek megfelelő utasítást hajtja végre. A <span class="k">switch</span> utasítás általános felépítése:<br />
+  <pre>
+<span class="k">switch</span> (<span class="defit">kifejezés</span>) {
+   <span class="k">case</span> <span class="defit">állandó kifejezés: utasítások</span>
+   <span class="k">case</span> <span class="defit">állandó kifejezés: utasítások</span>
+   .
+   .
+   .
+   <span class="k">default</span>: <span class="defit">utasítások</span>
+}
+</pre>
+  Mindegyik <span class="k">case</span> ágban egy egész állandó vagy állandó értékű kifejezés található, és ha ennek értéke megegyezik a <span class="k">switch</span> utáni kifejezés értékével, akkor végrehajtódik a <span class="k">case</span> ágban elhelyezett egy vagy több utasítás. Az utolsó, <span class="k">default</span> ág akkor hajtódik végre, ha egyetlen <span class="k">case</span> ághoz tartozó feltétel sem teljesült. A <span class="k">default</span> ág opcionális, ha elhagyjuk és a <span class="k">case</span> ágak egyike sem teljesül, akkor semmi sem történik. A <span class="k">case</span> ágak és a <span class="k">default</span> ág tetszőleges sorrendben követhetik egymást.
+  <p> Az <a href="01.html">1. fejezetben</a> leírtunk egy olyan programot, amely megszámolta az egyes számjegyek, üres helyek és más karakterek előfordulását. A programban <span class="k">if</span>-<span class="k">else</span> <span class="k">if</span>-<span class="k">else</span> szerkezetet használtunk, most elkészítjük a <span class="k">switch</span> utasítással felépített változatát.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+main( ) <span class="c">/* számok, üres helyek és mások számolása */</span> 
+{
+   <span class="k">int</span> c, i, nures, nmas, nszam[10];
+
+   nures = nmas = 0;
+   <span class="k">for</span> (i = 0; i &lt; 10; i++)
+      nszam[i] = 0;
+   <span class="k">while</span> ((c = <span class="f">getchar</span>( )) != <span class="f">EOF</span>) {		
+      <span class="k">switch</span> (c) {
+         <span class="k">case</span> '0': <span class="k">case</span> '1': <span class="k">case</span> '2':	<span class="k">case</span> '3':
+         <span class="k">case</span> '4': <span class="k">case</span> '5': <span class="k">case</span> '6':	<span class="k">case</span> '7':
+         <span class="k">case</span> '8': <span class="k">case</span> '9':
+            nszam[c-'0']++;
+            <span class="k">break</span>;
+         <span class="k">case</span> ' ':
+         <span class="k">case</span> '<span class="e">\n</span>':
+         <span class="k">case</span> '<span class="e">\t</span>':
+            nures++;
+            <span class="k">break</span>;
+         <span class="k">default</span>:
+            nmas++;
+            <span class="k">break</span>;
+      }
+}
+<span class="f">printf</span>(&quot;számok =&quot;);
+<span class="k">for</span> (i = 0; i &lt; 10; i++)
+   <span class="f">printf</span>(&quot; %d&quot;, nszam[i]);
+<span class="f">printf</span>(&quot;, üres hely = %d, más = %d<span class="e">\n</span>&quot;, nures, nmas);
+<span class="k">return</span> 0;
+}
+</pre>
+  A <span class="k">break</span> utasítás hatására a vezérlés azonnal abbahagyja a további vizsgálatokat és kilép a <span class="k">switch</span> utasításból. Az egyes <span class="k">case</span> esetek címkeként viselkednek, és miután valamelyik <span class="k">case</span> ág utasításait a program végrehajtotta, a vezérlés azonnal a következő <span class="k">case</span> ágra kerül, hacsak explicit módon nem gondoskodunk a kilépésről. A <span class="k">switch</span> utasításból való kilépés legáltalánosabb módja a <span class="k">break</span> és <span class="k">return</span> utasítással való kilépés. A <span class="k">break</span> utasítás a <span class="k">while</span>, <span class="k">for</span> vagy <span class="k">do</span> utasításokkal szervezett ciklusokból való kilépésre is használható, amint erről a későbbiekben még szó lesz.
+  <p> Az egyes <span class="k">case</span> ágakon való folyamatos végighaladás nem egyértelműen előnyös. Pozitív oldala, hogy több esethez azonos tevékenység rendelhető (mint a példában, ahol az összes számjegyhez azonos tevékenységet rendeltünk). De ebből következik, hogy minden <span class="k">case</span> ágat <span class="k">break</span> utasítással kell lezárni, nehogy a vezérlés a következő <span class="k">case</span> ágra kerüljön. Az egyik <span class="k">case</span> ágról a másikra való lépkedés nem túl ésszerű, mert a program módosítása esetén a vezérlés széteshet. Azokat az eseteket leszámítva, amikor több <span class="k">case</span> ághoz közös tevékenység tartozik, érdemes kerülni az egyes <span class="k">case</span> ágak közötti átmenetet.</p>
+  <p> A program áttekinthetősége érdekében akkor is helyezzünk el <span class="k">break</span> utasítást a programban, ha az utolsó ágban vagyunk (mint a példában, ahol a <span class="k">default</span> ág is tartalmaz <span class="k">break</span> utasítást), annak ellenére, hogy ez logikailag szükségtelen. Ha valamikor később a vizsgálati sort újabb <span class="k">case</span> ágakkal egészítjük ki, ez a defenzív programozási stílus előnyös lesz.<br />
+    <br />
+  </p>
+  <p><b>3.2.</b> gyakorlat. Írjunk <span class="m">escape(s, t)</span> néven függvényt, amely a <span class="m">t</span> karaktersorozatot az <span class="m">s</span> karaktersorozat végéhez másolja és a másolás során a láthatatlan karaktereket (pl. új sor, tabulátor) látható escape sorozatokká (<span class="e">\n</span>, <span class="e">\t</span>) alakítja! A programot a <span class="k">switch</span> utasítással írjuk meg! Készítsük el a függvény inverzét is, amely az escape sorozatokat a tényleges karakterekké alakítja!<br />
+    <br />
+  </p>
+  <h3><a name="3.5." id="3.5."></a>3.5. Ciklusszervezés while és for utasítással<br />
+  </h3>
+  Korábban már találkoztunk a <span class="k">while</span> és <span class="k">for</span> utasításokkal szervezett ciklusokkal. A<br />
+  <pre>
+<span class="k">while</span> (<span class="defit">kifejezés</span>)
+   <span class="defit">utasítás</span>
+</pre>
+  szerkezetben a program először kiértékeli a <i>kifejezést</i>. Ha annak értéke nem nulla (igaz), akkor az utasítást végrehajtja, majd a kifejezés újra kiértékelődik. Ez a ciklus mindaddig folytatódik, amíg a <i>kifejezés</i> nullává (hamissá) nem válik, és ilyen esetben a program végrehajtása az utasítás utáni helyen folytatódik.
+  <p> A <span class="k">for</span> utasítás általános szerkezete:<br />
+  </p>
+  <pre>
+<span class="k">for</span> (<span class="defit">1. kifejezés; 2. kifejezés; 3. kifejezés</span>)<br />
+   <span class="defit">utasítás</span>
+</pre>
+  ami teljesen egyenértékű a <span class="k">while</span> utasítással megvalósított<br />
+  <pre>
+<span class="defit">1. kifejezés</span>
+<span class="k">while</span> (<span class="defit">2. kifejezés</span>) {
+   <span class="defit">utasítás
+   3. kifejezés</span>
+}
+</pre>
+  szerkezettel, kivéve a <span class="k">continue</span> utasítás viselkedését, amivel a <a href="03.html#3.7.">3.7. pontban</a> foglalkozunk.
+  <p> Szintaktikailag a <span class="k">for</span> utasítás mindhárom komponense kifejezés. Leggyakrabban az <i>1.</i> és <i>3. kifejezés</i> értékadás vagy függvényhívás, és a <i>2. kifejezés</i> egy relációs kifejezés. A három komponens bármelyike hiányozhat, de az őket lezáró pontosvessző kiírása ekkor is kötelező. Ha az <i>1.</i> vagy <i>3. kifejezés</i> hiányzik, akkor azokat egyszerűen elhagyjuk a <span class="k">for</span> utasítást követő zárójelből. Ha a <i>2.</i> (vizsgáló) <i>kifejezés</i> is hiányzik, akkor azt a gép úgy tekinti, hogy az állandóan igaz, és ezért a<br />
+  </p>
+  <pre>
+<span class="k">for</span> (;;) {
+   ...
+}
+</pre>
+  szerkezet egy végtelen ciklus, amiből feltehetőleg más módon (pl. <span class="k">break</span> vagy <span class="k">return</span> utasítással) kell kilépni.<br />
+  Teljesen a programozóra van bízva, hogy mikor használ <span class="k">while</span> és mikor <span class="k">for</span> utasítást a ciklusszervezéshez. Például a<br />
+  <pre>
+<span class="k">while</span> ((c = <span class="f">getchar</span>( )) == ' ' || c == '<span class="e">\n</span>' || c == '<span class="e">\t</span>')
+   ; <span class="c">/* ugorjon az üres karaktereknél */</span>
+</pre>
+  esetén nincs kezdeti értékadás vagy újbóli értékadás, ezért a <span class="k">while</span> használata elég kézenfekvő.
+  <p> A <span class="k">for</span> utasítás egyszerű inicializálás és újrainicializálás esetén előnyös, mivel a ciklust vezérlő utasítások együtt, jól látható formában, a ciklusmag tetején helyezkednek el. Ez jól látszik a<br />
+  </p>
+  <pre>
+<span class="k">for</span> (i =0; i &lt; n; i++)
+   ...
+</pre>
+  szerkezetben, ami egyébként pl. egy tömb első <span class="m">n</span> elemét feldolgozó programrész C nyelvű megfogalmazása. A programrész hasonló a FORTRAN <span class="m">DO</span> utasításával vagy a Pascal <span class="m">for</span> utasításával szervezett ciklushoz, annyi eltéréssel, hogy a C nyelvű <span class="k">for</span> ciklusban a ciklusváltozó és a ciklus határa a ciklus belsejében változtatható, valamint hogy a ciklusváltozó a ciklusból való kilépés esetén is megtartja az értékét. Mivel a <span class="k">for</span> ciklus komponensei tetszőleges kifejezések lehetnek, a <span class="k">for</span> ciklus nem korlátozódik aritmetikai léptetésekre. Stiláris szempontból mégis helytelen, ha a <span class="k">for</span> utasítás inicializáló és inkrementáló részébe a <span class="k">for</span>-tól idegen számításokat helyezünk el. Célszerű a <span class="k">for</span> utasítást kizárólag a ciklus vezérlésére fenntartani.
+  <p> Nagyobb példaként bemutatjuk a számjegyekből álló karaktersorozatot számmá alakító <span class="m">atoi</span> függvény egy másik változatát. Ez kissé általánosabb a <a href="02.html">2. fejezetben</a> bemutatott változatnál: képes a karaktersorozat bevezető üres helyeinek és a szám esetleg kiírt <span class="m">+</span> vagy <span class="m">-</span> előjelének kezelésére is. (A <a href="04.html">4. fejezetben</a> ismertetjük az <span class="m">atof</span> függvényt, ami ugyanezt a feladatot lebegőpontos számokkal valósítja meg.)</p>
+  <p> A program szerkezete a bemeneti adatok struktúráját tükrözi:<br />
+  </p>
+  <pre class="defit">
+ugord át az üres helyeket, ha vannak
+olvasd be az előjelet, ha van
+olvasd be az egészrészt és konvertáld
+</pre>
+  Minden programrész elvégzi a maga feladatát és a dolgokat „tiszta” állapotban adja át a következő programrésznek. Az egész folyamat akkor ér véget, ha beolvasódik az első olyan karakter, ami nem lehet része egy egész számnak.<br />
+  <pre>
+<span class="d">#include</span> &lt;ctype.h&gt;
+
+<span class="c">/* atoi: az s karaktersorozat számmá alakítása */</span>
+
+<span class="k">int</span> atoi(<span class="k">char</span> s[ ])
+{
+   <span class="k">int</span> i, n, sign;
+
+   <span class="k">for</span> (i = 0; <span class="f">isspace</span>(s[i]); i++)
+      ; <span class="c">/* átugorja az üres helyeket */</span>
+   sign = (s[i] == '-') ? -1 : 1;
+   <span class="k">if</span> (s[i] == '+' || s[i] == '-')
+      i++; <span class="c">/* átugorja az előjelet */</span>
+   <span class="k">for</span> (n = 0; <span class="f">isdigit</span>(s[i]); i++)
+      n = 10 * n + (s[i]-'0');
+   <span class="k">return</span> sign*n; 
+}
+</pre>
+  A standard könyvtár a sokkal részletesebben kimunkált <span class="f">strtol</span> függvényt tartalmazza, ami karaktersorozatok <span class="k">long</span> típusú egésszé alakítására használható. Ennek leírását a <a href="b.html#B5.">B. Függelék 5. pontjában</a> találjuk meg.
+  <p> A ciklus vezérlésének egy helyen tartása főleg akkor előnyös, ha több, egymásba ágyazott ciklus van. Ezt jól példázza a következő program, amely az egész számokból álló tömb elemeit rendezi a Shell-algoritmussal. A rendezési algoritmus (amelyet D. L. Shell dolgozott ki 1959-ben) alapgondolata, hogy kezdetben az egymástól távoli elemek kerülnek összehasonlításra, szemben az egyszerűbb, cserélgetős rendezési algoritmusokkal, ahol a szomszédos elemeket hasonlítják össze. Ezáltal a kezdetben meglévő nagyfokú rendezetlenség gyorsan csökken és a későbbi lépésekben kevesebb munkát kell végezni. A programban az éppen összehasonlított elemek közti távolság fokozatosan egyre csökken, és végül a rendezés az egyszerű, szomszédos elemeket cserélgető rendezésbe megy át.<br />
+  </p>
+  <pre>
+<span class="c">/* shellsort: a v[0]...v[n-1] tömb rendezése
+növekvő sorrendbe */</span>
+<span class="k">void</span> shellsort(<span class="k">int</span> v[ ], <span class="k">int</span> n)
+{
+   <span class="k">int</span> tavolsag, i, j, atm;
+
+   <span class="k">for</span> (tavolsag = n/2; tavolsag &gt; 0; tavolsag /= 2)
+      <span class="k">for</span> (i = tavolsag; i &lt; n; i++)
+         <span class="k">for</span> (j = i-tavolsag;
+               j &gt;= 0 &amp;&amp; v[j] &gt; v[j + tavolsag];
+               j -= tavolsag){
+            atm = v[j];
+            v[j] = v[j+tavolsag];
+            v[j+tavolsag] = atm; 
+         }
+}
+</pre>
+  A programban három egymásba ágyazott ciklus van. A legkülső az összehasonlítandó elemek közötti távolságot szabályozza úgy, hogy azt <span class="m">n/2</span> értékről indítva minden lépésben a felére csökkenti, egészen addig, amíg nulla nem lesz. A középső ciklus folyamatosan végigmegy az elemeken. A legbelső ciklus összehasonlítja az egymástól <span class="m">tavolsag</span> értékre lévő elemeket és ha nincsenek megfelelő sorrendben, akkor megcseréli azokat. Mivel a <span class="m">tavolsag</span> az utolsó lépésben <span class="m">1</span>-re csökken, ezért a tömb végül is helyes sorrendbe rendeződik. Vegyük észre, hogy a külső ciklus <span class="k">for</span> utasítása ugyanolyan alakú, mint a többi, bár ez a <span class="k">for</span> utasítás nem végez aritmetikai léptetést.
+  <p> A C nyelv egyik eddig még nem említett operátora a <span class="m">,</span> (vessző), amelyet legtöbbször a <span class="k">for</span> utasításban használunk. A vesszővel elválasztott kifejezéspárok balról jobbra értékelődnek ki, és az eredmény típusa, ill. értéke a jobb oldalon álló operandus típusával, ill. értékével egyezik meg. Így egy <span class="k">for</span> utasítás lehetőséget ad az egyes részekben több kifejezés elhelyezésére, pl. két index szerint párhuzamosan végzett feldolgozás érdekében. Ezt a megoldást példázza a <span class="m">reverse(s)</span> függvény, amelynek feladata, hogy az s karaktersorozatot saját helyén megfordítsa.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;string.h&gt;
+
+<span class="c">/* reverse: az s karaktersorozat megfordítása helyben */</span>
+<span class="k">void</span> reverse(<span class="k">char</span> s[ ])
+{
+   <span class="k">int</span> c, i, j;
+
+   <span class="k">for</span> (i = 0, j = <span class="f">strlen</span>(s)-1; i &lt; j; i++, j--) {
+      c = s[i];
+      s[i] = s[j];
+      s[j] = c;
+   }
+}
+</pre>
+  A függvények argumentumait, a deklarációban lévő változókat stb. elválasztó vessző nem vesszőoperátor, nem garantált a balról jobbra irányú feldolgozásuk.
+  <p> A vesszőoperátort viszonylag ritkán használják, és a legtöbb alkalmazás szoros kapcsolatban van egymással. Ilyen pl. a <span class="m">reverse</span> függvényben a <span class="k">for</span> ciklus vagy a makróban a többlépéses számítások egyetlen kifejezéssel történő megadása. A vessző operátor jól használható a <span class="m">reverse</span> függvényben az egyes tömbelemek cseréjénél is. A<br />
+  </p>
+  <pre>
+<span class="k">for</span> (i = 0, j = <span class="f">strlen</span>(s)-1; i &lt; j; i++, j--)
+   c = s[i], s[i] = s[j], s[j] = c;
+</pre>
+  szerkezetben a cserélés műveletei egyetlen utasításba foghatók össze.<br />
+  <br />
+  <p><b>3.3.</b> gyakorlat. Írjunk <span class="m">expand(s1, s2)</span> néven függvényt, amely az <span class="m">s1</span> karaktersorozatban lévő rövidítéseket <span class="m">s2</span> karaktersorozatban feloldja (pl. az <span class="m">a-z</span> helyett kiírja az <span class="m">abc...xyz</span> teljes listát)! A program tegye lehetővé a betűk és számjegyek kezelését, és gondoljunk olyan rövidítések feloldására is, mint <span class="m">a-b-c</span>, <span class="m">a-z0-9</span> vagy <span class="m">-a-z</span> is! Célszerű a kezdő vagy záró <span class="m">-</span> jelet literálisként kezelni.<br />
+    <br />
+  </p>
+  <h3><a name="3.6." id="3.6."></a>3.6. Ciklusszervezés do-while utasítással<br />
+  </h3>
+  Amint azt már az <a href="01.html">1. fejezetben</a> elmondtuk, a <span class="k">while</span> és a <span class="k">for</span> utasítással szervezett ciklusok közös tulajdonsága, hogy a ciklus leállításának feltételét a ciklus tetején (a ciklusmagba belépés előtt) vizsgálják. Ezzel ellentétesen működik a C nyelv harmadik ciklusszervező utasítása, a do-while utasítás. A <span class="k">do</span>-<span class="k">while</span> utasítás a ciklus leállításának feltételét a ciklusmag végrehajtása után ellenőrzi, így a ciklusmag egyszer garantáltan végrehajtódik. Az utasítás általános formája:<br />
+  <pre>
+<span class="k">do</span>
+   <span class="defit">utasítás</span> 
+<span class="k">while</span> (<span class="defit">kifejezés</span>);
+</pre>
+  A gép először végrehajtja az <i>utasítást</i> és csak utána értékeli ki a <i>kifejezést</i>. Ha a kifejezés értéke igaz, az utasítás újból végrehajtódik. Ez így megy mindaddig, amíg a kifejezés értéke hamis nem lesz, ekkor a ciklus lezárul és a végrehajtás az utána következő utasítással folytatódik. Az ellenőrzés módjától eltekintve a <span class="k">do</span>-<span class="k">while</span> utasítás egyenértékű a Pascal <span class="m">repeat-until</span> utasításával.
+  <p> A tapasztalatok azt mutatják, hogy a <span class="k">do</span>-<span class="k">while</span> utasítást sokkal ritkábban használják, mint a <span class="k">while</span> vagy <span class="k">for</span> utasítást, bár hasznos tulajdonságai miatt időről időre célszerű elővenni, mint pl. a következőkben bemutatott <span class="m">itoa</span> függvényben, amely egy számot karaktersorozattá alakít (az <span class="m">atoi</span> függvény inverze). A feladat kicsit bonyolultabb, mint elsőre látszik, mivel a számjegyeket generáló egyszerű megoldások rossz sorrendet eredményeznek. Ezért úgy döntöttünk, hogy a karakterláncot fordított sorrendben generáljuk, majd a végén megfordítjuk.<br />
+  </p>
+  <pre>
+<span class="c">/* itoa: az n számot s karaktersorozattá alakítja */</span>
+<span class="k">void</span> itoa(<span class="k">int</span> n, <span class="k">char</span> s[])
+{
+   <span class="k">int</span> i, sign;
+
+   <span class="k">if</span> ((sign = n) &lt; 0) <span class="c">/* elteszi az előjelet */</span>
+      n = -n; <span class="c">/* n-et pozitívvá teszi */</span>
+   i = 0;
+   <span class="k">do</span> { <span class="c">/* generálja a számjegyeket, de fordított
+         sorrendben */</span>
+      s[i++] = n % 10 + '0'; <span class="c">/* a következő számjegy */</span>
+   } <span class="k">while</span>((n /= 10) &gt; 0); <span class="c">/* törli azt */</span>
+   <span class="k">if</span> (sign &lt; 0)
+      s[i++] = '-';
+   s[i] = '<span class="e">\0</span>';
+   reverse(s);
+}
+</pre>
+  A példában a <span class="k">do</span>-<span class="k">while</span> használata szükségszerű, vagy legalábbis kényelmes, mivel legalább egy karaktert akkor is el kell helyeznünk az <span class="m">s</span> karaktersorozatban, ha <span class="m">n</span> értéke nulla. A <span class="k">do</span>-<span class="k">while</span> ciklus magját kapcsos zárójellel kiemeltük (bár szükségtelen), mivel így a <span class="k">while</span> rész nem téveszthető össze egy <span class="k">while</span> utasítással szervezett <i>ciklus kezdetével</i>.<br />
+  <br />
+  <p><b>3.4.</b> gyakorlat. Az <span class="m">itoa</span> függvény itt ismertetett változata kettes komplemens kódú számábrázolás esetén nem kezeli a legnagyobb negatív számot; azaz az <span class="m">n = -2↑(szóhossz-1)</span> értéket. Magyarázzuk meg, hogy miért! Módosítsuk úgy a programot, hogy ezt az értéket is helyesen írja ki, a használt számítógéptől függetlenül.<br />
+  </p>
+  <p><b>3.5.</b> gyakorlat. Írjunk <span class="m">itob(n, s, b)</span> néven függvényt, amely az <span class="m">n</span> egész számot <span class="m">b</span> alapú számrendszerben karaktersorozattá alakítja és az s karaktersorozatba helyezi! Speciális esetként írjuk meg az <span class="m">itob(n, s, 16)</span> függvényt is, amely az <span class="m">n</span> értékét hexadecimális formában írja az s karaktersorozatba.<br />
+  </p>
+  <p><b>3.6.</b> gyakorlat. Írjuk meg az <span class="m">itoa</span> függvénynek azt a változatát, amelynek kettő helyett három argumentuma van! Ez a harmadik argumentum legyen a minimális mezőszélesség, és az átalakított számot szükség esetén balról üres helyekkel töltse fel, hogy elegendően széles legyen!<br />
+    <br />
+  </p>
+  <h3><a name="3.7." id="3.7."></a>3.7. A break és continue utasítások<br />
+  </h3>
+  Néha kényelmes lehet, ha egy ciklusból az elején vagy végén elhelyezett ellenőrzés kikerülésével is ki tudunk lépni. A <span class="k">break</span> utasítás lehetővé teszi a <span class="k">for</span>, <span class="k">while</span> vagy <span class="k">do</span> utasításokkal szervezett ciklusok idő előtti elhagyását, valamint a <span class="k">switch</span> utasításból való kilépést. A <span class="k">break</span> hatására a legbelső ciklus vagy a teljes <span class="k">switch</span> utasítás fejeződik be.
+  <p> A működés bemutatására írjuk meg a trim függvényt, amely egy karaktersorozat végéről eltávolítja a szóközöket, tabulátorokat és újsor-karaktereket. A program a <span class="k">break</span> utasítást használja a ciklusból való idő előtti kilépésre, ha megtalálja a karaktersorozat legjobboldalibb (utolsó) nem szóköz-, tabulátor- vagy újsor-karakterét.<br />
+  </p>
+  <pre>
+<span class="c">/* trim: eltávolítja a záró szóköz-,
+tabulátor- vagy újsor-karaktereket */</span>
+<span class="k">int</span> trim(<span class="k">char</span> s[ ])
+{
+   <span class="k">int</span> n;
+
+   <span class="k">for</span> (n = <span class="f">strlen</span>(s)-1; n &gt;= 0; n --)
+      <span class="k">if</span> (s[n] !=' ' &amp;&amp; s[n] != '<span class="e">\t</span>' &amp;&amp; s[n] != '<span class="e">\n</span>')
+         <span class="k">break</span>;
+      s[n + 1] = '<span class="e">\0</span>';
+   <span class="k">return</span> n; 
+}
+</pre>
+  Az <span class="f">strlen</span> függvény visszatéréskor a karaktersorozat hosszát adja meg. A <span class="k">for</span> ciklus a karaktersorozat végén kezdi a feldolgozást és addig vizsgálja a karaktereket, amíg megtalálja az első szóköztől, tabulátortól vagy új sortól különböző karaktert. A ciklus akkor áll le, ha az első ilyen karaktert megtaláltuk vagy n értéke negatívvá válik (azaz, amikor a teljes karaktersorozatot végignéztük). Az olvasóra bízzuk, hogy igazolja, a program akkor is helyesen működik, ha a karaktersorozat üres vagy csak üres helyet adó karaktereket tartalmaz.
+  <p> A <span class="k">continue</span> utasítás a <span class="k">break</span> utasításhoz kapcsolódik, de annál ritkábban használjuk. A ciklusmagban található <span class="k">continue</span> utasítás hatására azonnal (a ciklusmagból még hátralévő utasításokat figyelmen kívül hagyva) megkezdődik a következő iterációs lépés. A <span class="k">while</span> és <span class="k">do</span> utasítások esetén ez azt jelenti, hogy azonnal végbemegy a feltételvizsgálat, <span class="k">for</span> esetén pedig a ciklusváltozó újrainicializálódik. A <span class="k">continue</span> utasítás csak ciklusokban alkalmazható, a <span class="k">switch</span> utasításban nem. Ha a <span class="k">switch</span> utasításban ciklus volt, akkor a <span class="k">continue</span> ezt a ciklust lépteti tovább.</p>
+  <p> A <span class="k">continue</span> működését illusztráló egyszerű programrész az a tömb nem negatív elemeit dolgozza fel, a negatív elemeket átugorja.<br />
+  </p>
+  <pre>
+<span class="k">for</span> (i = 0; i &lt; n; i++) {
+   <span class="k">if</span> (a[i] &lt; 0) <span class="c">/* a negatív elemek átugrása */</span>
+      <span class="k">continue</span>;
+   ... <span class="c">/* a pozitív elemek feldolgozása */</span>
+}
+</pre>
+  A <span class="k">continue</span> utasítást gyakran használjuk olyan esetekben, amikor a ciklus további része nagyon bonyolult, és ezért a vizsgálati feltétel megfordítása, ill. egy újabb programszint beágyazása a programot túlzottan mélyen tagolná.<br />
+  <br />
+  <h3><a name="3.8." id="3.8."></a>3.8. A goto utasítás és a címkék<br />
+  </h3>
+  A C nyelvben is használható a gyakran szidott <span class="k">goto</span> utasítás, amellyel megadott címkékre ugorhatunk. Alapvetően a <span class="k">goto</span> utasításra nincs szükség és a gyakorlatban majdnem mindig egyszerűen írhatunk olyan programot, amelyben nincs <span class="k">goto</span>. A könyvben közölt mintaprogramok a továbbiakban sem tartalmaznak <span class="k">goto</span> utasítást.
+  <p> Mindezek ellenére most bemutatunk néhány olyan esetet, amelyben a <span class="k">goto</span> utasítás működése megfigyelhető. A <span class="k">goto</span> használatának egyik legelterjedtebb esete, amikor több szinten egymásba ágyazott szerkezet belsejében kívánjuk abbahagyni a feldolgozást és egyszerre több, egymásba ágyazott ciklusból szeretnénk kilépni. Ilyenkor a <span class="k">break</span> utasítás nem használható, mivel az csak a legbelső ciklusból lép ki.</p>
+  <p> Például a<br />
+  </p>
+  <pre>
+<span class="k">for</span>(...)
+   <span class="k">for</span>(...) {
+      ...
+      <span class="k">if</span> (zavar)
+         <span class="k">goto</span> hiba;
+   }
+   ...
+hiba:
+   <span class="defit">a hiba kezelése</span>
+</pre>
+  szerkezetben előnyös a hibakezelő eljárást egyszer megírni és a különböző hibaeseteknél a vezérlést a közös hibakezelő eljárásnak átadni, bárhol is tartott a feldolgozás.
+  <p> A címke ugyanolyan szabályok szerint alakítható ki, mint a változók neve és mindig kettőspont zárja. A címke bármelyik utasítás előtt állhat és a <span class="k">goto</span> utasítással bármelyik, a goto-val azonos függvényben lévő utasítás elérhető. A címke hatásköre arra a teljes függvényre kiterjed, amiben használják.</p>
+  <p> Második példaként tekintsük azt a feladatot, amikor meg szeretnénk határozni, hogy az a és b tömbnek vannak-e közös elemei. Egy lehetséges megoldás:<br />
+  </p>
+  <pre>
+   <span class="k">for</span> (i = 0; i &lt; n; i++)
+      <span class="k">for</span> (j = 0; j &lt; m; j++)
+         <span class="k">if</span> (a[i] == b[j])
+            <span class="k">goto</span> talalt;
+   <span class="c">/* nem talált közös elemet */</span>
+   ...
+talalt:
+   <span class="c">/* egy közös elem van, a[i] == b[j] */</span>
+   ...
+</pre>
+  Mint említettük, minden <span class="k">goto</span>-t tartalmazó program megírható <span class="k">goto</span> nélkül is, bár ez néha bonyolult a sok ismétlődő vizsgálat és segédváltozó miatt. Az előző példa <span class="k">goto</span> nélküli változata:<br />
+  <pre>
+talalt = 0;
+<span class="k">for</span> (i = 0; i &lt; n &amp;&amp; !talalt; i++)
+   <span class="k">for</span> (j = 0; j &lt; m &amp;&amp; !talalt; j++)
+      <span class="k">if</span> (a[i] == b[j])
+         talalt = 1;
+<span class="k">if</span> (talalt)
+   <span class="c">/* egy közös elem van, a[i-1] == b[j-1] */</span>
+      ...
+<span class="k">else</span>
+   <span class="c">/* nem talált közös elemet */</span>
+      ...
+</pre>
+  Néhány itt bemutatott kivételtől eltekintve a <span class="k">goto</span> utasítást tartalmazó programok általában nehezebben érthetők és kezelhetők, mint a <span class="k">goto</span> nélküli programok. Bár ez nem törvény, de jó ha betartjuk: a <span class="k">goto</span> utasítást a lehető legritkábban használjuk.<br />
+
+<br>
+<br>
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="02.html">2. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="04.html">4. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+
+</div>
+</body>
+</html>

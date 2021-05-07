@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1606903940 source:d:\prog_code\datum_strukt\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1606905465 source:d:\szemÉlyes\egyetem\programozás\kódok\datum_strukt\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

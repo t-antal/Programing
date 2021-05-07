@@ -1,0 +1,751 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="krc.css" rel="stylesheet" type="text/css" />
+<title>Típusok, operátorok és kifejezések</title>
+</head>
+<body>
+
+
+<div id="main">
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="01.html">1. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="03.html">3. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+
+  <h2><a name="2. FEJEZET" id="2. FEJEZET"></a><i>2. FEJEZET:</i><br />
+  </h2>
+  <h2>Típusok, operátorok és kifejezések<br />
+  </h2>
+  A változók és az állandók alkotják a programban feldolgozott alapvető adatobjektumokat. A program deklarációi felsorolják a felhasznált változókat, megadják a típusukat és néha még a kezdeti értéküket is. Az operátorok azt határozzák meg, hogy mit kell csinálni az adatokkal. A kifejezések a változókat és állandókat egy új érték előállítása érdekében kombinálják. Az objektum típusa meghatározza, hogy az objektum milyen értékeket vehet fel és milyen operátorok alkalmazhatók rá. Ebben a fejezetben ezekkel az alapelemekkel foglalkozunk.
+  <p> Az ANSI szabvány csak kis változásokat hozott az alapvető adattípusok és kifejezések terén, és inkább csak bővítette a lehetőségeket. Újdonság az összes egész típusú mennyiségre bevezetett <span class="k">signed</span> és <span class="k">unsigned</span> forma, valamint az előjel nélküli (<span class="k">unsigned</span>) állandó és a hexadecimális karakteres állandó bevezetése. Az új szabvány szerint a lebegőpontos műveleteket egyszeres pontossággal végzi a gép, és a nagyobb pontosság eléréséhez bevezették a <span class="k">long</span> <span class="k">double</span> adattípust. A karakterlánc-állandók a fordítás során összekapcsolhatók. A felsorolt változók a nyelv részévé váltak a rég bevált tulajdonságok formalizálásával. Deklarálhatóvá vált a <span class="k">const</span> típusú objektum, ami ezek változatlanságát jelzi. Az aritmetikai adattípusok közti automatikus konverziós kényszerek bővítik az adattípusok választékát.<br />
+    <br />
+  </p>
+  <h3><a name="2.1." id="2.1."></a>2.1. Változónevek<br />
+  </h3>
+  Bár az <a href="01.html">1. fejezetben</a> nem említettük, de van néhány megszorítás a változók és szimbolikus állandók neveit illetően. A nevek betűkből és számjegyekből állhatnak és az első karakterüknek betűnek kell lenni. Az aláhúzás-karakter ( _ ) betűnek számít, és alkalmazásával sokszor javítható a hosszú változónevek olvashatósága. Változónevet ne kezdjünk aláhúzás-karakterrel, mivel a könyvtári eljárások gyakran használnak ilyen neveket. A nagy- és kisbetűk különböznek egymástól, így az <span class="m">x</span> és <span class="m">X</span> két különböző nevet jelent. A hagyományos C programozói gyakorlatban a változóneveket kisbetűvel írjuk és a szimbolikus állandókat csupa nagybetűvel.
+  <p> A belső neveknek legalább az első 31 karaktere szignifikáns. A függvények és külső változók neveinek hossza 31-nél kisebb, mert ezek külső nevek, amelyeket az assemblerek és loaderek használnak a nyelvtől függetlenül (ezekre nem vonatkoznak a C nyelv szabályai). A szabvány külső nevek esetén csak 6 karakterig garantálja a megkülönböztethetőséget. A nyelv kulcsszavai (pl. <span class="k">if</span>, <span class="k">else</span>, <span class="k">int</span>, <span class="k">float</span> stb.) fenntartott szavak és nem lehetnek változónevek. A kulcsszavakat kisbetűvel kell írni.</p>
+  <p> Célszerű a programban olyan neveket választani, amelyek jelentenek valamit („beszélő nevek”) és írásmódjuk nem zavaró. Érdemes a helyi változókhoz (különösen a ciklusváltozóhoz) rövid, a külső változókhoz hosszabb neveket választani.<br />
+    <br />
+  </p>
+  <h3><a name="2.2." id="2.2."></a>2.2. Adattípusok és méretek<br />
+  </h3>
+  A C nyelv viszonylag kevés alapvető adattípust használ:<br />
+  <br />
+  <br />
+  <table class="def">
+    <tr>
+      <td width="120px"><span class="k">char</span></td>
+      <td>egyetlen bájt, a gépi karakterkészlet egy elemét tárolja</td>
+    </tr>
+    <tr>
+      <td><span class="k">int</span></td>
+      <td>egész szám, mérete általában a befogadó számítógép egészek ábrázolásához használt mérete</td>
+    </tr>
+    <tr>
+      <td><span class="k">float</span></td>
+      <td>egyszeres pontosságú lebegőpontos szám</td>
+    </tr>
+    <tr>
+      <td><span class="k">double</span></td>
+      <td>kétszeres pontosságú lebegőpontos szám</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  Ezekhez az alapvető adattípusokhoz még néhány minősíthető specifikáció járulhat. Ilyen az egész típusokhoz használható <span class="k">short</span> és <span class="k">long</span> minősítő, pl.<br />
+  <pre>
+<span class="k">short</span> <span class="k">int</span> sh;
+<span class="k">long</span> <span class="k">int</span> counter;
+</pre>
+  Az ilyen deklarációkból az <span class="k">int</span> típusjelzés elhagyható, és általában el is hagyják.
+  <p> A <span class="k">short</span> és <span class="k">long</span> minősítők bevezetésével az volt a cél, hogy ahol szükséges, két különböző hosszúságú egész álljon a programozó rendelkezésére. Szokásos módon az <span class="k">int</span> mérete megegyezik a használt számítógép alap szóméretével. A <span class="k">short</span> típus általában 16 bites, a <span class="k">long</span> pedig 32 bites, az <span class="k">int</span> típus 16 vagy 32 bites. Minden fordítóprogram a saját hardverének megfelelően választja meg az adatok méretét, és csak annyi megszorítás van, hogy a <span class="k">short</span> és <span class="k">int</span> adattípus legalább 16, a <span class="k">long</span> adattípus legalább 32 bites kell legyen, valamint, hogy a <span class="k">short</span> nem lehet hosszabb az int-nél és az nem lehet hosszabb a long-nál.</p>
+  <p> A <span class="k">signed</span> és <span class="k">unsigned</span> minősítők a <span class="k">char</span> és bármely egész adattípus esetén használhatók. Egy <span class="k">unsigned</span> típusú szám mindig pozitív vagy nulla, és a modulo 2<sup><i>n</i></sup> aritmetika szabályai szerint használható, ahol <i>n</i> az adott típus ábrázolásához rendelt bitek száma, így pl. ha a <span class="k">char</span> típust a gép 8 biten ábrázolja, akkor az <span class="k">unsigned</span> <span class="k">char</span> típus értéke 0 és 255 között, amíg a <span class="k">signed</span> <span class="k">char</span> típus értéke -128 és +127 között lehet (kettes komplemens kódú ábrázolás esetén). Az, hogy a <span class="k">char</span> típusú adat <span class="k">signed</span> vagy <span class="k">unsigned</span>-e a géptől függ, de a nyomtatható karakterek mindig pozitívak.</p>
+  <p> A <span class="k">long</span> <span class="k">double</span> típus növelt pontosságú lebegőpontos számot jelöl. Az egészekhez hasonlóan a lebegőpontos számok mérete is gépfüggő. A <span class="k">float</span>, <span class="k">double</span> és <span class="k">long</span> <span class="k">double</span> típus egyszeres, kétszeres és háromszoros méretet jelenthet.</p>
+  <p> A <span class="m">&lt;limits.h&gt;</span> és <span class="m">&lt;float.h&gt;</span> szabványos header állományok szimbolikus állandói között mindezen méretűek megtalálhatók, és ezek leírása a géptől, ill. a fordítóprogramtól függő tulajdonságokkal együtt a <a href="b.html">B. Függelékben</a> található.<br />
+    <br />
+  </p>
+  <p><b>2.1.</b> gyakorlat. Írjunk programot, ami meghatározza a <span class="k">signed</span> és <span class="k">unsigned</span> minősítőjű <span class="k">char</span>, <span class="k">short</span>, <span class="k">int</span> és <span class="k">long</span> típusú változók nagyságát a szabványos header állományokból vett megfelelő értékek kiírásával és közvetlen számítással! A feladat nehezebb, ha kiszámítjuk a nagyságokat és tovább nehezíthető, ha a lebegőpontos számok nagyságát is meg akarjuk határozni.<br />
+    <br />
+  </p>
+  <h3><a name="2.3." id="2.3."></a>2.3. Állandók<br />
+  </h3>
+  Az <span class="m">1234</span> formában leírt egész állandó minden külön jelzés nélkül <span class="k">int</span> típusú. Egy <span class="k">long</span> típusú egész állandó leírásánál viszont a számot <span class="m">l</span> (el) vagy <span class="m">L</span> betűvel kell zárni, pl. <span class="m">123456789L</span>. Ez a szám túl nagy ahhoz, hogy <span class="k">int</span> típusú legyen, ezért <span class="k">long</span> lesz. Az előjel nélküli (<span class="k">unsigned</span>) számokat az utánuk írt <span class="m">u</span> vagy <span class="m">U</span> betűvel jelöljük, és az <span class="m">ul</span> vagy <span class="m">UL</span> toldalék <span class="k">unsigned</span> <span class="k">long</span> típust ír elő.
+  <p> A lebegőpontos állandók tizedespontot (pl. <span class="m">123.4</span>) vagy kitevőt (pl. <span class="m">1e-2</span>) vagy mindkettőt tartalmaznak, és alapértelmezésben <span class="k">double</span> típusúak. A lebegőpontos állandó után írt <span class="m">f</span> vagy <span class="m">F</span> <span class="k">float</span>, <span class="m">l</span> vagy <span class="m">L</span> <span class="k">long</span> <span class="k">double</span> típust jelöl.</p>
+  <p> Egy egész szám értéke nem csak decimálisan, hanem oktális vagy hexadecimális alakban is megadható. A szám elé nullát írva az egész típusú állandó oktális alakú és ha <span class="m">0x</span> jelzést írunk a szám elé, akkor hexadecimális alakú. Például a decimális <span class="m">31</span> oktális alakban <span class="m">037</span> és hexadecimális alakban <span class="m">0x1f</span> vagy <span class="m">0X1F</span>. Az oktális vagy hexadecimális állandó után írt L <span class="k">long</span> és U <span class="k">unsigned</span> típust jelöl: pl. <span class="m">0XFUL</span> egy decimálisán <span class="m">15</span> értékű <span class="k">unsigned</span> <span class="k">long</span> típusú állandó.</p>
+  <p> A karakter állandó egy egész típusú adat, amit aposztrófok közé írt egyetlen karakterrel (pl. <span class="m">'x'</span>) adunk meg. A karakterállandó értéke a karakter gépi karakterkészletbeni kódszáma. Például az ASCII karakterkészletben a <span class="m">'0'</span> karakterállandó értéke <span class="m">48</span>, ami semmiféle kapcsolatban nincs a <span class="m">0</span> számértékkel. Ha a <span class="m">48</span> kódérték helyett <span class="m">'0'</span> karakterállandót írunk, akkor a program függetlenné válik a gépi karakterkészlettől és könnyebben olvasható. A karakterállandókat leggyakrabban más karakterekkel való összehasonlításra használjuk, de ugyanúgy részt vehetnek a numerikus műveletekben is, mint bármilyen egész adat.</p>
+  <p> Bizonyos karakterek a karakterállandókban vagy karaktersorozat-állandókban escape sorozattal adhatók meg, mint pl. a <span class="e">\n</span>, ami az újsor-karaktert jelöli. Ezek az escape sorozatok leírva két karakternek látszanak, de valójában egyetlen karaktert jelölnek. Mindezeken kívül tetszőleges tartalmú, egy bájt méretű bitminta adható meg a<br />
+  </p>
+  <pre>
+'<span class="e">\o</span>oo'
+</pre>
+  specifikációval, ahol <span class="m">ooo</span> egy max. háromjegyű oktális szám számjegyeit jelöli (csak a <span class="m">0...7</span> számjegyek megengedettek), vagy a<br />
+  <pre>
+'<span class="e">\x</span>hh'
+</pre>
+  specifikációval, ahol <span class="m">hh</span> egy max. kétjegyű hexadecimális szám jegyeit jelöli (a számjegyek <span class="m">0...9</span>, <span class="m">a...f</span> vagy <span class="m">A...F</span> lehetnek). Így minden további nélkül írhatjuk, hogy<br />
+  <pre>
+<span class="d">#define</span> VTAB '<span class="e">\0</span>13' <span class="c">/* a VTAB ASCII kódja */</span>
+<span class="d">#define</span> BELL '<span class="e">\0</span>07' <span class="c">/* a BELL ASCII kódja */</span>
+</pre>
+  vagy hexadecimálisan<br />
+  <pre>
+<span class="d">#define</span> VTAB '<span class="e">\x</span>b' <span class="c">/* a VTAB ASCII kódja */</span>
+<span class="d">#define</span> BELL '<span class="e">\x</span>7' <span class="c">/* a BELL ASCII kódja */</span>
+</pre>
+  Az escape sorozatok teljes listája a következő:<br />
+  <pre>
+<span class="e">\a</span>     <span class="def">figyelmeztető jelzés (bell, csengő)</span>
+<span class="e">\b</span>     <span class="def">visszalépés (backspace)</span>
+<span class="e">\f</span>     <span class="def">lapdobás (formfeed)</span>
+<span class="e">\n</span>     <span class="def">új sor (new line)</span>
+<span class="e">\r</span>     <span class="def">kocsi vissza (carriage return)</span>
+<span class="e">\t</span>     <span class="def">vízszintes tabulátor (horizontal tab, HTAB)</span>
+<span class="e">\v</span>     <span class="def">függőleges tabulátor (vertical tab, VTAB)</span>
+<span class="e">\\</span>     <span class="def">fordított törtvonal (backlash)</span>
+<span class="e">\?</span>     <span class="def">kérdőjel</span>
+<span class="e">\'</span>     <span class="def">aposztróf</span>
+<span class="e">\&quot;</span>     <span class="def">idézőjel</span>
+<span class="e">\o</span>oo   <span class="def">oktális szám</span>
+<span class="e">\x</span>hh   <span class="def">hexadecimális szám</span>
+</pre>
+  A <span class="m">'<span class="e">\0</span>'</span> karakterállandó egy nulla értékű karaktert, az ún. null-karaktert jelöli. A programokban gyakran írunk <span class="m">'<span class="e">\0</span>'</span>-t a <span class="m">0</span> helyett, hogy ezzel is kihangsúlyozzuk a kifejezésen belül az érték karakteres természetét, de természetesen mindkét alak számértéke nulla.
+  <p> Az <i>állandó kifejezés</i> csak állandókat tartalmaz. Az ilyen kifejezések kiértékelése még a fordítás során megtörténik, ezért bárhol szerepelhetnek, ahol állandó használata megengedett. Ilyen állandó kifejezés pl. a<br />
+  </p>
+  <pre>
+<span class="d">#define</span> MAXSOR 1000
+<span class="k">char</span> sor[MAXSOR+1];
+</pre>
+  vagy a<br />
+  <pre>
+<span class="d">#define</span> UGRAS <span class="c">/* pl. ugrás szökőévben */</span>
+<span class="k">int</span> napok[31+18+UGRAS+31+30+31+30+31+31+30+31+30+31];
+</pre>
+  A <i>karaktersorozat-állandó (string-konstans)</i> nulla vagy több karakterből áll, amelyek idézőjelek között helyezkednek el. Ilyen pl. a<br />
+  <pre>
+&quot;Ez egy karaktersorozat&quot;
+</pre>
+  vagy a<br />
+  <pre>
+&quot;&quot; <span class="c">/* ez egy üres karaktersorozat */</span>
+</pre>
+  Az idézőjelek nem részei a karaktersorozatnak, csak határolják azt. A karaktersorozat-állandókban ugyanazok az escape sorozatok használhatók, mint a karakterállandóknál, ezért a <span class="e">\&quot;</span> egy idézőjelet jelent (mivel az idézőjel határolja a karaktersorozatot, ezért annak belsejében idézőjel csak a <span class="e">\&quot;</span> escape sorozattal íratható ki). A karaktersorozatállandók a fordítás során összekapcsolhatók (konkatenálhatók), így a<br />
+  <pre>
+&quot;Halló&quot; &quot;mindenki!&quot;<br />
+</pre>
+  egyenértékű a<br />
+  <pre>
+&quot;Halló mindenki!&quot;<br />
+</pre>
+  karaktersorozattal. Ez lehetőséget nyújt arra, hogy a forrásprogram túl hosszú sorait több, rövid sorra bontsuk.
+  <p> Gyakorlatilag a karaktersorozat-állandó egy karakterből álló tömb. Egy karaktersorozat belső ábrázolásában a sorozatot a <span class="m">'<span class="e">\0</span>'</span> null-karakter zárja, így a tárolásukhoz szükséges tárolóhelyek száma csak eggyel több, mint a karakterek száma. Ez a belső ábrázolásmód azt eredményezi, hogy nincs korlátozva a karaktersorozat hossza, de így a programoknak a teljes karaktersorozatot végig kell nézni ahhoz, hogy meghatározzák a tényleges hosszt. A standard könyvtár <span class="m"><span class="f">strlen</span>(s)</span> függvénye visszatéréskor megadja a karaktersorozat típusú <span class="m">s</span> argumentumának a hosszát (a záró <span class="m">'<span class="e">\0</span>'</span> null-karaktert nem számítja bele a hosszba). A függvény általunk írt változata:<br />
+  </p>
+  <pre>
+<span class="c">/* strlen: az s karaktersorozat hosszát adja */</span>
+<span class="k">int</span> strlen(<span class="k">char</span> s[ ])
+{
+   <span class="k">int</span> i;
+   
+   i = 0;
+   <span class="k">while</span> (s[i] != '<span class="e">\0</span>')
+      ++i; 
+   <span class="k">return</span> i; 
+}
+</pre>
+  Az <span class="f">strlen</span> és még több más karaktersorozat-kezelő függvény is a <span class="m">&lt;string.h&gt;</span> szabványos headerben található.
+  <p> Ügyeljünk arra, hogy megkülönböztessük a karakterállandót és az egyetlen karaktert tartalmazó karaktersorozatot: <span class="m">'x'</span> nem azonos az <span class="m">&quot;x&quot;</span>-szel! Az első egy egész mennyiség, amelynek számértéke az <span class="m">x</span> betű gépi karakterkészletben kódja, amíg a második egy egyetlen karaktert (az <span class="m">x</span> betűt) és a lezáró <span class="m">'<span class="e">\0</span>'</span> null-karaktert tartalmazó tömb.</p>
+  <p> Az állandók eddigiektől eltérő fajtája a <i>felsorolt állandó</i>. A felsorolt állandó egész értékek listájából áll, mint pl. az<br />
+  </p>
+  <pre>
+<span class="k">enum</span> boolean {NO, YES};
+</pre>
+  Az <span class="k">enum</span> listájában az első név értéke <span class="m">0</span>, a másodiké <span class="m">1</span> és így tovább, kivéve ha az értékeket explicit módon specifikáljuk. Ha a listában nem minden értéket specifikáltunk, akkor a nem specifikált elemek az utolsó specifikált elemtől kezdve folyamatosan a következő értéket kapják, mint ez az alábbik közül a második példában látható:<br />
+  <pre>
+<span class="k">enum</span> espaces { BELL = '<span class="e">\a</span>', BACKSPACE = '<span class="e">\b</span>', TAB = '<span class="e">\t</span>',
+               NEWKUBE = '<span class="e">\n</span>', VTAB = '<span class="e">\v</span>',
+               RETURN = '<span class="e">\r</span>' };
+<span class="k">enum</span> honapok { JAN = 1, FEB, MAR, APR, MAJ,
+               JUN, JUL, AUG, SZEP, OKT, NOV, DEC };
+               <span class="c">/* így FEB = 2, MAR = 3 stb. */</span>
+</pre>
+  A különböző felsorolt állandókban szereplő neveknek különbözniük kell, de egy felsoroláson belül az értékeknek nem kell különbözni.
+  <p> A felsorolás egy szokásos módja annak, hogy a nevekhez állandó értéket rendeljünk, és így lényegében a <span class="d">#define</span> utasítás helyettesítésére alkalmas, azzal az előnnyel, hogy a nevekhez rendelt értékek automatikusan generálhatók. Bár az <span class="k">enum</span> típusú változókat deklarálhatjuk, a fordítóprogramok nem ellenőrzik, hogy az így eltárolt változóknak van-e érvényes értékük a felsorolásban. Mindazonáltal a felsorolt változók jellegéből adódik az ellenőrzés lehetősége, így gyakran jobban használhatók, mint a <span class="d">#define</span> utasítással definiált változók. További előny, hogy egy megfelelő debugger program szimbolikus formában is képes kiírni a felsorolt változók értékét.<br />
+    <br />
+  </p>
+  <h3><a name="2.4." id="2.4."></a>2.4. Deklarációk<br />
+  </h3>
+  A felhasználása előtt minden változót deklarálni kell, bár bizonyos deklarációk implicit módon, a programkörnyezet alapján is létrejöhetnek. A deklaráció egy típust határoz meg, és utána egy vagy több adott típusú változó felsorolása (listája) áll.
+  <p> Ilyen deklaráció pl.<br />
+  </p>
+  <pre>
+<span class="k">int</span> also, felso, lepes;
+<span class="k">char</span> c, sor[1000];
+</pre>
+  A változók a deklarációk közt tetszőleges módon szétoszthatók, pl. a fenti deklarációs listákkal teljesen egyenértékű az<br />
+  <pre>
+<span class="k">int</span> also;
+<span class="k">int</span> felso;
+<span class="k">int</span> lepes;
+<span class="k">char</span> c;
+<span class="k">char</span> sor[1000];
+</pre>
+  Az utóbbi forma több helyet igényel, viszont előnye, hogy az egyes deklarációkhoz kényelmesen fűzhetők megjegyzések és maga a deklaráció is egyszerűen módosítható.
+  <p> A változók a deklaráció során kezdeti értéket is kaphatnak. Ha a nevet egyenlőségjel és egy kifejezés követi, akkor a kifejezés értéke lesz a kezdeti érték, mint pl. a következő deklarációban:<br />
+  </p>
+  <pre>
+<span class="k">char</span> esc = '<span class="e">\\</span>';<br />
+<span class="k">int</span> i = 0;<br />
+<span class="k">int</span> hatar = MAXSOR+1;<br />
+<span class="k">float</span> eps = 1.0e-5;<br />
+</pre>
+  Ha a kérdéses változó nem automatikus, akkor a kezdeti értékadás csak egyszer, a program végrehajtásának kezdetén történik meg és a kezdő értéket megadó kifejezésnek állandó kifejezésnek kell lenni. Az explicit módon inicializált automatikus változók esetén a kezdeti értékadás minden alkalommal létrejön, amikor a vezérlés átkerül a végrehajtandó függvényhez vagy blokkhoz, és a kezdeti értéket megadó kifejezés tetszőleges lehet. Alapfeltételezés szerint a külső és statikus változók nulla kezdeti értéket kapnak. Az automatikus változók kezdeti értéke határozatlan, hacsak explicit módon nem kapnak értéket.<br />
+  Bármely változó deklarációjában alkalmazható a <span class="k">const</span> minősítő, ami azt jelzi, hogy a változó értékét nem fogjuk megváltoztatni. Ilyen deklaráció pl.<br />
+  <pre>
+<span class="k">const</span> <span class="k">double</span> e = 2.71828182845905;
+<span class="k">const</span> <span class="k">char</span> uzenet[ ] = &quot;figyelem:&quot;;
+</pre>
+  A <span class="k">const</span> minősítésű deklaráció tömb argumentumok esetén is használható, jelezve hogy a függvény nem változtatja meg a tömböt. Pl:<br />
+  <pre>
+<span class="k">int</span> strlen(<span class="k">const</span> <span class="k">char</span> [ ]);
+</pre>
+  Amennyiben a program a <span class="k">const</span> minősítésű változó értékének megváltoztatására mégis kísérletet tesz, akkor a hatás a használt számítógéptől és rendszertől függ.<br />
+  <br />
+  <h3><a name="2.5." id="2.5."></a>2.5. Aritmetikai operátorok<br />
+  </h3>
+  A C nyelv kétoperandusú aritmetikai operátorai a <span class="m">+</span>, <span class="m">-</span>, <span class="m">*</span> és <span class="m">/</span>, valamint a <span class="m">%</span> modulus operátor. Az egészek osztásakor a törtrészt a rendszer levágja, ezért van szükség a <span class="m">%</span> modulus operátorra. Az<br />
+  <pre>
+x % y
+</pre>
+  kifejezés az <span class="m">x/y</span> egészosztás (egész) maradékát adja, és értéke nulla, ha <span class="m">x</span> osztható <span class="m">y</span>-nal. Például egy adott év szökőév, ha az évszáma osztható néggyel és nem osztható százzal, kivéve a 400-zal osztható évszámokat, amik szintén szökőévek. Ezért annak eldöntése, hogy egy adott év szökőév-e vagy sem, az alábbi programrészlettel lehetséges:<br />
+  <pre>
+<span class="k">if</span> ((ev % 4 == 0 &amp;&amp; ev % 100 != 0) || ev % 400 == 0)
+   <span class="f">printf</span>(&quot;%d szökőév.<span class="e">\n</span>&quot;, ev);
+<span class="k">else</span>
+   <span class="f">printf</span>(&quot;%d nem szökőév.<span class="e">\n</span>&quot;, ev);
+</pre>
+  A <span class="m">%</span> operátor nem alkalmazható <span class="k">float</span> és <span class="k">double</span> típusú adatokra. Negatív operandusok esetén az egészosztás hányadosának csonkítása, valamint a modulus előjele gépfüggő, és ugyanez igaz az esetlegesen előforduló túlcsordulásra és alácsordulásra is.
+  <p> Az egyoperandusú (unáris) <span class="m">+</span> és <span class="m">-</span> operátorok precedenciája a legmagasabb. A kétoperandusú <span class="m">+</span> és <span class="m">-</span> operátorok precedenciája kisebb a <span class="m">*</span>, <span class="m">/</span> és <span class="m">%</span> precedenciájánál. Az aritmetikai operátorok mindig balról jobbra haladva hajtódnak végre (a precedencia figyelembevételével).</p>
+  <p> A fejezet végén lévő 2.1 táblázatban összefoglaltuk az összes operátor precedenciáját és asszociativitását.<br />
+    <br />
+  </p>
+  <h3><a name="2.6." id="2.6."></a>2.6. Relációs és logikai operátorok<br />
+  </h3>
+  A C nyelv relációs operátorai: <span class="m">&gt;</span>, <span class="m">&gt;=</span>, <span class="m">&lt;</span>, <span class="m">&lt;=</span>. Ez a sorrend egyben a precedenciájuk sorrendje is. Ezeknél eggyel alacsonyabb precedenciájúak az egyenlőség operátorok: <span class="m">==</span>, <span class="m">!=</span>.
+  <p> A relációs operátorok precedenciája kisebb, mint az aritmetikai operátoroké, így pl. egy olyan kifejezés, mint <span class="m">i &lt; hatar-1</span> úgy értékelődik ki, mint ha <span class="m">i &lt;(hatar-1)</span> formában írtuk volna (amint ez elvárható).</p>
+  <p> Sokkal érdekesebb az <span class="m">&amp;&amp;</span> és <span class="m">||</span> logikai operátorok kérdése! Az <span class="m">&amp;&amp;</span> és <span class="m">||</span> operátorokkal összekapcsolt kifejezések kiértékelése balról jobbra történik, és a kiértékelés azonnal félbeszakad, ha az eredmény igaz vagy hamis volta ismertté válik. A legtöbb C nyelvű program kihasználja ezeket a tulajdonságokat. Így pl. az <a href="01.html">1. fejezetben</a> írt <span class="m">getline</span> függvény ciklusszervezése is ennek alapján működik:<br />
+  </p>
+  <pre>
+<span class="k">for</span> (i = 0; i&lt;lim-1 &amp;&amp; (c = <span class="f">getchar</span> ( )) != '<span class="e">\n</span>'
+	   &amp;&amp; c != <span class="f">EOF</span>; ++i) 
+   s[i] = c;
+</pre>
+  Az új karakter beolvasása előtt meg kell vizsgálni, hogy van-e hely számára az <span class="m">s</span> tömbben, így először az <span class="m">i&lt;lim-1</span> ellenőrzést <i>kell</i> végrehajtani. Ha ennek az eredménye hamis, akkor a program már nem is megy tovább a következő karakter beolvasására. Ugyancsak nem volna szerencsés, ha a <span class="m">c</span> karaktert az állomány vége feltételre vizsgálnánk a <span class="f">getchar</span> hívása előtt, ezért a hívásnak és az értékadásnak meg kell előzni a <span class="m">c</span> karakter vizsgálatát.
+  <p> Az <span class="m">&amp;&amp;</span> precedenciája nagyobb, mint a <span class="m">||</span> precedenciája, és mindkét operátor alacsonyabb precedenciájú, mint a relációs és egyenlőség operátorok, így az<br />
+  </p>
+  <pre>
+i&lt;lim-1 &amp;&amp; (c = <span class="f">getchar</span>( )) != '<span class="e">\n</span>' &amp;&amp; c != <span class="f">EOF</span>
+</pre>
+  kifejezés nem tartalmaz felesleges zárójeleket. De mivel a <span class="m">!=</span> precedenciája nagyobb, mint az értékadásé, ezért zárójelezés szükséges:<br />
+  <pre>
+(c = <span class="f">getchar</span>( )) != '<span class="e">\n</span>'<br />
+</pre>
+  Ezzel elérjük, hogy először az értékadás történjen meg, és csak ezután hasonlítsuk össze a <span class="m">c</span> értékét az <span class="m">'<span class="e">\n</span>'</span> karakterrel.
+  <p> Egy relációs vagy logikai kifejezés számértéke definíció szerint <span class="m">0</span>, ha a kifejezés hamis, és <span class="m">1</span>, ha igaz.</p>
+  <p> A <span class="m">!</span> unáris (egyoperandusú) negáló operátor a nem nulla (igaz) operandust 0 értékűvé (hamissá), a 0 értékű (hamis) operandust 1 értékűvé (igazzá) alakítja. A <span class="m">!</span> operátort gyakran használjuk olyan szerkezetekben, mint pl. az<br />
+  </p>
+  <pre>
+<span class="k">if</span> (!igaz)
+</pre>
+  az<br />
+  <pre>
+<span class="k">if</span> (igaz == 0)
+</pre>
+  kifejezés helyett. Nehéz általános esetben megmondani, hogy melyik változat a jobb. A <span class="m">!igaz</span> szerkezet általában jól olvasható („nem igaz”), de bonyolultabb esetben nehezen érthető.<br />
+  <br />
+  <p><b>2.2.</b> gyakorlat. Írjunk az előző <span class="k">for</span> ciklussal egyenértékű ciklust, ami nem használja az <span class="m">&amp;&amp;</span> vagy <span class="m">||</span> operátorokat!<br />
+    <br />
+  </p>
+  <h3><a name="2.7." id="2.7."></a>2.7. Típuskonverziók<br />
+  </h3>
+  Ha egy operátor operandusai különböző típusúak, akkor a művelet végrehajtása előtt azokat egy közös típusra kell hozni. Az átalakításra néhány szabály vonatkozik. Általában az automatikus konverzió csak akkor jön létre, ha egy „keskenyebb&quot; operandust egy „szélesebb” operandussá kell alakítani, mivel így biztosan nem vész el információ. Ilyen konverzió jön létre pl. az <span class="m">f+1</span> alakú kifejezésekben, ahol az <span class="m">i</span> egész lebegőpontossá alakul az <span class="m">f</span> lebegőpontos szám miatt. Az értelmetlen kifejezések, mint pl. <span class="k">float</span> típusú adat indexként való használata, nem megengedettek. Ha egy hosszabb egész típust egy rövidebbhez, vagy egy lebegőpontos típust egy egészhez rendelünk, akkor információ veszhet el, ezért figyelmeztető jelzést kapunk, de maga a művelet nem tilos.
+  <p> A <span class="k">char</span> típusú adatok kis egész számok, ezért az összes aritmetikai műveletben szabadon használhatók, ami nagymértékben egyszerűsíti és rugalmassá teszi a karakterkezelést. Erre jó példa az <span class="f">atoi</span> függvény, amely a számjegyekből álló karaktersorozatot a megfelelő értékű számmá alakítja. A függvény egyszerűsített változata:<br />
+  </p>
+  <pre>
+<span class="c">/* atoi: az s karaktersorozat egész számmá alakitása */</span>
+<span class="k">int</span> <span class="f">atoi</span>(<span class="k">char</span> s[ ])
+{
+   <span class="k">int</span> i, n;
+
+   n = 0;
+   <span class="k">for</span> (i = 0; s[i] &gt;= '0' &amp;&amp; s[i] &lt;= '9'; ++i)
+      n = 10 * n + (s[i] - '0'); 
+<span class="k">return</span> n; 
+}
+</pre>
+  Amint azt az <a href="01.html">1. fejezetben</a> már elmondtuk, az <span class="m">s[i]-'0'</span> kifejezés megadja az <span class="m">s[i]</span>-ben tárolt karakter számértékét, mivel a <span class="m">'0', '1'</span> stb. folyamatosan növekvő sorozatot alkot.
+  <p> A <span class="k">char</span> típus <span class="k">int</span> típussá alakítására egy másik példa a <span class="m">lower</span> függvény, amely egy (kizárólag ASCII karakterkészletbeli) karaktert alakít kisbetűvé. Ha a karakter nem nagybetű, akkor a függvény változatlan formában adja vissza.<br />
+  </p>
+  <pre>
+<span class="c">/* lower: a c ASCII karakter kisbetűssé alakitása */</span>
+<span class="k">int</span> lower(<span class="k">int</span> c)
+{
+   <span class="k">if</span> (c &gt;= 'A' &amp;&amp; c &lt;= 'Z')
+      <span class="k">return</span> c + 'a' - 'A';
+   <span class="k">else</span>
+      <span class="k">return</span> c; 
+}
+</pre>
+  A függvény csak ASCII karakterkészlet esetén használható, mivel kihasználja, hogy a nagy- és kisbetűk számértéke (kódja) rögzített távolságra van egymástól, és a nagy-, ill. kisbetűs ábécék folyamatosak (azaz A és Z, ill. a és z között a betűkön kívül nincs más karakter). Ez az utóbbi kitétel nem igaz az EBCDIC karakterkészletre, így a lower nem működne helyesen (nem csak betűket alakítana át).
+  <p> A <a href="b.html">B. függelékben</a> leírt <span class="m">&lt;ctype.h&gt;</span> standard header állományban számos függvény van, amelyek a karakterkészlettől független karakter-ellenőrzésre és -átalakításra használhatók. Például a <span class="m"><span class="f">tolower</span>(c)</span> függvény a <span class="m">c</span> karakter kisbetűs értékével tér vissza, ha az nagybetűs karakter volt, így általánosabb formában helyettesítheti a <span class="m">lower</span> függvényünket.</p>
+  <p> Az <span class="f">atoi</span> függvényben használt<br />
+  </p>
+  <pre>
+c &gt;= '0' &amp;&amp; c &lt;= '9'
+</pre>
+  vizsgálat is helyettesíthető az<br />
+  <pre>
+<span class="f">isdigit</span>(c)
+</pre>
+  könyvtári függvénnyel. A továbbiakban a <span class="m">&lt;ctype.h&gt;</span> standard header függvényeit használni fogjuk az egyes programokban.
+  <p> A karakterek egésszé alakításával kapcsolatban szólnunk kell még a C nyelv egy további finomságáról. A nyelv nem határozza meg, hogy a <span class="k">char</span> típusú változó előjeles vagy előjel nélküli mennyiség-e. Vajon <span class="k">char</span> típusú adat <span class="k">int</span> típusúvá alakításakor létrejöhet-e negatív szám? A válasz gépről gépre változik, a felépítéstől függően. Néhány számítógépnél azok a karakterek, amelyek bal szélső (legnagyobb helyiértékű) bitje 1, negatív egész számmá konvertálódnak (előjel-kiterjesztés!). Más gépeken az átalakítás során keletkező <span class="k">int</span> típusú adat balról nullákkal töltődik fel, ezért mindig pozitív marad.</p>
+  <p> A C nyelv definíciója garantálja, hogy a gép szabványos karakterkészletében lévő egyetlen nyomtatható karakter sem lesz negatív, így ezek a karakterek egy kifejezésben mindig pozitív mennyiségként szerpelnek. Ez természetesen nem igaz a karakteres változóban tárolt tetszőleges bitmintákra, amelyek néhány gépen negatív, más gépeken pozitív értékűek lehetnek. Az egyértelműség és hordozhatóság érdekében célszerű a <span class="k">signed</span> vagy <span class="k">unsigned</span> minősítőt használni, ha nem karakteres adatot tárolunk <span class="k">char</span> típusú változóban.</p>
+  <p> Az <span class="m">&amp;&amp;</span> és <span class="m">||</span> logikai műveletekkel összekapcsolt <span class="m">i &gt; j</span> alakú relációs kifejezések és logikai kifejezések eredményének értékét úgy definiáljuk, hogy az <span class="m">1</span>, ha az eredmény igaz, és <span class="m">0</span>, ha hamis. Így a<br />
+  </p>
+  <pre>
+d = c &gt;= '0' &amp;&amp; c &lt;= '9'
+</pre>
+  értékadás a <span class="m">d</span> változóhoz <span class="m">1</span> értéket rendel, ha <span class="m">c</span> számjegy, és <span class="m">0</span> értéket, ha nem. Másrészről az <span class="f">isdigit</span>hez hasonló függvények igaz esetben tetszőleges nem nulla értékkel térnek vissza. Az eltérő értelmezések okozta hibák kiküszöbölése érdekében az <span class="k">if</span>, <span class="k">while</span>, <span class="k">for</span> stb. utasítások vizsgáló részében az „igaz” ugyanazt jelenti, mint a „nem nulla”, ezért a kétféle értékadás hatása között nincs különbség.
+  <p> Az implicit aritmetikai típuskonverziók sokkal inkább a várakozásnak megfelelően működnek. Ha egy kétoperandusú operátor (pl. <span class="m">+</span> vagy <span class="m">*</span>) operandusai különböző típusúak, akkor az „alacsonyabb” típus „magasabb” típussá alakul (<i>„előlép”</i>) a művelet végrehajtása előtt, és az eredmény a „magasabb” típusnak megfelelő lesz. A pontos konverziós szabályokat az <a href="a.html#A6">A. Függelék 6. pontjában</a> ismertetjük, addig is néhány egyszerű szabályt adunk. Ha az operandusok nem <span class="k">unsigned</span> minősítésűek, akkor:<br />
+  </p>
+  <pre class="def">
+<i>Ha</i> valamelyik operandus <span class="k">long</span> <span class="k">double</span> típusú, akkor a másik is <span class="k">long</span> <span class="k">double</span>
+      típusúvá konvertálódik;
+<i>különben</i>, ha valamelyik operandus <span class="k">double</span> típusú, akkor a másik is <span class="k">double</span>
+      típusúvá konvertálódik;
+<i>különben</i>, ha valamelyik operandus <span class="k">float</span> típusú, akkor a másik is <span class="k">float</span>
+      típusúvá konvertálódik;
+<i>különben</i> a <span class="k">char</span> és <span class="k">short</span> típusú operandus <span class="k">int</span>
+      típusúvá konvertálódik;
+<i>végül</i>, ha valamelyik operandus <span class="k">long</span> típusú, akkor a másik is <span class="k">long</span>
+      típusúvá konvertálódik.
+</pre>
+  Megjegyezzük, hogy egy kifejezésben a <span class="k">float</span> típusú operandusok nem automatikusan alakulnak át <span class="k">double</span> típusúvá, ami a C nyelv eredeti definíciójához képest eltérést jelent. Általában a matematikai függvények (mint a <span class="m">&lt;math.h&gt;</span> standard header függvényei is) kétszeres pontosságú lebegőpontos adatokat használnak. A <span class="k">float</span> típus használatának fő oka, hogy nagy tömbök esetén tárterület takarítható meg, vagy ritkábban, hogy a végrehajtási idő csökken, mivel a kétszeres pontosságú aritmetika viszonylag lassú.
+  <p> A konverziós szabályok <span class="k">unsigned</span> minősítésű operandusok esetén sokkal bonyolultabbak. A problémát az előjeles és előjel nélküli számok összehasonlítása jelenti, mivel az értékek a géptől és a különböző egész típusok méretétől függenek. Például tegyük fel, hogy az <span class="k">int</span> 16 bites, a <span class="k">long</span> 32 bites. Ekkor <span class="m">-1L &lt; 1U</span>, mert <span class="m">1U</span> (ami egy <span class="k">int</span> típus) „előlép” <span class="k">signed</span> <span class="k">long</span> típussá. Másrészt viszont <span class="m">-1L</span> &gt; <span class="m">1UL</span>, mert a <span class="m">-1L</span> <span class="k">unsigned</span> <span class="k">long</span> típussá „lép elő”, amivel nagy pozitív számmá válik.</p>
+  <p> Az értékadás is típuskonverzióval jár: a jobb oldal értéke a bal oldal típusának megfelelő típusúvá alakul és ez lesz az eredmény típusa is.</p>
+  <p> A karakterek mindig egésszé alakulnak (előjel-kiterjesztéssel vagy anélkül, ahogy erről már volt szó).</p>
+  <p> A hosszabb egészek rövidebb vagy <span class="k">char</span> típusúvá alakulásakor a magasabb helyiértékű bitek elvesznek. Így az<br />
+  </p>
+  <pre>
+<span class="k">int</span> i;
+<span class="k">char</span> c;
+
+i = c;
+c = i;
+</pre>
+  műveletsorban a <span class="m">c</span> értéke változatlan marad. Ez mindig igaz, függetlenül attól, hogy van-e előjel-kiterjesztés vagy sem.
+  <p> Az értékadás sorrendjének megfordítása információvesztéshez vezethet. Ha az <span class="m">x</span> <span class="k">float</span> és az <span class="m">i</span> <span class="k">int</span> típusú, akkor az <span class="m">x = i</span> és <span class="m">i = x</span> értékadásoknál mindkét esetben létrejön a típuskonverzió. A <span class="k">float</span> <span class="k">int</span> típussá alakulása a törtrész elvesztésével jár. Ha <span class="k">double</span> típust alakítunk <span class="k">float</span> típussá, akkor az új érték a rendszertől függően kerekítéssel vagy levágással keletkezik.</p>
+  <p> Mivel függvényhíváskor az argumentum kifejezés is lehet, az argumentum átadásakor is létrejöhet típuskonverzió. Függvényprototípus hiányában a <span class="k">char</span> és <span class="k">short</span> típusok <span class="k">int</span> típussá, a <span class="k">float</span> típus <span class="k">double</span> típussá alakul. Ezért a függvények argumentumait <span class="k">int</span> és <span class="k">double</span> típusúnak deklaráltuk akkor is, ha a függvényt <span class="k">char</span> vagy <span class="k">float</span> típusú argumentummal hívtuk.</p>
+  <p> Végül megjegyezzük, hogy tetszőleges kifejezésben kikényszeríthetjük az explicit típuskonverziót a rögzítő <span class="m">(cast)</span> unáris típusmódosító operátorral. Az így kialakított szerkezet:<br />
+  </p>
+  <pre class="defit">
+(típusnév) kifejezés
+</pre>
+  alakú, és hatására a <i>kifejezés</i> a típusnévvel megadott típusúvá konvertálódik, a korábban elmondott szabályok szerint. A kényszerített típusmódosítás alapvetően úgy működik, mintha a <i>kifejezés</i> értékét az előírt típusú változóhoz rendelnénk egy értékadással, majd ezután ezt a változót használnánk a kifejezés helyett. Például a <span class="f">sqrt</span> könyvtári függvény <span class="k">double</span> típusú argumentumot vár, és értelmetlen eredményt ad, ha véletlenül valamilyen más típusú argumentumot kap. (Az <span class="f">sqrt</span> függvény a <span class="m">&lt;math.h&gt;</span> standard headerben található.) Így, ha az <span class="m">n</span> változó egész típusú, akkor az <span class="f">sqrt</span> függvény<br />
+  <pre>
+<span class="f">sqrt</span>((<span class="k">double</span>) n)
+</pre>
+  formában használható, mivel ez a paraméterátadás előtt <span class="k">double</span> típusúvá alakítja <span class="m">n</span> értékét. Meg kell jegyeznünk, hogy bár a kényszerített típusmódosítás létrehozza <span class="m">n</span> megfelelő típusú értékét, de magát az <span class="m">n</span> változót nem változtatja meg. A kényszerített típusmódosítás operátora a többi unáris operátorral azonos precedenciájú, mint az a fejezet végén lévő összefoglaló táblázatból látszik.
+  <p> Ha az argumentumot egy függvényprototípusban deklaráljuk (ami a szokásos megoldás), akkor a deklaráció bármilyen más, a függvény hívásakor felhasznált argumentumra rákényszeríti a megadott típust. Így pl. az <span class="f">sqrt</span> prototípusát<br />
+  </p>
+  <pre>
+<span class="k">double</span> <span class="f">sqrt</span> (<span class="k">double</span>);
+</pre>
+  formában megadva megengedett a<br />
+  <pre>
+gyok2 = <span class="f">sqrt</span>(2)
+</pre>
+  alakú hívás, mivel a 2 automatikusan <span class="k">double</span> típusú <span class="m">2.0</span> értékké alakul, minden kényszerített típusmódosítás nélkül.
+  <p> A standard könyvtár tartalmaz egy hordozható pszeudovéletlenszám-generátort, valamint annak kezdőértékét beállító függvényt. A két függvény egyszerűsített programja jó példa a kényszerített típusmódosításra. A program:<br />
+  </p>
+  <pre>
+<span class="k">unsigned</span> <span class="k">long</span> <span class="k">int</span> next = 1;
+
+<span class="c">/* rand: egy 0 és 32767 közti pszeudo-véletlen számot */</span>
+<span class="c">/* ad vissza */</span>
+<span class="k">int</span> rand(<span class="k">void</span>)
+{
+   next = next * 1103515245 + 12345;
+   <span class="k">return</span> (<span class="k">unsigned</span> <span class="k">int</span>) (next/65536) % 32768;
+}
+
+<span class="c">/* srand: a rand kezdőértékének beállítása */</span>
+<span class="k">void</span> srand(<span class="k">unsigned</span> <span class="k">int</span> alap)
+{
+   next = alap; 
+}
+</pre>
+  <p><b>2.3.</b> gyakorlat. Írjunk <span class="m">htoi(s)</span> néven függvényt, amely egy hexadecimális számjegyekből álló karaktersorozatot (beleértve a <span class="m">0x</span> vagy <span class="m">0X</span> karaktersorozatot is) a megfelelő egész számmá alakít! A megengedett számjegyek <span class="m">0...9</span> és <span class="m">a...f</span> vagy <span class="m">A...F</span>.<br />
+    <br />
+  </p>
+  <h3><a name="2.8." id="2.8."></a>2.8. Inkrementáló és dekrementáló operátorok<br />
+  </h3>
+  A C nyelv két szokatlan operátort használ a változók inkrementálására (eggyel való növelésére) és dekrementálására (eggyel való csökkentésére). A <span class="m">++</span> inkrementáló operátor egyet ad az operandushoz, a <span class="m">--</span> dekrementáló operátor pedig egyet kivon belőle. A <span class="m">++</span> operátort gyakran használjuk változók növelésére, pl. az<br />
+  <pre>
+<span class="k">if</span> (c == '<span class="e">\n</span>') ++nl
+</pre>
+  programrészletben. A <span class="m">++</span> és <span class="m">--</span> szokatlan vonatkozása, hogy prefix formában (a változó előtt elhelyezve, pl. <span class="m">++n</span>) és postfix formában (a változó után elhelyezve, pl. <span class="m">n++</span>) egyaránt létezik. A kétféle változat egyaránt növeli (vagy csökkenti) a változót, de a <span class="m">++n</span> a felhasználás előtt, az <span class="m">n++</span> pedig utána növeli az <span class="m">n</span> értékét (a <span class="m">--</span> operátor hasonlóan működik). Ebből következően minden olyan esetben, amikor a változó értékét is felhasználjuk (nem csak a növelésre vagy csökkentésre, azaz számlálásra van szükség), a <span class="m">++n</span> és az <span class="m">n++</span> különbözik. Ha pl. <span class="m">n</span> értéke <span class="m">5</span>, akkor<br />
+  <pre>
+x = n++;
+</pre>
+  hatására <span class="m">x</span> értéke <span class="m">5</span> lesz, amíg az<br />
+  <pre>
+x = ++n;
+</pre>
+  hatására <span class="m">x</span> értéke <span class="m">6</span> lesz. Természetesen <span class="m">n</span> értéke mindkét esetben <span class="m">6</span> lesz. Az inkrementáló vagy dekrementáló operátorok csak változókra alkalmazhatók, az <span class="m">(i+j)++</span> formájú kifejezések tilosak.
+  <p> Olyan esetekben, amikor az értékre nincs szükség, csak a növelésre, mint pl. az alábbi példában:<br />
+  </p>
+  <pre>
+<span class="k">if</span> (c == '<span class="e">\n</span>')
+   nl++;
+</pre>
+  a prefix és postfix forma egyenértékű. Van viszont olyan feladat, amikor csak az egyiket vagy a másikat választhatjuk. Példaként vizsgáljuk meg a <span class="m">squeeze(s, c)</span> függvényt, amely az <span class="m">s</span> karaktersorozatból eltávolítja az összes <span class="m">c</span> karaktert.<br />
+  <pre>
+<span class="c">/* squeeze: az s-ből törli az összes c-t */</span>
+<span class="k">void</span> squeeze(<span class="k">char</span> s[ ], <span class="k">int</span> c)
+{
+   <span class="k">int</span> i, j;
+
+   <span class="k">for</span> (i = j = 0; s[i] != '<span class="e">\0</span>'; i++)
+      <span class="k">if</span> (s[i] != c)
+         s[j++] = s[i];
+   s[j] = '<span class="e">\0</span>'; 
+}
+</pre>
+  A függvény minden alkalommal, amikor <span class="m">c</span>-től különböző karaktert talál, az <span class="m">i</span>-edik pozícióból átmásolja azt a <span class="m">j</span>-edik (aktuális) pozícióba, és csak ezután inkrementálja <span class="m">j</span> értékét, hogy kijelölje a következő karakter helyét. Ez teljesen egyenértékű a következővel:<br />
+  <pre>
+<span class="k">if</span> (s[i] != c) {
+   s[j] = s[i];
+   j++;
+}
+</pre>
+  A másik példát az <a href="01.html">1. fejezetben</a> ismertetett <span class="m">getline</span> függvényből vettük:<br />
+  <pre>
+<span class="k">if</span> (c == '<span class="e">\n</span>') {
+   sor[i] = c;
+   ++i; 
+}
+</pre>
+  Ez a szerkezet helyettesíthető a sokkal tömörebb<br />
+  <pre>
+<span class="k">if</span> (c == '<span class="e">\n</span>')
+   sor[i++] = c;
+</pre>
+  szerkezettel. A harmadik példánk az <span class="m">strcat(s, t)</span> függvény, amely a <span class="m">t</span> karaktersorozatot az <span class="m">s</span> karaktersorozat végéhez illeszti (konkatenálja). Az <span class="m">strcat</span> feltételezi, hogy az <span class="m">s</span> karaktersorozat elegendően hosszú az összekapcsolt karaktersorozat befogadásához. Az itt közölt példaprogramban az <span class="m">strcat</span> visszatéréskor nem ad értéket, standard könyvtári változata viszont egy mutatót ad vissza, ami kijelöli az eredményül kapott karaktersorozat helyét.<br />
+  <pre>
+<span class="c">/* strcat: a t karaktersorozatot a s karaktersorozat végéhez
+kapcsolja, s elegendően hosszú */</span>
+<span class="k">void</span> strcat(<span class="k">char</span> s[], <span class="k">char</span> t[ ] )
+{
+   <span class="k">int</span> i, j;
+
+   i = j = 0;
+   <span class="k">while</span> (s[i] != '\0') <span class="c">/* megkeresi s végét */</span>
+      i++;
+   <span class="k">while</span> ((s[i++] = t[j++]) != '\0')
+      ; <span class="c">/* átmásolja t-t */</span>
+}
+</pre>
+  A program <span class="m">t</span> minden egyes karakterének <span class="m">s</span>-be másolása után a postfix <span class="m">++</span> operátorral növeli <span class="m">i</span> és <span class="m">j</span> értékét, így azok a ciklusmag következő végrehajtásakor már a következő helyet jelölik ki.<br />
+  <br />
+  <p><b>2.4.</b> gyakorlat. Írjuk meg a <span class="m">squeeze(s1, s2)</span> olyan változatát, amely az <span class="m">s1</span> karaktersorozatból töröl minden karaktert, ami az <span class="m">s2</span> karaktersorozatban megtalálható!</p>
+  <p><b>2.5.</b> gyakorlat. Írjunk <span class="m">any(s1, s2)</span> néven függvényt, amely visszatérési értékként megadja az <span class="m">s1</span> karaktersorozat azon legelső helyét, ahol az <span class="m">s2</span> karaktersorozat bármelyik karaktere előfordul! A függvény visszatérési értéke legyen <span class="m">-1</span>, ha <span class="m">s1</span> egyetlen <span class="m">s2</span>-beli karaktert sem tartalmaz. (Az <span class="f">strbrk</span> standard könyvtári függvény ugyanezt teszi, csak visszatérési értékként az adott helyet kijelölő mutatót adja.)<br />
+    <br />
+  </p>
+  <h3><a name="2.9." id="2.9."></a>2.9. Bitenkénti logikai operátorok<br />
+  </h3>
+  A C nyelvben hat operátor van a bitenkénti műveletekre. Ezek az operátorok csak egész típusú adatokra, azaz <span class="k">char</span>, <span class="k">short</span>, <span class="k">int</span> és <span class="k">long</span> típusokra használhatók, akár előjeles, akár előjel nélküli változatban. Az egyes operátorok és értelmezésük a következő:<br />
+  <pre>
+&amp;     <span class="def">bitenkénti ÉS-kapcsolat</span>
+|     <span class="def">bitenkénti megengedő (inkluzív) VAGY-kapcsolat</span>
+^     <span class="def">bitenkénti kizáró (exkluzív) VAGY-kapcsolat</span>
+&lt;&lt;    <span class="def">balra léptetés</span>
+&gt;&gt;    <span class="def">jobbra léptetés</span>
+~     <span class="def">egyes komplemens képzés (unáris)</span>
+</pre>
+  A bitenkénti ÉS operátort gyakran valamilyen bitminta kimaszkolására használják, pl. az<br />
+  <pre>
+n = n &amp; 0177;
+</pre>
+  művelet az <span class="m">n</span> bináris értékében az alsó hét bit kivételével minden bitet nulláz. A bitenkénti VAGY operátort a bitek beállítására használják, pl. az<br />
+  <pre>
+x = x | BEALL;
+</pre>
+  művelet <span class="m">x</span> minden olyan bitjét <span class="m">1</span>-re állítja, amely a <span class="m">BEALL</span>-ban is <span class="m">1</span> volt (függetlenül attól, hogy korábban milyen értékű volt).
+  <p> A kizáró VAGY operátor minden olyan helyen <span class="m">1</span>-et ad, ahol a két operandus bitjei különböztek, és <span class="m">0</span>-t, ha megegyeztek.</p>
+  <p> Az <span class="m">&amp;</span> és <span class="m">|</span> bitenkénti, valamint az <span class="m">&amp;&amp;</span> és <span class="m">||</span> logikai operátorok közti legfontosabb különbség, hogy az utóbbiak az igazságtábla szerint, balról jobbra haladva végzik a kiértékelést, míg az előzőek egy lépésben, bitenként. Például, ha <span class="m">x</span> értéke <span class="m">1</span> és <span class="m">y</span> értéke 2 , akkor <span class="m">x &amp; y</span> értéke nulla, viszont <span class="m">x &amp;&amp; y</span> értéke egy.</p>
+  <p> A <span class="m">&lt;&lt;</span> és <span class="m">&gt;&gt;</span> léptető operátorok a bal oldalukon lévő operandust a jobb oldalukon lévő pozitív értéknek megfelelő számú bittel jobbra vagy balra léptetik. Így pl. az <span class="m">x &lt;&lt; 2</span> művelet <span class="m">x</span> értékét két hellyel balra lépteti, a jobb szélen keletkező két üres bináris helyet nullával tölti fel. A művelet megfelel a néggyel való szorzásnak. Egy előjel nélküli mennyiség jobbra léptetésekor a bal szélen felszabaduló bitek mindig nullával töltődnek fel. Előjeles számok jobbra léptetésekor a felszabaduló bitek az előjel bittel (aritmetikai léptetés), ill. néhány számítógép esetén nullával töltődnek fel (logikai léptetés).</p>
+  <p> A <span class="m">~</span> unáris (egyoperandusú) operátor egy egész egyes komplemensét állítja elő, ami azt jelenti, hogy a szám minden <span class="m">1</span> értékű bitjét <span class="m">0</span>-ra, minden <span class="m">0</span> értékű bitjét <span class="m">1</span>-re állítja. Például az<br />
+  </p>
+  <pre>x = x ~ 077
+</pre>
+  művelet hatására <span class="m">x</span> utolsó hat bitje nulla értékű lesz. Vegyük észre, hogy az <span class="m">x ~ 077</span> eredménye független az <span class="m">x</span> gépi ábrázolásához használt szó hosszától, és így 16 bites szóhossz esetén (de csak akkor!) előnyösebb a vele egyenértékű <span class="m">x ~ 0177700</span> művelet. A hordozható forma semmiféle többletbefektetést nem igényel, mivel az <span class="m">~077</span> egy állandó kifejezés, aminek kiértékelése a fordítás során történik.
+  <p> Néhány bitenkénti operátor működésének bemutatására írjunk <span class="m">getbits(x, p, n)</span> néven függvényt, amely az <span class="m">x</span> <span class="m">p</span>-edik hellyel kezdődő <span class="m">n</span> bites részét adja vissza, jobbra igazítva. Tételezzük fel, hogy a <span class="m">0.</span> bitpozíció a jobb szélső, valamint azt, hogy <span class="m">n</span> és <span class="m">p</span> értelmes pozitív mennyiségek. Például a <span class="m">getbits(x, 4, 3)</span> <span class="m">x</span> 4., 3. és 2. pozícióján álló hárombites, jobbra igazított számmal tér vissza. A függvény:<br />
+  </p>
+  <pre>
+<span class="c">/* getbits: a p-edik pozíciótól kezdődő n bitet adja */</span>
+<span class="k">unsigned</span> getbits(<span class="k">unsigned</span> x, <span class="k">int</span> p, <span class="k">int</span> n)
+{
+   <span class="k">return</span> (x &gt;&gt; (p+1-n)) &amp; ~(~0 &lt;&lt; n);
+}
+</pre>
+  az <span class="m">x &gt;&gt; (p+1-n)</span> kifejezés a kiválasztott mezőt a szó jobb szélére mozgatja. A <span class="m">~0</span> a teljes szóhosszon csupa <span class="m">1</span> értékű bitet jelent, amit a <span class="m">~0 &lt;&lt; n</span> művelettel <span class="m">n</span> lépéssel balra tolunk. Ennek hatására a szó <span class="m">n</span> számú jobb szélső bitje nullával töltődik fel, és ebből komplementálással alakul ki az <span class="m">n</span> darab jobb szélső bitet kiválasztó (csupa egyenesből álló) maszk.<br />
+  <br />
+  <p><b>2.6.</b> gyakorlat. Írjuk meg a <span class="m">setbits(x, p, n, y)</span> függvényt, amely egy olyan <span class="m">x</span> értékkel tér vissza, amit úgy kap, hogy az <span class="m">x</span> <span class="m">p</span>-edik pozíciótól jobbra eső <span class="m">n</span> bitje helyébe bemásolja <span class="m">y</span> jobb szélső <span class="m">n</span> bitjét, a többi bitet változatlanul hagyva!</p>
+  <p> <b>2.7.</b> gyakorlat. Írjunk egy <span class="m">invert(x, p, n)</span> függvényt, amely az <span class="m">x</span> <span class="m">p</span>-edik pozíciótól kezdődő <span class="m">n</span> bitjét invertálja (az <span class="m">1</span>-eseket <span class="m">0</span>-ra, a <span class="m">0</span>-kat <span class="m">1</span>-esekre változtatja), a többi bitet pedig változatlanul hagyja!</p>
+  <p> <b>2.8.</b> gyakorlat. Írjunk egy <span class="m">rightrot(x, n)</span> függvényt, ami <span class="m">n</span> bittel jobbra rotálja az <span class="m">x</span> egész mennyiséget! Jobbra rotálásnál a jobb szélen kilépő bitek a bal szélen visszakerülnek a szóba.<br />
+    <br />
+  </p>
+  <h3><a name="2.10." id="2.10."></a>2.10. Értékadó operátorok és kifejezések<br />
+  </h3>
+  Az olyan kifejezéseket, mint<br />
+  <pre>
+i = i + 2
+</pre>
+  amelyekben a bal oldalon lévő változó ismét megjelenik a jobb oldalon, az<br />
+  <pre>
+i += 2
+</pre>
+  tömörebb formában is írhatjuk. Az új formában szereplő <span class="m">+=</span> jelkombinációt értékadó operátornak nevezik. A legtöbb kétoperandusú operátor (pl, mint a <span class="m">+</span>, amelynek bal és jobb oldalán is operandus áll) szerepelhet az értékadó operátorban, amelynek általános alakja <i>op=</i>, ahol <i>op</i> a<br />
+  <pre>
++ - * / % &lt;&lt; &gt;&gt; &amp; ^ |
+</pre>
+  operátorok egyike lehet. Ha <i>k1</i> és <i>k2</i> két kifejezés, akkor a<br />
+  <pre>
+<i>k1 op= k2</i>
+</pre>
+  egyenértékű a<br />
+  <pre>
+<i>k1 = (k1) op (k2)</i>
+</pre>
+  alakkal. A tömörebb forma előnye, hogy a gép a kikifejezést csak egyszer számolja ki. Összetett kifejezések esetén ügyeljünk a zárójelekre. Például az<br />
+  <pre>
+x *= y + 1
+</pre>
+  alak az<br />
+  <pre>
+x = x * (y + 1)
+</pre>
+  kifejezésnek felel meg, és nem az<br />
+  <pre>
+x = x * y + 1
+</pre>
+  kifejezésnek. Az elmondottak megvilágítására nézzük a bitcount függvényt, amely megszámolja az egész típusú argumentumában lévő 1 értékű biteket.<br />
+  <pre>
+<span class="c">/* bitcount: x 1 értékű bitjeinek száma */</span>
+<span class="k">int</span> bitcount(<span class="k">unsigned</span> x)
+{
+   <span class="k">int</span> b;
+
+   <span class="k">for</span> (b = 0; x != 0; x &gt;&gt;= 1)
+      <span class="k">if</span> (x &amp; 01)
+         b++;
+   <span class="k">return</span> b;
+}
+</pre>
+  A függvény <span class="m">x</span> argumentumát <span class="k">unsigned</span> típusúnak deklaráltuk, hogy a jobbra léptetés során a felszabaduló helyekre garantáltan 0 értékű bitek lépjenek be, függetlenül a géptől, amelyen a program fut.
+  <p> A tömörségen túl az értékadó operátorok alkalmazásának további előnye, hogy jobban megfelel az emberi gondolkodásnak. Általában azt mondjuk, hogy „adj kettőt i-hez” vagy „növeld i-t kettővel”, ahelyett, hogy azt mondanánk „vedd i-t, adj hozzá kettőt, majd tedd az eredményt vissza az i-be”. Emiatt az <span class="m">i += 2</span> kifejezés előnyösebb, mint az <span class="m">i = i+2</span>. Bonyolult kifejezéseknél az értékadó operátor használatának még az is előnye, hogy érthetőbbé teszi a programot. Például egy<br />
+  </p>
+  <pre>
+yyval[yypv[p3+p4] + yypv[p1+p2]] += 2
+</pre>
+  alakú kifejezésben nem kell nehézkes módon ellenőrizni, hogy a bal és jobb oldali kifejezések tényleg megegyeznek-e, ill. ha nem, akkor miért nem. Az értékadó operátorok a fordítóprogramot is segítik a hatékony kód előállításában.
+  <p> Mint korábban már láttuk, az értékadó utasításnak értéke van és előfordulhat kifejezésben, amire a legegyszerűbb példa a<br />
+  </p>
+  <pre>
+<span class="k">while</span> ((c = <span class="f">getchar</span>()) != <span class="f">EOF</span>)
+</pre>
+  utasítássor. Ennek mintájára más értékadó operátort (<span class="m">+=</span>, <span class="m">-=</span> stb.) tartalmazó értékadások is szerepelhetnek kifejezésekben, bár ez nem túl gyakori.
+  <p> Minden ilyen kifejezésben az értékadó kifejezés típusa megegyezik a bal oldali operandus típusával, és értéke az értékadás utáni érték.<br />
+    <br />
+  </p>
+  <p><b>2.9.</b> gyakorlat. A kettes komplemens kódú aritmetikában az <span class="m">x &amp;= (x-1)</span> kifejezés törli <span class="m">x</span> jobb szélső bitjét. Magyarázzuk meg, miért! Ezt kihasználva írjunk egy gyorsabb bitcount változatot!<br />
+    <br />
+  </p>
+  <h3><a name="2.11." id="2.11."></a>2.11. Feltételes kifejezések<br />
+  </h3>
+  Az<br />
+  <pre>
+<span class="k">if</span> (a &gt; b)
+   z = a;
+<span class="k">else</span>
+   z = b;
+</pre>
+  programrészlet hatására <span class="m">z</span> az <span class="m">a</span> és <span class="m">b</span> értékek közül a nagyobbikat veszi fel. Ilyen és hasonló szerkezetek a C nyelv háromoperandusú <span class="m">?:</span> <i>feltételes kifejezés</i> operandusával egyszerűbben is leírhatók. Az operátor általános formája kifejezésekben:<br />
+  <pre class="defit">
+kif1? kif2 : kif3
+</pre>
+  A szerkezet úgy működik, hogy először kiértékeli a <i>kif1</i> kifejezést. Ha ennek értéke nem nulla (igaz), akkor a <i>kif2</i> kiértékelése következik, egyébként pedig a <i>kif3</i> kiértékelése. A program <i>kif2</i> és <i>kif3</i> közül csak az egyiket értékeli ki (a <i>kif1</i> értékétől függően) és ez lesz a feltételes kifejezés értéke. Így <span class="m">z</span> beállítása az <span class="m">a</span> és <span class="m">b</span> közül a nagyobbik értékének megfelelően a<br />
+  <pre>
+z=(a&gt;b) ? a : b; <span class="c">/* z = max (a, b) */</span>
+</pre>
+  utasítással történhet.
+  <p> Meg kell jegyeznünk, hogy a feltételes kifejezés egy valódi kifejezés, tehát ugyanúgy használható, mint bármilyen más kifejezés. Ha <i>kif2</i> és <i>kif3</i> eltérő típusúak, akkor az eredmény típusát a korábban tárgyalt konverziós szabályok szerint lehet meghatározni. Például, ha <span class="m">f</span> <span class="k">float</span> típusú és <span class="m">n</span> <span class="k">int</span>, akkor az<br />
+  </p>
+  <pre>
+(n &gt; 0) ? f : n
+</pre>
+  kifejezés <span class="k">float</span> típusú lesz, függetlenül attól, hogy <span class="m">n</span> pozitív-e vagy sem.
+  <p> A feltételes kifejezésben az első kifejezést nem szükséges zárójelbe tenni, mivel a <span class="m">?:</span> operátor precedenciája nagyon alacsony (csak eggyel nagyobb, mint az értékadásé). Másrészt zárójelezéssel a kifejezés feltételrésze egyértelművé tehető.</p>
+  <p> A feltételes kifejezések használata tömör és világos kódot eredményez. Ezt jól mutatja az alábbi programrészlet, amely egy tömb n elemét nyomtatja ki úgy, hogy soronként tíz értéket ír, azokat egy szóközzel választja el és a sort újsor-karakterrel zárja.<br />
+  </p>
+  <pre>
+<span class="k">for</span> (i = 0; i&lt;n; i++)
+   <span class="f">printf</span>(&quot;%6d%c&quot;, a[i], (i%10==9 || i==n-1) ?
+      '<span class="e">\n</span>' : ' ');
+</pre>
+  A programrész minden tizedik sor és <span class="m">n</span>-edik elem után egy újsor-karaktert ír ki, minden más esetben pedig a számot szóköz követi. A példa elég trükkös, de mindenképpen sokkal tömörebb, mint az <span class="k">if</span>-<span class="k">else</span> szerkezettel megvalósított változata. Egy másik példa*:<br />
+  <pre>
+<span class="f">printf</span>(&quot;You have %d item%s. <span class="e">\n</span>&quot;, n, n==1 ? &quot; &quot; : &quot;s&quot;);
+</pre>
+  <br />
+  <div class="note">*[Az eddigiektől eltérően ezt a példát az angol és a magyar nyelvtan eltérő volta miatt nem tudtuk magyarra átírni. A példa lényege, hogy a programrész az <i>n</i> szám 1 vagy 1-nél nagyobb értékétől függően a mondatot „You have 1 item.” vagy „You have 5 items.” alakban írja ki (ha pl. <i>n=5</i>), azaz az „item” szó egyes vagy többes számát használja az angol nyelvtani szabályoknak megfelelően. (A mondat magyarul: „1 árucikked van”, ill. „5 árucikked van”.) (A fordító)]<br />
+  </div>
+  <br />
+  <p><b>2.10.</b> gyakorlat. Írjuk át a nagybetűket kisbetűkké alakító <span class="m">lower</span> függvényt úgy, hogy az <span class="k">if</span>-<span class="k">else</span> szerkezetet feltételes kifejezéssel helyettesítjük!<br />
+    <br />
+  </p>
+  <h3><a name="2.12." id="2.12."></a>2.12. A precedencia és a kifejezés kiértékelési sorrendje<br />
+  </h3>
+  A 2.1. táblázatban összefoglaltuk az összes operátor (beleértve az eddig nem tárgyaltakat is) precedenciáját és asszociativitását (kiértékelési irányát). Az azonos sorban szereplő operátorok precedenciája azonos, a sorok csökkenő precedencia szerint követik egymást, és így pl. a <span class="m">*</span>, <span class="m">/</span> és <span class="m">%</span> precedenciája azonos és nagyobb a kétoperandusú <span class="m">+</span> és <span class="m">-</span> precedenciájánál. A táblázatban a <span class="m">()</span> operátor a függvényhívást jelöli, a <span class="m">-&gt;</span> és <span class="m">.</span> operátorok pedig struktúrák elemeihez való hozzáféréshez használhatók. Ezekkel a <a href="06.html">6. fejezetben</a> foglalkozunk, csakúgy mint az objektum méretét megadó <span class="k">sizeof</span> operátorral. A mutatókkal kapcsolatos indirekciós ( * ) operátort és az objektum címét megadó &amp; operátort az <a href="05.html">5. fejezetben</a>, a , (vessző) operátort pedig a <a href="03.html">3. fejezetben</a> tárgyaljuk.<br />
+  <br />
+  <table width="480" border="1" align="center">
+    <caption align="top">
+    <b>2.1 táblázat.</b> Operátorok precedenciája és asszociativitása
+    </caption>
+    <tr>
+      <td align="center">Operátor</td>
+      <td align="center">Asszociativitás</td>
+    </tr>
+    <tr>
+      <td class="m">() [] -&gt; </td>
+      <td align="center">balról jobbra</td>
+    </tr>
+    <tr>
+      <td class="m">! ~ ++ -- + - * &amp; (típus) sizeof </td>
+      <td align="center">jobbról balra</td>
+    </tr>
+    <tr>
+      <td class="m">* / % </td>
+      <td align="center">balról jobbra</td>
+    </tr>
+    <tr>
+      <td>+ - </td>
+      <td align="center">balról jobbra</td>
+    </tr>
+    <tr>
+      <td class="m">&lt;&lt; &gt;&gt; </td>
+      <td align="center">balról jobbra</td>
+    </tr>
+    <tr>
+      <td class="m">&lt; &lt;= &gt; &gt;= </td>
+      <td align="center">balról jobbra</td>
+    </tr>
+    <tr>
+      <td class="m">== != </td>
+      <td align="center">balról jobbra</td>
+    </tr>
+    <tr>
+      <td class="m">&amp;</td>
+      <td align="center">balról jobbra</td>
+    </tr>
+    <tr>
+      <td class="m">^</td>
+      <td align="center">balról jobbra</td>
+    </tr>
+    <tr>
+      <td class="m">|</td>
+      <td align="center">balról jobbra</td>
+    </tr>
+    <tr>
+      <td>&amp;&amp;</td>
+      <td align="center">balról jobbra</td>
+    </tr>
+    <tr>
+      <td class="m">||</td>
+      <td align="center">jobbról balra</td>
+    </tr>
+    <tr>
+      <td class="m">?:</td>
+      <td align="center">jobbról balra</td>
+    </tr>
+    <tr>
+      <td class="m">= += -= *= /= %= &amp;= ^= |= &lt;&lt;= &gt;&gt;= </td>
+      <td align="center">balról jobbra</td>
+    </tr>
+  </table>
+  <i>Megegyzés: az unáris (egyoperandusú) <span class="m">+</span>, <span class="m">-</span> és <span class="m">*</span> operátorok nagyobb precedenciájúak, mint a kétoperandusú operátorok.</i><br />
+  <br />
+  Megjegyezzük, hogy a bitenkénti <span class="m">&amp;</span>, <span class="m">^</span> és <span class="m">|</span> operátorok precedenciája ilyen sorrendben csökken és eleve kisebb az <span class="m">==</span> és <span class="m">!=</span> precedenciájánál. Emiatt az olyan bitvizsgáló kifejezéseket, mint<br />
+  <pre>
+<span class="k">if</span> ((x &amp; MASZK) == 0)
+</pre>
+  a helyes eredmény érdekében gondosan zárójelezni kell.
+  <p> A C, több más nyelvhez hasonlóan, nem határozza meg az operátorok operandusainak kiértékelési sorrendjét. (Kivéve az <span class="m">&amp;&amp;</span>, <span class="m">||</span>, <span class="m">?:</span> és <span class="m">,</span> operátorokat.) Így pl. felmerül a kérdés, hogy az<br />
+  </p>
+  <pre>
+x = f( ) + g( );
+</pre>
+  alakú kifejezésben az <span class="m">f</span> kiértékelése a <span class="m">g</span> előtt történik-e vagy sem. Ez azért érdekes, mert <span class="m">f</span> vagy <span class="m">g</span> megváltoztathatja a másik függvényben használt változókat, és emiatt <span class="m">x</span> értéke függhet a kiértékelés sorrendjétől. Ha valami miatt fontos a kiértékelés sorrendje, akkor a közbenső eredményeket egy segédváltozóban kell eltárolni és később felhasználni. Hasonlóan a függvényargumentumok kiértékelési sorrendje sincs meghatározva, ezért a<br />
+  <pre>
+<span class="f">printf</span>(&quot;%d %d<span class="e">\n</span>&quot;, ++n, power(2, n)); <span class="c">/* hibás */</span>
+</pre>
+  utasítás különböző fordítóprogramokkal más-más eredményt adhat, aszerint, hogy az <span class="m">n</span> inkrementálása a <span class="m">power</span> függvény hívása előtt vagy után történik-e. A biztos megoldás természetesen az, ha az utasítást<br />
+  <pre>
+++n;
+<span class="f">printf</span>(&quot;%d %d<span class="e">\n</span>&quot;, n, power(2, n));
+</pre>
+  alakban írjuk.
+  <p> A függvényhívások, egymásba ágyazott értékadó utasítások és inkrementáló, ill. dekrementáló utasítások mellékhatásokat okozhatnak, azaz egy kifejezés kiértékelése közben néhány változó értéke (nem szándékosan) megváltozhat. Bármely kifejezés kiértékelése vezethet mellékhatásokhoz, és sok függhet attól, hogy a kifejezésben aktuálisan szereplő változókat milyen sorrendben dolgozza fel a gép. Egy szerencsétlen, de sajnos gyakori esetet példáz a következő utasítás:<br />
+  </p>
+  <pre>
+a[i] = i++;
+</pre>
+  A kérdés az, hogy az index a régi vagy az új <span class="m">i</span> érték-e? A fordítóprogramok a kérdést különböző módon kezelik, és az eredmény a felhasznált fordítóprogramtól függ. A szabvány a legtöbb ilyen kérdést szándékosan nyitva hagyja. A kifejezések kiértékelése során a mellékhatások kialakulását végezetül is mindig a fordítóprogram dönti el, mivel az optimális kiértékelési sorrend nagymértékben függ a számítógép felépítésétől.
+  <p> A kiértékelési sorrendtől függő programok írása minden nyelv esetén helytelen, ezért mindenképpen kerüljük és igyekezzünk kiküszöbölni a mellékhatásokat is. A mellékhatások elkerüléséhez jó, ha tudjuk, hogy adott helyzetben <i>mit</i> csinál a számítógép (vagy a fordítóprogram), viszont a tudatlanság sok esetben védelmet is jelenthet.<br />
+    <br />
+    <br />
+  </p>
+
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="01.html">1. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="03.html">3. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1298 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>B. FÜGGELÉK: A standard könyvtár</title>
+<link href="krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main">
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="a.html">A. FÜGGELÉK</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="c.html">C. FÜGGELÉK</a>
+   </td>
+</tr>
+</table>
+
+
+  <h2> <i><a name="B. FÜGGELÉK" id="B. FÜGGELÉK"></a>B. FÜGGELÉK:<br />
+    </i></h2>
+  <h2>A standard könyvtár<br />
+  </h2>
+  Ebben a függelékben összefoglaljuk az ANSI szabványban definiált programkönyvtárral kapcsolatos ismereteket. A standard könyvtár nem része a szűkebb értelemben vett C nyelvnek, de gondoskodik függvények deklarálásáról, valamint adattípusok és makrók definiálásáról, amivel a szabványos C nyelvet támogató környezetet hoz létre. Az ismertetésből néhány, csak korlátozottan használható vagy más függvényekből egyszerűen előállítható függvény leírását elhagytuk, csakúgy, mint a több-bájtos karakterekkel végezhető műveleteket, valamint a helyi jellegeztességektől (pl. nyelvtől) függő részleteket.
+  <p> A standard könyvtár függvényei, típusai és makrói standard headerekben vannak deklarálva. Ezek a standard headerek:<br />
+  </p>
+  <pre>
+&lt;assert.h&gt;  &lt;limits.h&gt;  &lt;signal.h&gt;  &lt;stdlib.h&gt;
+&lt;ctype.h&gt;   &lt;locale.h&gt;  &lt;stdarg.h&gt;  &lt;string.h&gt;
+&lt;errno.h&gt;   &lt;math.h&gt;    &lt;stddef.h&gt;  &lt;time.h&gt;
+&lt;float.h&gt;   &lt;setjmp.h&gt;  &lt;stdio.h&gt;
+</pre>
+  Egy headerhez az<br />
+  <pre>
+<span class="d">#include</span> &lt;headernev&gt;
+</pre>
+  direktívával férhetünk hozzá. A headerek bármilyen sorrendben és akárhányszor beépíthetők a programba. Egy headert bármilyen külső deklaráción vagy definíción kívül, vagy bármely, a headerben deklarált függvény, típus vagy adat felhasználása előtt kell beépíteni. A headernek nem szükséges a forrásállományban lenni.
+  <p> Az aláhúzással kezdődő külső azonosítók a könyvtár számára vannak fenntartva, és a könyvtárban használt összes azonosító aláhúzással kezdődik vagy nagybetűs írásmóddal és kezdő aláhúzással van jelölve.<br />
+  </p>
+  <h3><a name="B1." id="B1."></a>B1. Adatbevitel és adatkivitel: az &lt;stdio.h&gt; header<br />
+  </h3>
+  Az adatbevitelt és -kivitelt kezelő függvények és makrók, valamint a hozzájuk tartozó adattípusok az <span class="m">&lt;stdio.h&gt;</span> headerben vannak definiálva, és ez a header alkotja a standard könyvtár közel egyharmadát.
+  <p> Az adatok forrása vagy címzettje (ami lemezegység vagy más periféria lehet) adatáramot kezel. A standard könyvtár a szöveges és a bináris adatáram használatát támogatja, bár ezek néhány operációs rendszerben (pl. a UNIX esetén is) azonosak. Egy szöveges adatáram egymást követő sorokból áll, az egyes sorok nulla vagy több karaktert tartlamaznak és '<span class="e">\n</span>' (újsor-) karakterrel záródnak. Egy programozási környezetben szükség lehet egy szöveges adatáram valamilyen más ábrázolásmódba való alakítására (pl. a '<span class="e">\n</span>' kocsivissza- és soremelés-karakterekké alakítására). Egy bináris adatáram belső adatokat tartalmazó feldolgozatlan bájtok sorozata, és fő jellegzetessége, hogy kiírása után azonnal visszaolvassa a rendszer ellenőrzés céljából.</p>
+  <p> Egy adatáram a megnyitási folyamattal kapcsolódik egy állományhoz vagy perifériához és ez a kapcsolat az adatáram lezárásával szakítható meg. Az adatállományt megnyitó eljárás <span class="f">FILE</span> típusú objektumot címző mutatóval tér vissza, és ez az objektum tartalmazza az adatáram vezérléséhez szükséges információkat. A későbbiekben, amikor nem okoz félreértést, az állománymutató és az adatáram fogalmát csereszabatosan fogjuk használni.</p>
+  <p> Amikor egy program végrehajtása megkezdődik, három adatáram, az <span class="f">stdin</span>, <span class="f">stdout</span> és <span class="f">stderr</span> automatikusan megnyílik.<br />
+    <br />
+  </p>
+  <h4><a name="B1.1." id="B1.1."></a>B1.1. Állománykezelő műveletek<br />
+  </h4>
+  A következőkben ismertetendő függvények végzik az állománykezelő műveleteket. A függvényekben használt <span class="k">size_t</span> a <span class="k">sizeof</span> operátorral létrehozott előjel nélküli, egész típusú változó.<br />
+  <br />
+  <span class="m"><span class="f">FILE</span> *<span class="f">fopen</span> (<span class="k">const</span> <span class="k">char</span> *allomanynev, <span class="k">const</span> <span class="k">char</span> *mod)</span><br />
+  <blockquote> Az <span class="f">fopen</span> függvény megnyitja az adott nevű állományt és visszatér egy adatárammal (állománymutatóval) vagy <span class="f">NULL</span> értékkel, ha a megnyitás közben hiba volt. A <span class="m">mod</span> kezelési módot megadó paraméter lehetséges értékei: <br />
+    <br />
+    <table>
+      <tr>
+        <td width="80px" class="m">&quot;r&quot;</td>
+        <td>szöveges állomány megnyitása olvasásra;</td>
+      </tr>
+      <tr>
+        <td class="m">&quot;w&quot;</td>
+        <td>szöveges állomány létrehozása írásra, ha az állomány már létezik,<br />
+          akkor előző tartalma elvész;</td>
+      </tr>
+      <tr>
+        <td class="m">&quot;a&quot;</td>
+        <td>hozzáfűzés: szöveges állomány megnyitása és írás az állomány végéhez;</td>
+      </tr>
+      <tr>
+        <td class="m">&quot;r+&quot;</td>
+        <td>szöveges állomány megnyitása aktuális használatra, azaz olvasásra<br />
+          és írásra;</td>
+      </tr>
+      <tr>
+        <td class="m">&quot;w+&quot;</td>
+        <td>szöveges állomány létrehozása aktuális használatra, az állomány korábbi tartalma (ha volt) elvész;</td>
+      </tr>
+      <tr>
+        <td class="m">&quot;a+&quot;</td>
+        <td>hozzáfűzés: szöveges állomány megnyitása aktuális használatra és írás az állomány végéhez.</td>
+      </tr>
+    </table>
+    <br />
+    Az aktuális használatnak megfelelő üzemmód megengedi, hogy ugyanazt az állományt olvassuk és írjunk bele. Az írási és olvasási műveletek között az <span class="f">fflush</span> függvényt vagy egy állományon belüli pozicionálást végző függvényt kell hívni. Ha a kezelési mód paraméter a megadott betűk után a <span class="m">b</span> jelzést tartalmazza (pl. <span class="m">&quot;rb&quot;</span> vagy <span class="m">&quot;w+b&quot;</span>), akkor ez bináris állományra utal. Az állománynevek hossza max. <span class="f">FILENAME_MAX</span> számú karakter lehet. Egy időben legfeljebb <span class="f">FOPEN_MAX</span> számú állomány lehet megnyitva.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="f">FILE</span> *<span class="f">freopen</span> (<span class="k">const</span> <span class="k">char</span> *allomanynev, cost <span class="k">char</span> *mod,
+      <span class="f">FILE</span> *adataram)</span>
+  <blockquote> A <span class="f">freopen</span> függvény megnyitja az adott nevű állományt jelzett használati móddal és hozzárendeli a megadott adatáramot. A függvény az adatárammal tér vissza vagy ha hiba volt, a <span class="f">NULL</span> értékkel. A <span class="f">freopen</span> függvényt általában az <span class="f">stdin</span>, <span class="f">stdout</span> vagy <span class="f">stderr</span> adatáramokhoz rendelt állományok megváltoztatására használják.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">fflush</span> (<span class="f">FILE</span> *adataram)</span>
+  <blockquote> Kimeneti adatáramra híva az <span class="f">fflush</span> függvény az összes pufferelt, de még ki nem írt adatot kiírja. Bemeneti adatáramra híva a függvényt az eredmény nem definiálható. A függvény normális esetben nulla értékkel, írási hiba esetén <span class="f">EOF</span> értékkel tér vissza. A <span class="f">fflush</span> (<span class="f">NULL</span>) kiüríti az összes kimeneti adatáramot.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">fclose</span> (<span class="f">FILE</span> *adataram)</span>
+  <blockquote> A <span class="f">fclose</span> függvény az összes pufferelt kimeneti adatot kiírja a megadott adatáramba, törli a még be nem olvasott, de pufferelt adatot, felszabadítja az automatikusan kiosztott pufferterületeket, majd lezárja az adatáramot. A függvény <span class="f">EOF</span> értékkel tér vissza, ha bármilyen hiba volt és nulla értékkel máskülönben.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">remove</span> (<span class="k">const</span> <span class="k">char</span> *allomanynev)</span>
+  <blockquote> A <span class="f">remove</span> függvény eltávolítja (törli) a megadott nevű állományt, így az állomány megnyitására tett következő kísérlet hibát fog okozni. A függvény nem nulla értékkel tér vissza, ha a hozzáférési kísérlet hibát okozott.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">rename</span> (<span class="k">const</span> <span class="k">char</span> *reginev, <span class="k">const</span> <span class="k">char</span> *ujnev)</span>
+  <blockquote> A <span class="f">rename</span> függvény az állomány nevét <span class="m">reginev</span>-ről <span class="m">ujnev</span>-re változtatja. A függvény nem nulla értékkel tér vissza, ha az állományhoz való hozzáférés sikertelen.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="f">FILE</span> *<span class="f">tmpfile</span>(<span class="k">void</span>)</span>
+  <blockquote> A <span class="f">tmpfile</span> függvény &quot;wb+&quot; használati móddal létrehoz egy átmeneti állományt, amelyet automatikusan töröl a lezárásakor vagy a program normális lefutásakor. A függvény visszatérésekor normális esetben az adatáramot adja, ill. ha az állomány nem hozható létre, akkor a <span class="f">NULL</span> értéket.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">tmpnam</span>(<span class="k">char</span> s[L_tmpnam])</span>
+  <blockquote> A függvényt <span class="f">tmpnam</span>(<span class="f">NULL</span>) formában híva egy karaktersorozatot generál, ami nem egyezik meg egyetlen létező állomány nevével sem, és visszatéréskor ezt a karaktersorozatot tároló belső statikus tömb mutatóját adja vissza. A <span class="m"><span class="f">tmpnam</span> (s)</span> alakú hívás eltárolja a karaktersorozatot az <span class="m">s</span>-ben, valamint függvényértékként is visszaadja. Az <span class="m">s</span> tömbben legalább <span class="m">L_tmpnam</span> számú karakter számára kell hogy hely legyen. A <span class="f">tmpnam</span> minden hívásakor egy nevet generál és a program végrehajtása során legalább <span class="f">TMP_MAX</span> számú különböző név generálása garantálható. Ügyeljünk arra, hogy a <span class="f">tmpnam</span> csak nevet generál és nem állományt.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">setvbuf</span>(<span class="f">FILE</span> *stream, <span class="k">char</span> *buf, <span class="k">int</span> mod, <span class="k">size_t</span> meret)</span>
+  <blockquote> A <span class="f">setvbuf</span> függvény az adatáram pufferelését vezérli, és ezt a függvényt kell hívni írás, olvasás vagy bármilyen más állománykezelő művelet előtt. A <span class="m">mod</span> paraméter lehetséges értékei:<br />
+    <table>
+      <tr>
+        <td><span class="f">_IOFBF</span></td>
+        <td>teljes pufferelés;</td>
+      </tr>
+      <tr>
+        <td><span class="f">_IOLBF</span></td>
+        <td>szöveges állományok esetén sorpufferelés;</td>
+      </tr>
+      <tr>
+        <td><span class="f">_IONBF</span></td>
+        <td>nincs pufferelés.</td>
+      </tr>
+    </table>
+    Ha a hívásakor a <span class="m">buf</span> paraméter nem <span class="f">NULL</span>, akkor a függvény ezt fogja pufferként használni, máskülönben a rendszer rendel pufferterületet a függvényhez. A <span class="m">meret</span> paraméter a puffer méretét határozza meg. A függvény hiba esetén nem nulla értékkel tér vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> <span class="f">setbuf</span>(<span class="f">FILE</span> *adataram, <span class="k">char</span> *buf)</span>
+  <blockquote> Ha a függvény hívásakor a <span class="m">buf</span> paraméter <span class="f">NULL</span>, akkor az adatáram pufferelését kikapcsolja. Minden más esetben a függvény megegyezik a (<span class="k">void</span>) <span class="m"><span class="f">setvbuf</span> (adataram, buf, <span class="f">_IOFBF</span>, BUFSIZ)</span> függvénnyel.<br />
+  </blockquote>
+  <br />
+  <h4><a name="B1.2." id="B1.2."></a>B1.2. Formátumozott adatkivitel<br />
+  </h4>
+  A formátumozott adatkiviteli konverziót alapvetően a <span class="f">printf</span> függvény különböző változatai végzik.<br />
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">fprintf</span>(<span class="f">FILE</span> *adataram, <span class="k">const</span> <span class="k">char</span> *format, ...)</span>
+  <blockquote> Az <span class="f">fprintf</span> függvény a <span class="m">format</span> karaktersorozatban leírt formátum szerint átalakítja és az <span class="m">adataramba</span> írja a megadott adatok értékét. A függvény a kiírt karakterek számát adja visszatérési értékként, vagy egy negatív számot, ha hiba volt.<br />
+  </blockquote>
+  <p>A formátumot leíró karaktersorozat kétféle objektumot tartalmaz: közönséges karaktereket, amelyeket változtatás nélkül bemásol a kimeneti adatáramba, valamint konverziós specifikációkat, amelyek mindegyike az <span class="f">fprintf</span> soron következő argumentumának konverzióját és kiíratását vezérli. Az egyes konverziós specifikációk a % karakterrel kezdődnek és egy konverziós karakterrel végződnek. A <span class="m">%</span> jel és a konverziós karakter között sorrendben a következők helyezkedhetnek el:<br />
+  </p>
+  <ul>
+    <li>Jelzők (bármilyen sorrendben), amelyek módosítják a specifikációt: mínuszjel, ami a konvertált argumentum balra igazítását írja elő a kiírási mezőben; <span class="m">+</span> jel, ami azt írja elő, hogy a számok kiírása mindig előjellel együtt történjen; szóközkarakter hatására a szám elé szóköz íródik, ha az első karaktere nem előjel; <span class="m">0</span> számkonverzió esetén azt írja elő, hogy a kiírási mezőben a szám előtti üres helyek vezető nullákkal töltődjenek fel; <span class="m">#</span> jel a kimeneti formátum megváltoztatását írja elő. <span class="m">o</span> esetén a kiírt első számjegy nulla lesz (oktális szám kiírása). <span class="m">X</span> vagy <span class="m">x</span> esetén a nem nulla szám elé <span class="m">0x</span> vagy <span class="m">0X</span> íródik (hexadecimális szám kiírása), <span class="m">e</span>, <span class="m">E</span>, <span class="m">g</span> és <span class="m">G</span> esetén a kiírt szám mindig tartalmazza a tizedespontot és <span class="m">g</span> vagy <span class="m">G</span> esetén a szám végén lévő értéktelen nullák megmaradnak. </li>
+    <li>A kiírási mező minimális szélességét előíró szám: az átalakított argumentum legalább ilyen szélességben (vagy ha szükséges, akkor szélesebb formában) fog kiíródni. Ha az átalakított szám a megadott mezőszélességnél kevesebb karakterből áll, akkor a mező bal széle (ill. ha balra igazítás volt előírva, akkor jobb széle) helykitöltő karakterekkel fog feltöltődni. A helykitöltő karakter normális esetben szóköz, de ha 0-val való feltöltést írtuk elő, akkor nulla. </li>
+    <li>A pont karakter, ami elválasztja a mezőszélességet a pontosságtól. </li>
+    <li>A pontosságot meghatározó szám, ami megadja, hogy <span class="m">e</span>, <span class="m">E</span> és <span class="m">f</span> konverzió esetén a tizedespont után hány számjegyet kell kiírni, vagy <span class="m">g</span> és <span class="m">G</span> konverzió esetén minimálisan hány számjeggyel íródjon ki egy egész szám (a szükséges szélesség elérése érdekében a szám elé vezető nullák íródnak), vagy a karaktersorozatból hány karaktert kell kiírni. </li>
+    <li>Hosszmódosító, ami <span class="m">h</span>, <span class="m">l</span> vagy <span class="m">L</span> lehet. A <span class="m">h</span> azt jelzi, hogy a megfelelő argumentum <span class="k">short</span> vagy <span class="k">unsigned</span> <span class="k">short</span> formában nyomtatható, az <span class="m">l</span> azt, hogy az argumentum <span class="k">long</span> vagy <span class="k">unsigned</span> <span class="k">long</span> és az <span class="m">L</span> pedig azt, hogy az argumentum <span class="k">long</span> <span class="k">double</span>.</li>
+  </ul>
+  <br />
+  A mezőszélesség vagy pontosság vagy mindkettő a <span class="m">*</span> jellel is megadható, és ebben az esetben a kívánt érték a következő argumentum(ok)ból, az(ok) konverziójával számítódik ki (az erre a célra használt argumentumoknak <span class="k">int</span> típusúaknak kell lenni).
+  <p> A konverziós karaktereket és jelentésüket a B.1. táblázat tartalmazza. Ha a <span class="m">%</span> jel utáni karakter nem konverziós karakter, akkor a függvény viselkedése nincs definiálva.<br />
+    <br />
+  </p>
+  <table border="1px" align="center">
+    <caption>
+    <b>B.1. táblázat.</b> A printf függvény konverziós karakterei
+    </caption>
+    <tr>
+      <td align="center">A konverziós karakter</td>
+      <td align="center">Az argumentum típusa</td>
+      <td align="center">A nyomtatás módja</td>
+    </tr>
+    <tr>
+      <td><span class="m">d, i</span></td>
+      <td><span class="k">int</span></td>
+      <td>decimális szám</td>
+    </tr>
+    <tr>
+      <td>o</td>
+      <td><span class="k">int</span></td>
+      <td>előjel nélküli oktális szám vezető nullák nélkül)</td>
+    </tr>
+    <tr>
+      <td><span class="m">x, X</span></td>
+      <td><span class="k">int</span></td>
+      <td>előjel nélküli hexadecimális szám (a vezető <span class="m">0x</span> vagy <span class="m">0X</span> nélkül), a <span class="m">10...15</span> jelzése az <span class="m">abcdef</span> vagy <span class="m">ABCDEF</span> karakterekkel</td>
+    </tr>
+    <tr>
+      <td><span class="m">u</span></td>
+      <td><span class="k">int</span></td>
+      <td>előjel nélküli decimális szám</td>
+    </tr>
+    <tr>
+      <td><span class="m">c</span></td>
+      <td><span class="k">int</span></td>
+      <td>egyetlen karakter</td>
+    </tr>
+    <tr>
+      <td><span class="m">s</span></td>
+      <td><span class="k">char</span>*</td>
+      <td>karaktersorozatból karaktereket nyomtat a '<span class="e">\0</span>' végjelzésig vagy a pontossággal megadott darabszámig</td>
+    </tr>
+    <tr>
+      <td><span class="m">f</span></td>
+      <td><span class="k">double</span></td>
+      <td><span class="m">[-]m.dddddd</span> alakú decimális szám, ahol <span class="m">d</span> számjegyeinek számát a pontosság adja meg (alapfeltételezés szerint <span class="m">d=6</span>)</td>
+    </tr>
+    <tr>
+      <td><span class="m">e, E</span></td>
+      <td><span class="k">double</span></td>
+      <td><span class="m">[-]m.dddddde</span> xx vagy <span class="m">[-]m.ddddddE xx</span> alakú decimális szám, ahol <span class="m">d</span> számjegyeinek számát a pontosság adja meg (alapfeltételezés szerint <span class="m">d=6</span></td>
+    </tr>
+    <tr>
+      <td><span class="m">g, G</span></td>
+      <td><span class="k">double</span></td>
+      <td><span class="m">%e</span> vagy <span class="m">%E</span> alakú kiírást használ, ha a kitevő <span class="m">&lt; -4</span> vagy <span class="m">&gt;=</span>&nbsp; pontosság, különben a <span class="m">%f</span> alakú kiírást használja. A tizedespont és az utána következő értéktelen nullák nem íródnak ki</td>
+    </tr>
+    <tr>
+      <td><span class="m">p</span></td>
+      <td><span class="k">void</span> *</td>
+      <td>mutató a géptől függő kiírási formában</td>
+    </tr>
+    <tr>
+      <td><span class="m">n</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>a <span class="f">printf</span> függvény aktuális hívásakor kiírt karakterek száma beíródik az argumentumba. Az argumentum nem konvertálódik</td>
+    </tr>
+    <tr>
+      <td><span class="m">%</span></td>
+      <td>nincs konvertálandó argumentum</td>
+      <td>egy <span class="m">%</span> jelet ír ki</td>
+    </tr>
+  </table>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">printf</span>(<span class="k">const</span> <span class="k">char</span> *format, ...)</span>
+  <blockquote> A <span class="f">printf</span> függvény teljesen egyenértékű az <span class="f">fprintf</span> (<span class="f">stdout</span>, ...) függvénnyel.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">sprintf</span>(<span class="k">char</span> *s, <span class="k">const</span> <span class="k">char</span> *format, ...)</span>
+  <blockquote> A <span class="f">sprintf</span> függvény megegyezik a <span class="f">printf</span> függvénnyel, kivéve, hogy a kimenetet az <span class="m">s</span> karaktersorozatba írja, majd a <span class="m">'<span class="e">\0</span>'</span> végjellel lezárja. Az <span class="m">s</span> karaktersorozatnak elegendően hosszúnak kell lennie, hogy az eredményt tárolni tudja. A függvény visszatérésekor a kiírt karakterek számát adja (a végjel nélkül számolva).<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="f">vprintf</span>(<span class="k">const</span> <span class="k">char</span> * format, <span class="f">va_list</span> arg)<br />
+  <span class="f">vfprintf</span>(<span class="f">FILE</span> *adataram, <span class="k">const</span> <span class="k">char</span> *format, <span class="f">va_list</span> arg)<br />
+  <span class="f">vsprintf</span>(<span class="k">char</span> *s, <span class="k">const</span> <span class="k">char</span> *format, <span class="f">va_list</span> arg)</span>
+  <blockquote> A <span class="f">vprintf</span> <span class="f">vfprintf</span> és <span class="f">vsprintf</span> függvények megegyeznek a <span class="f">printf</span> függvénnyel, kivéve, hogy a változó hosszúságú argumentumlistát az <span class="m">arg</span> helyettesíti, ami a <span class="f">va_start</span> makróval inicializálható és a <span class="f">va_arg</span> makróval kezelhető. A változó hosszúságú argumentumlistát kezelő eljárások az <span class="m">&lt;stdarg.h&gt;</span> headerben találhatók és használatukat a <a href="b.html#B7.">B7. pontban</a> írjuk le.<br />
+  </blockquote>
+  <br />
+  <h4><a name="B1.3." id="B1.3."></a>B1.3. Formátumozott adatbevitel<br />
+  </h4>
+  A formátumozott adatbeviteli konverziót alapvetően a <span class="f">scanf</span> függvény különböző változatai végzik.<br />
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">fscanf</span>(<span class="f">FILE</span> *adataram, <span class="k">const</span> <span class="k">char</span> *format, ...)</span>
+  <blockquote> Az <span class="f">fscanf</span> függvény a karaktersorozatként megadott formátumleírással vezérelt módon beolvas az <span class="m">adataram</span>-ból egy adatot, majd annak konvertált értékét hozzárendeli a soron következő argumentumhoz. Az adatokat tároló argumentumoknak kötelezően mutató típusúaknak kell lenni! A függvény akkor fejezi be a működését, ha a teljes formátumleírást feldolgozta. A függvény visszatérési értéke <span class="f">EOF</span>, ha bármilyen adatkonverzió előtt állományvége-jelet érzékelt, vagy a beolvasás során hiba történt. Minden más esetben a visszatérési érték a konvertált és argumentumokhoz hozzárendelt bemeneti adatok száma.<br />
+  </blockquote>
+  <br />
+  A formátumot leíró karaktersorozat konverziós specifikációkat tartalmaz, amelyek közvetlenül felhasználhatók a bemenet értelmezéséhez. A formátumot leíró karaktersorozat tartalma:<br />
+  <ul>
+    <li>Szóközök vagy tabulátorok, amelyeket a függvény a formátum feldolgozása során figyelmen kívül hagy. </li>
+    <li>Közönséges karakterek (nem <span class="m">%</span> jel), amelyek várhatóan illeszkednek a bemeneti adatáram következő nem üreshely-karaktereihez. </li>
+    <li>Konverziós specifikációk, amelyek a <span class="m">%</span> jelből, a <span class="m">*</span> opcionális hozzárendelés-elnyomó karakterből, a max. mezőszélességet meghatározó számból (opcionális), a célként megadott argumentum szélességét jelző <span class="m">h</span>, <span class="m">l</span> vagy <span class="m">L</span> karakterből (opcionális), valamint egy konverziós karakterből tevődnek össze.</li>
+  </ul>
+  <br />
+  A konverziós specifikáció a következő bemeneti mező konverziójának módját határozza meg. Normális esetben a konverzió eredménye a megfelelő argumentummal címzett változóba kerül. Ha a <span class="m">*</span> hozzárendelés-elnyomó karaktert alkalmaztuk, mint pl. a <span class="m">%*s</span> esetben, akkor a függvény a bemeneti mezőt egyszerűen átlépi és nem történik meg a beolvasott érték hozzárendelése a változóhoz. A bemeneti mező nem üres helyekből álló karaktersorozatként van definiálva, és a következő üreshely-karakterig, vagy ha megadtuk, akkor a mezőszélességnek megfelelő számú karakterig tart. Ez azt jelenti, hogy a <span class="f">scanf</span> függvény a bemenet keresése közben folyamatosan átolvas a sorhatárokon, mivel az új sor is üreshely-karakternek számít. (Üreshely-karakter a szóköz, a tabulátor, az új sor, a kocsivissza, a soremelés, a függőleges tabulátor és a lapemelés.)
+  <p> A konverziós karakterek jelzik a bemeneti mező értelmezését. A megengedett konverziós karaktereket a B.2. táblázat tartalmazza.</p>
+  <p> A <span class="m">d</span>, <span class="m">i</span>, <span class="m">n</span>, <span class="m">o</span>, <span class="m">u</span> és <span class="m">x</span> konverziós karakterek előtt a <span class="m">h</span> jelzés állhat, ha a mutatóval címzett argumentum nem <span class="k">int</span>, hanem <span class="k">short</span> típusú, vagy a <span class="m">l</span> jelzés, ha a mutatóval címzett argumentum <span class="k">long</span> típusú. Az <span class="m">e</span>, <span class="m">f</span> és <span class="m">g</span> konverziós karakterek előtt állhat az <span class="m">l</span>, ha az argumentumként megadott mutató <span class="k">float</span> helyett <span class="k">double</span> típusú változót címez és az <span class="m">L</span>, ha a mutató <span class="k">long</span> <span class="k">double</span> típusú változót címez.<br />
+    <br />
+    <span class="m"><span class="k">int</span> <span class="f">scanf</span> (<span class="k">const</span> <span class="k">char</span> * format, ...)</span> </p>
+  <blockquote> A <span class="m"><span class="f">scanf</span>(...)</span> függvény megegyezik az <span class="m"><span class="f">fscanf</span>(<span class="f">stdin</span>, ...)</span> függvénnyel.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">sscanf</span>(<span class="k">char</span> *s, <span class="k">const</span> <span class="k">char</span> *format, ...)</span>
+  <blockquote> A <span class="m"><span class="f">sscanf</span>(s, ...)</span> függvény megegyezik a <span class="m"><span class="f">scanf</span>(...)</span> függvénnyel, kivéve, hogy a bemeneti karakterek az <span class="m">s</span> karaktersorozatból olvasódnak.<br />
+  </blockquote>
+  <br />
+  <table border="1px" align="center">
+    <caption>
+    <b>B.2. táblázat.</b> A scanf függvény konverziós karakterei
+    </caption>
+    <tr>
+      <td align="center">A konverziós karakter</td>
+      <td align="center">Az argumentum típusa</td>
+      <td align="center">A beolvasott adat</td>
+    </tr>
+    <tr>
+      <td><span class="m">d</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>decimális egész</td>
+    </tr>
+    <tr>
+      <td><span class="m">i</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>egész szám, ami lehet oktális (vezető nullákkal) vagy hexadecimális (vezető <span class="m">0x</span> vagy <span class="m">0X</span> karakterekkel)</td>
+    </tr>
+    <tr>
+      <td><span class="m">o</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>oktális egész szám (vezető nullákkal vagy azok nélkül)</td>
+    </tr>
+    <tr>
+      <td><span class="m">u</span></td>
+      <td><span class="k">unsigned</span>&nbsp;<span class="k">int</span>*</td>
+      <td>előjel nélküli decimális egész szám</td>
+    </tr>
+    <tr>
+      <td><span class="m">x</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>hexadecimális egész szám (a vezető <span class="m">0x</span>, ill. <span class="m">0X</span> karakterekkel vagy azok nélkül)</td>
+    </tr>
+    <tr>
+      <td><span class="m">c</span></td>
+      <td><span class="k">char</span> *</td>
+      <td>karakterek. A következő bemeneti karakterek (alapfeltételezés szerint 1) elhelyezése a kijelölt mezőben. Az üres helyek átlépését (mint normális esetet) elnyomja, ha a következő nem üres karaktert akarjuk beolvastatni, akkor a <span class="m">%1s</span> specifikációt kell használni</td>
+    </tr>
+    <tr>
+      <td><span class="m">s</span></td>
+      <td><span class="k">char</span> *</td>
+      <td>karaktersorozat (aposztrófok nélkül). A <span class="k">char</span>&nbsp;* mutató egy elegendően nagy karaktersorozatra mutat és a záró '<span class="e">\0</span>' jelzést a beolvasás után automatikusan elhelyezi</td>
+    </tr>
+    <tr>
+      <td><span class="m">e, f, g</span></td>
+      <td><span class="k">float</span> *</td>
+      <td>lebegőpontos szám, opcionális előjellel opcionális tizedesponttal és opcionális kitevővel</td>
+    </tr>
+    <tr>
+      <td><span class="m">p</span></td>
+      <td><span class="k">void</span> *</td>
+      <td>mutató, olyan formában, ahogyan azt a <span class="m"><span class="f">printf</span>(&quot;%p&quot;)</span> kiírta</td>
+    </tr>
+    <tr>
+      <td><span class="m">n</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>az aktuális <span class="f">scanf</span> hívással beolvasott karakterek száma beíródik az argumentumba. Nem történik adatbeolvasás, a konvertált tételek száma nem nő</td>
+    </tr>
+    <tr>
+      <td><span class="m">[...]</span></td>
+      <td><span class="k">char</span> *</td>
+      <td>a bemeneti karakteráramból beolvassa a zárójelek közötti karakterekkel (illeszkedési halmazzal) megegyező karakterekből álló leghosszabb nem üres karaktersorozatot és lezárja a <span class="m">'<span class="e">\0</span>'</span> végjellel. A <span class="m">[]...]</span> formában megadott halmaz esetén a <span class="m">]</span> karakter a halmaz része lesz</td>
+    </tr>
+    <tr>
+      <td><span class="m">[^...]</span></td>
+      <td><span class="k">char</span> *</td>
+      <td>az illeszkedési halmazzal nem megegyező karakterekből álló karaktersorozat beolvasása és <span class="m">'<span class="e">\0</span>'</span> végjellel történő lezárása. A <span class="m">[^]...]</span> formában megadott halmaz esetén a <span class="m">]</span> karakter a halmaz része lesz</td>
+    </tr>
+    <tr>
+      <td><span class="m">%</span></td>
+      <td>nincs hozzárendelés</td>
+      <td><span class="m">%</span> jel mint karakteres állandó</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  <h4><a name="B1.4." id="B1.4."></a>B1.4. Karakteres adatbevitelt és adatkivitelt kezelő függvények<br />
+  </h4>
+  <span class="m"><span class="k">int</span> <span class="f">fgetc</span>(<span class="f">FILE</span> *adataram)</span>
+  <blockquote> Az <span class="f">fgetc</span> függvény visszatér az adatáramból a következő karakterrel. A beolvasott karakter <span class="k">unsigned</span> <span class="k">char</span> típusú, amely <span class="k">int</span> típusúvá alkul. A visszatérési érték <span class="f">EOF</span>, ha az olvasás elérte az állomány végét vagy az olvasás közben hiba történt.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">fgets</span>(<span class="k">char</span> *s, <span class="k">int</span> n, <span class="f">FILE</span> *adataram)</span>
+  <blockquote> Az <span class="f">fgets</span> függvény a következő legfeljebb <span class="m">n-1</span> darab karaktert beolvassa az <span class="m">s</span> karakteres tömbbe. A beolvasás leáll, ha újsor-karakter fordul elő, de az új sor beíródik az s tömbbe. A beolvasott karaktersorozat kiegészül a <span class="m">'<span class="e">\0</span>'</span> végjellel. A függvény az s tömbbel, ill. hiba vagy állomány vége esetén <span class="f">NULL</span> értékkel tér vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">fputc</span>(<span class="k">int</span> c, <span class="f">FILE</span> *adataram)</span>
+  <blockquote> Az <span class="f">fputc</span> függvény a <span class="m">c</span> karakter <span class="k">unsigned</span> <span class="k">char</span> típusra konvertált értékét kiírja az adatáramba. Visszatérési értéke maga a kiírt karakter vagy <span class="f">EOF</span>, ha hiba történt.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">fputs</span>(<span class="k">const</span> <span class="k">char</span> *s, <span class="f">FILE</span> *adataram)</span>
+  <blockquote> Az <span class="f">fputs</span> kiírja az <span class="m">s</span> karaktersorozatot (amelynek nem szükséges <span class="m">'<span class="e">\n</span>'</span> újsorkaraktert tartalmazni) az adatáramba és normális esetben nem negatív értékkel, hiba esetén <span class="f">EOF</span> értékkel tér vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">getc</span>(<span class="f">FILE</span> *adataram)</span>
+  <blockquote> A <span class="f">getc</span> megegyezik az <span class="f">fgetc</span> függvénnyel, kivéve, hogy makróként van megvalósítva.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">getchar</span>(<span class="k">void</span>)</span>
+  <blockquote> A <span class="f">getchar</span> megegyezik a <span class="f">getc</span>(<span class="f">stdin</span>) függvénnyel.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">gets</span>(<span class="k">char</span> *s)</span>
+  <blockquote> A <span class="f">gets</span> függvény beolvassa a következő bemeneti sort az <span class="m">s</span> karakteres tömbbe és helyettesíti a sort lezáró újsor-karaktert a <span class="m">'<span class="e">\0</span>'</span> végjellel. A függvény az <span class="m">s</span> tömbbel vagy állomány vége, ill. hiba esetén <span class="f">NULL</span> értékkel tér vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">putc</span>(<span class="k">int</span> c, <span class="f">FILE</span> *adataram)</span>
+  <blockquote> A <span class="f">putc</span> megegyezik az <span class="f">fputc</span> függvénnyel, kivéve, hogy makróként van megvalósítva.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">putchar</span>(<span class="k">int</span> c)</span>
+  <blockquote> A <span class="f">putchar</span> megegyezik a <span class="m"><span class="f">putc</span> (c, <span class="f">stdout</span>)</span> függvénnyel.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">puts</span>(<span class="k">const</span> <span class="k">char</span> *s)</span>
+  <blockquote> A <span class="f">puts</span> függvény az <span class="f">stdout</span>-ra kiírja az <span class="m">s</span> karaktersorozatot és lezárja egy újsorkarakterrel. Visszatérési értéke normális esetben nem negatív, hiba esetén <span class="f">EOF</span>.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">ungetc</span>(<span class="k">int</span> c, <span class="f">FILE</span> *adataram)</span>
+  <blockquote> Az <span class="f">ungetc</span> függvény visszateszi <span class="m">c</span> <span class="k">unsigned</span> <span class="k">char</span> típusúra konvertált értékét a bemeneti adatáramba, ahonnan az a következő olvasással elővehető. Csak egy karakter visszahelyezése esetén garantálható a helyes működés. Az <span class="f">EOF</span> karaktert nem lehet visszahelyezni az adatáramba. A függvény visszatérési értéke maga az adatáramba visszahelyezett karakter vagy <span class="f">EOF</span>, ha hiba történt.<br />
+  </blockquote>
+  <br />
+  <h4><a name="B1.5." id="B1.5."></a>B1.5. A közvetlen adatbevitel és adatkivitel függvényei<br />
+  </h4>
+  <span class="m"><span class="k">size_t</span> <span class="f">fread</span>(<span class="k">void</span> *ptr, <span class="k">size_t</span> meret, <span class="k">size_t</span> nobj, <span class="f">FILE</span> *adataram)</span>
+  <blockquote> Az <span class="f">fread</span> függvény az adatáramból a <span class="m">ptr</span> mutatóval címzett tömbbe olvas legfeljebb <span class="m">nobj</span> számú, <span class="m">meret</span> méretű objektumot. A függvény visszatérési értéke a beolvasott objektumok száma, ami kisebb lehet a megadott darabszámnál. Az állapot meghatározásához a <span class="f">feof</span> és <span class="f">ferror</span> makrókat kell használni.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">size_t</span> <span class="f">fwrite</span>(<span class="k">const</span> <span class="k">void</span> *ptr, <span class="k">size_t</span> méret, <span class="k">size_t</span> nobj,
+      <span class="f">FILE</span> *adataram)</span>
+  <blockquote> A <span class="f">fwrite</span> függvény a <span class="m">ptr</span> mutatóval címzett tömbből <span class="m">nobj</span> számú, meret méretű objektumot ír ki az adatáramba. A függvény viszatér a kiírt objektumok számával, ami hiba esetén kisebb, mint <span class="m">nobj</span>.<br />
+  </blockquote>
+  <br />
+  <h4><a name="B1.6." id="B1.6."></a>B1.6. Állományon belül pozicionáló függvények<br />
+  </h4>
+  <span class="m"><span class="k">int</span> <span class="f">fseek</span>(<span class="f">FILE</span> *adataram, <span class="k">long</span> offset, <span class="k">int</span> bazis)</span>
+  <blockquote> Az <span class="f">fseek</span> függvény az adatáram aktuális pozícióját úgy állítja be, hogy a következő olvasás vagy írás ettől a pozíciótól kezdődően fog végbemenni. Bináris állományok esetén az új pozíció a <span class="m">bazis</span>-tól számított <span class="m">offset</span> számú karaktere lesz, és a <span class="m">bazis</span> értéke <span class="f">SEEK_SET</span> (az állomány kezdete), <span class="f">SEEK_CUR</span> (a régi aktuális pozíció) vagy <span class="f">SEEK_END</span> (az állomány vége) lehet. Szöveges állományok esetén <span class="m">offset</span> értéke nulla kell legyen vagy az <span class="f">ftell</span> függvénnyel előállított értéknek (ilyenkor a <span class="m">bazis</span>-nak a <span class="f">SEEK_SET</span> értéket kell adni). Az <span class="f">fseek</span> hiba esetén nem nulla értékkel tér vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">long</span> <span class="f">ftell</span>(<span class="f">FILE</span> *adataram)</span>
+  <blockquote> Az <span class="f">ftell</span> függvény visszatér az <span class="m">adataram</span>-hoz tartozó állomány aktuális pozíciójával vagy hiba esetén a <span class="m">-1L</span> értékkel.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> <span class="f">rewind</span>(<span class="f">FILE</span> *adataram)</span>
+  <blockquote> A <span class="m"><span class="f">rewind</span>(allomanymutato)</span> megegyezik az <span class="m"><span class="f">fseek</span>(allomanymutato, 0L, <span class="f">SEEK_SET</span>); <span class="f">clearerr</span>(allomanymutato)</span> függvényhívásokkal.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">fgetpos</span>(<span class="f">FILE</span> *adataram, <span class="f">fpos_t</span> *ptr)</span>
+  <blockquote> Az <span class="f">fgetpos</span> függvény a <span class="m">ptr</span> mutatóval címzett változóba olvassa az <span class="m">adataram</span>-hoz tartozó állomány aktuális pozícióját. A kapott érték az <span class="f">fsetpos</span> függvényben használható. Az <span class="f">fpos_t</span> típus olyan, hogy alkalmas a pozíció tárolására. A függvény hiba esetén nem nulla értékkel tér vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">fsetpos</span>(<span class="f">FILE</span> *adataram, <span class="k">const</span> <span class="f">fpos_t</span> *ptr)</span>
+  <blockquote> Az <span class="f">fsetpos</span> függvény az <span class="m">adataram</span>-hoz tartozó állományt az <span class="f">fgetpos</span> függvénnyel meghatározott és a <span class="m">ptr</span> mutatóval címzett helyre eltárolt pozícióba állítja. A függvény hiba esetén nem nulla értékkel tér vissza.<br />
+  </blockquote>
+  <br />
+  <h4><a name="B1.7." id="B1.7."></a>B1.7. Hibakezelő függvények<br />
+  </h4>
+  A könyvtári függvények többsége hiba- vagy állományvége-jelzés esetén beállítja az állapotjelzőket. Ezeket az állapotjelzőket explicit módon lehet beállítani és vizsgálni. Ezenkívül még az <span class="f">errno</span> egész típusú kifejezés (amely az <span class="m">&lt;errno.h&gt;</span> headerben van deklarálva) tartalmazhat egy hibaszámot, ami további információt szolgáltat a legutoljára előfordult hibáról.
+  <p> A hibakezelő függvények:<br />
+    <br />
+    <span class="m"><span class="k">void</span> <span class="f">clearerr</span>(<span class="f">FILE</span> *adataram)</span> </p>
+  <blockquote> A <span class="f">clearerr</span> függvény törli az <span class="m">adataram</span>-hoz tartozó, az <span class="f">EOF</span>-ot és a hibákat tartalmazó állapotjelzőket.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">feof</span>(<span class="f">FILE</span> *adataram)</span>
+  <blockquote> A <span class="f">feof</span> függvény nem nulla értékkel tér vissza, ha az <span class="m">adataram</span>-hoz tartozó <span class="f">EOF</span> állapotjelző be van állítva.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">ferror</span>(<span class="f">FILE</span> *adataram)</span>
+  <blockquote> A <span class="f">ferror</span> függvény nem nulla értékkel tér vissza, ha az <span class="m">adataram</span>-hoz tartozó hibaállapot-jelző be van állítva.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> <span class="f">perror</span>(<span class="k">const</span> <span class="k">char</span> *s)</span>
+  <blockquote> A <span class="f">perror</span> függvény kiírja az <span class="m">s</span> karaktersorozatot, valamint az <span class="f">errno</span> hibaszámhoz tartozó, gépi megvalósítástól függően definiált hibaüzenetet. A függvény úgy működik, mintha az<br />
+    <pre>
+<span class="f">fprintf</span>(<span class="f">stderr</span>, &quot;%s: %s<span class="e">\n</span>&quot;, s, &quot;hibaüzenet&quot;);
+</pre>
+    utasítást adtuk volna ki. A hibaüzenet az <span class="f">strerror</span> függvénnyel határozható meg, ennek leírása a <a href="b.html#B3.">B3. pontban</a> található.<br />
+  </blockquote>
+  <br />
+  <h3><a name="B2." id="B2."></a>B2. Karakteres vizsgálatok: a &lt;ctype.h&gt; header<br />
+  </h3>
+  A <span class="m">&lt;ctype.h&gt;</span> headerben vannak a karakteres vizsgálatok függvényei deklarálva. Az egyes függvények argumentuma <span class="k">int</span> típusú, amelynek értéke <span class="f">EOF</span> vagy <span class="k">unsigned</span> <span class="k">char</span> típusban ábrázolható kell hogy legyen. A függvények visszatérési értéke <span class="k">int</span> típusú, és nem nulla (logikailag igaz), ha a <span class="m">c</span> argumentum kielégíti az adott feltételt, ill. nulla (logikailag hamis), ha nem. Az egyes függvények (az igaz értékhez tartozó feltételt megadva):<br />
+  <br />
+  <blockquote>
+    <table>
+      <tr>
+        <td width="120px" class="m"><span class="f">isalnum</span>(c)</td>
+        <td>ha <span class="m"><span class="f">isalpha</span>(c)</span> vagy <span class="m"><span class="f">isdigit</span>(c)</span> igaz (azaz <span class="m">c</span> betű vagy decimális számjegy);</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="f">isalpha</span>(c)</td>
+        <td>ha <span class="m"><span class="f">isupper</span>(c)</span> vagy <span class="m"><span class="f">islower</span>(c)</span> igaz (azaz <span class="m">c</span> nagy- vagy kisbetű);</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="f">iscntrl</span>(c)</td>
+        <td>ha <span class="m">c</span> vezérlőkarakter;</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="f">isdigit</span>(c)</td>
+        <td>ha <span class="m">c</span> decimális számjegy;</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="f">isgraph</span>(c)</td>
+        <td>ha <span class="m">c</span> nyomtatható karakter (kivéve a szóközt);</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="f">islower</span>(c)</td>
+        <td>ha <span class="m">c</span> kisbetű;</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="f">isprint</span>(c)</td>
+        <td>ha <span class="m">c</span> nyomtatható karakter, beleértve a szóközt is;</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="f">ispunct</span>(c)</td>
+        <td>ha <span class="m">c</span> nyomtatható karakter, de nem szóköz, betű vagy számjegy;</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="f">isspace</span>(c)</td>
+        <td>ha <span class="m">c</span> szóköz, lapemelés, új sor, kocsivissza, tabulátor, függőleges tabulátor (üreshely-karakter);</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="f">isupper</span>(c)</td>
+        <td>ha <span class="m">c</span> nagybetű;</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="f">isxdigit</span>(c)</td>
+        <td>ha <span class="m">c</span> hexadecimális számjegy.</td>
+      </tr>
+    </table>
+  </blockquote>
+  <br />
+  A hétbites ASCII karakterkészletben a nyomtatható karakterek kódja a <span class="m">0x20-tól</span> <span class="m">(' ')</span> <span class="m">0x7E</span>-ig <span class="m">('~')</span> terjed. A vezérlőkarakterek kódja <span class="m">0</span>-tól <span class="m">(NUL)</span> <span class="m">0x1F</span>-ig <span class="m">(US)</span> terjed és ide tartozik még a <span class="m">0x7F</span> <span class="m">(DEL)</span> kódja.<br />
+  Még további két konverziós függvény használható a betűkre:<br />
+  <blockquote>
+    <table>
+      <tr>
+        <td width="200px" class="m"><span class="k">int</span> <span class="f">tolower</span>(<span class="k">int</span> c)</td>
+        <td><span class="m">c</span> értékét kisbetűvé alakítja;</td>
+      </tr>
+      <tr>
+        <td class="m"><span class="k">int</span> <span class="f">toupper</span>(<span class="k">int</span> c)</td>
+        <td><span class="m">c</span> értékét nagybetűvé alakítja.</td>
+      </tr>
+    </table>
+  </blockquote>
+  Ha c egy nagybetű, akkor a <span class="f">tolower</span> (c) a megfelelő kisbetűvel, a különben magával a c értékével tér vissza. Ha c egy kisbetű, akkor a <span class="f">toupper</span> (c) visszatér a megfelelő nagybetűvel, különben visszaadja a c értékét.<br />
+  <br />
+  <h3><a name="B3." id="B3."></a>B3. Karaktersorozat-kezelő függvények: a &lt;string.h&gt; header<br />
+  </h3>
+  A karaktersorozatot kezelő függvényeknek két csoportja van deklarálva a <span class="m">&lt;string.h&gt;</span> headerben. Az első csoportba tartozó függvények neve az <span class="m">str</span> karakterekkel kezdődik, a második csoportba tartozóké pedig a <span class="m">mem</span> karakterekkel. A <span class="f">memmove</span> függvény kivételével a függvények viselkedése definiálatlan, ha átfedő objektumokra alkalmazzuk azokat. Az összehasonlító függvények az argumentumukat <span class="k">unsigned</span> <span class="k">char</span> típusú tömbként kezelik.<br />
+  A következő táblázatban <span class="m">s</span> és <span class="m">t</span> <span class="m"><span class="k">char</span> *</span> típusú, <span class="m">cs</span> és <span class="m">ct</span> <span class="k">const</span> <span class="m"><span class="k">char</span> *</span> típusú, <span class="m">n</span> <span class="k">size_t</span> típusú, valamint <span class="m">c</span> <span class="k">char</span> típusra konvertált <span class="k">int</span> típusú.<br />
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">strcpy</span>(s, ct)</span>
+  <blockquote> Az <span class="f">strcpy</span> függvény a <span class="m">ct</span> karaktersorozatot átmásolja az s karaktersorozatba, beleértve a <span class="m">ct</span>-t záró <span class="m">'<span class="e">\0</span>'</span> végjelet is. A függvény visszatérési értéke s mutatója.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">strncpy</span>(s, ct, n)</span>
+  <blockquote> Az <span class="f">strncpy</span> függvény a <span class="m">ct</span>-ből <span class="m">n</span> karaktert átmásol <span class="m">s</span>-be és visszatér <span class="m">s</span> mutatójával. Az <span class="m">s</span> végét <span class="m">'<span class="e">\0</span>'</span> végjelekkel tölti fel, ha <span class="m">ct</span> <span class="m">n</span> karakternél rövidebb volt.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">strcat</span>(s, ct)</span>
+  <blockquote> Az <span class="f">strcat</span> függvény a <span class="m">ct</span> karaktersorozatot az <span class="m">s</span> karaktersorozat végéhez fűzi (konkatenálja) és visszatér <span class="m">s</span> mutatójával.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">strncat</span>(s, ct, n)</span>
+  <blockquote> Az <span class="f">strncat</span> függvény a <span class="m">ct</span> karaktersorozatból <span class="m">n</span> karaktert az <span class="m">s</span> karaktersorozat végéhez fűz, <span class="m">s</span>-t lezárja a <span class="m">'<span class="e">\0</span>'</span> végjellel és visszatér <span class="m">s</span> mutatójával.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">strcmp</span>(cs, ct)</span>
+  <blockquote> Az <span class="f">strcmp</span> függvény összehasonlítja a <span class="m">cs</span> karaktersorozatot a <span class="m">ct</span> karaktersorozattal és visszatér negatív értékkel, ha <span class="m">cs &lt; ct</span>, nulla értékkel, ha <span class="m">cs == ct</span> és pozitív értékkel, ha <span class="m">cs &gt; ct</span>.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">strncmp</span>(cs, ct, n)</span>
+  <blockquote> Az <span class="f">strncmp</span> függvény összehasonlítja a <span class="m">cs</span> karaktersorozat legfeljebb <span class="m">n</span> karakterét a <span class="m">ct</span> karaktersorozattal és visszatér negatív értékkel, ha <span class="m">cs &lt; ct</span>, nulla értékkel, ha <span class="m">cs == ct</span> és pozitív értékkel, ha <span class="m">cs &gt; ct</span>.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">strchr</span>(cs, c)</span>
+  <blockquote> Az <span class="f">strchr</span> függvény a <span class="m">c</span> karakter <span class="m">cs</span>-beli első előfordulási helyének mutatójával, ill. ha <span class="m">c</span> nem található meg <span class="m">cs</span>-ben, akkor <span class="f">NULL</span> értékű mutatóval tér vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">strrchr</span>(cs, c)</span>
+  <blockquote> Az <span class="f">strrchr</span> függvény a <span class="m">c</span> karakter <span class="m">cs</span>-beli utolsó előfordulási helyének mutatójával, ill. ha <span class="m">c</span> nem található meg <span class="m">cs</span>-ben, akkor <span class="f">NULL</span> értékű mutatóval tér vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">size_t</span> <span class="f">strspn</span>(cs, ct)</span>
+  <blockquote> Az <span class="f">strspn</span> függvény visszatérési értéke a <span class="m">cs</span> karaktersorozat elejéről vett és <span class="m">ct</span>-ben megtalálható részsorozat hossza. (Az elején egyező rész hossza.)<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">size_t</span> <span class="f">strcspn</span>(cs, ct)</span>
+  <blockquote> Az <span class="f">strcspn</span> függvény visszatérési értéke a <span class="m">cs</span> karaktersorozat elejéről vett és <span class="m">ct</span>-ben nem megtalálható részsorozat hossza. (Az elején különböző rész hossza.)<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">strpbrk</span>(cs, ct)</span>
+  <blockquote> Az <span class="f">strpbrk</span> függvény visszatérési értéke a <span class="m">cs</span> karaktersorozat <span class="m">ct</span> karaktersorozaton belüli első előfordulásának kezdetét címző mutató, vagy <span class="f">NULL</span>, ha <span class="m">cs</span> nem található meg <span class="m">ct</span>-ben.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">strstr</span>(cs, ct)</span>
+  <blockquote> Az <span class="f">strstr</span> függvény visszatérési értéke a <span class="m">ct</span> karaktersorozat <span class="m">cs</span>-beli első előfordulásának kezdetét címző mutató, vagy <span class="f">NULL</span>, ha a <span class="m">ct</span> nem található meg <span class="m">cs</span>-ben.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">size_t</span> <span class="f">strlen</span>(cs)</span>
+  <blockquote> Az <span class="f">strlen</span> függvény visszatérési értéke a <span class="m">cs</span> karaktersorozat hossza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">strerror</span>(n)</span>
+  <blockquote> Az <span class="f">strerror</span> függvény az <span class="m">n</span> hibaszámhoz tartozó, a gépi megvalósítástól függő hibaüzenet karaktersorozatának mutatójával tér vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">strtok</span>(s, ct)</span>
+  <blockquote> Az <span class="f">strtok</span> függvény megkeresi az <span class="m">s</span> karaktersorozatban a <span class="m">ct</span> karaktersorozatból vett karakterekkel határolt tokeneket. (A függvény működésének leírását l. alább.)<br />
+  </blockquote>
+  <br />
+  Az <span class="m"><span class="f">strtok</span>(s, ct)</span> függvény sorozatos hívásával az <span class="m">s</span> karaktersorozat tokenekre bontható és az egyes tokeneket a <span class="m">ct</span>-ben lévő karakter határolja. A függvény első hívásának s nem <span class="f">NULL</span> értékével kell történnie, és ekkor a függvény megkeresi az <span class="m">s</span>-ben az első, <span class="m">ct</span>-ben nem lévő karakterekből felépített tokent, majd az <span class="m">s</span> következő karakterét a <span class="m">'<span class="e">\0</span>'</span> végjellel felülírva visszatér a tokent címző mutatóval. A további hívásokat az <span class="m">s</span> <span class="f">NULL</span> értéke jelzi, és a függvény ilyenkor a következő token (amelyet az előzőleg talált token végétől kezd keresni) mutatójával tér vissza. Ha az <span class="f">strtok</span> nem talál további tokent, akkor a visszatérési értéke <span class="f">NULL</span> lesz. A <span class="m">ct</span> karaktersorozat hívásról hívásra változhat.
+  <p> A <span class="m">mem</span> kezdetű függvények különböző objektumokkal mint karakteres tömbökkel való manipulációkra használhatók, és megírásukkal a hatékony adatkezelő eljárások kialakítása volt a cél. A következő táblázatban <span class="m">s</span> és <span class="m">t</span> <span class="m"><span class="k">void</span> *</span> típusú, <span class="m">cs</span> és <span class="m">ct</span> <span class="k">const</span> <span class="m"><span class="k">void</span> *</span> típusú, <span class="m">n</span> <span class="k">size_t</span> típusú, valamint <span class="m">c</span> <span class="k">unsigned</span> <span class="k">char</span> típusúvá alakított <span class="k">int</span> típusú.<br />
+    <br />
+    <span class="m"><span class="k">void</span> *<span class="f">memcpy</span>(s, ct, n)</span> </p>
+  <blockquote> A <span class="f">memcpy</span> függvény a <span class="m">ct</span>-ből <span class="m">n</span> karaktert átmásol az <span class="m">s</span>-be és visszatér <span class="m">s</span> mutatójával.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> *<span class="f">memmove</span>(s, ct, n)</span>
+  <blockquote> A <span class="f">memmove</span> függvény megegyezik a <span class="f">memcpy</span> függvénnyel, kivéve, hogy egymást átfedő objektumok esetén is használható.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">memcmp</span>(cs, ct, n)</span>
+  <blockquote> A <span class="f">memcmp</span> függvény összehasonlítja a <span class="m">cs</span> első <span class="m">n</span> karakterét <span class="m">ct</span>-vel. A függvény visszatérési értékei megegyeznek az <span class="f">strcmp</span> visszatérési értékeivel.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> *<span class="f">memchr</span>(cs, c, n)</span>
+  <blockquote> A <span class="f">memchr</span> függvény visszatérési értéke a <span class="m">c</span> karakter <span class="m">cs</span>-beli első előfordulásának helyét címző mutató, vagy <span class="f">NULL</span>, ha <span class="m">c</span> nem található meg <span class="m">cs</span> első <span class="m">n</span> karakterében.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> *<span class="f">memset</span>(s, c, n)</span>
+  <blockquote> A <span class="f">memset</span> függvény elhelyezi a <span class="m">c</span> karaktert az <span class="m">s</span> első <span class="m">n</span> karakterében és visszatérési értéke az <span class="m">s</span> mutatója.<br />
+  </blockquote>
+  <br />
+  <h3><a name="B4." id="B4."></a>B4. Matematikai függvények: a &lt;math.h&gt; header<br />
+  </h3>
+  A matematikai eljárások függvényei és makrói a <span class="m">&lt;math.h&gt;</span> headerben vannak deklarálva.
+  <p> Az <span class="m">&lt;errno.h&gt;</span> headerben deklarált <span class="f">EDOM</span> és <span class="f">ERANGE</span> nem nulla értékű egész állandók, amelyek a függvények értelmezési tartomány és értékkészlet hibáját jelzik, a <span class="f">HUGE_VAL</span> értéke pedig pozitív, <span class="k">double</span> típusú szám. Az értelmezési tartomány hiba akkor fordul elő, ha a függvény argumentuma a függvénydefinícióban megadott tartományon kívülre esik. Az értelmezési tartomány hiba esetén az <span class="f">errno</span> beáll <span class="f">EDOM</span> értékére és a visszatérési érték (a hibaüzenet) a gépi megvalósítástól függ. Az értékkészlet hiba akkor fordul elő, ha a függvénnyel kapott eredmény nem ábrázolható <span class="k">double</span> típusú változóval. Ha az eredmény túlcsordult, akkor a függvény visszatérésekor a helyes előjelnek megfelelően állítja be a <span class="f">HUGE_VAL</span>-t és az <span class="f">errno</span> az <span class="f">ERANGE</span> értékének megfelelően áll be. Ha az eredmény alácsordult, akkor a függvény nulla értékkel tér vissza és az <span class="f">errno</span> a gépi megvalósítástól függő módon áll be <span class="f">ERANGE</span> értékére.</p>
+  <p> A függvények leírását tartalmazó táblázatban <span class="m">x</span> és <span class="m">y</span> <span class="k">double</span> típusú, <span class="m">n</span> értéke <span class="k">int</span> típusú, és minden függvény visszatérési értéke <span class="k">double</span> típusú. A trigonometrikus függvények argumentumát radiánban kell megadni. A matematikai függvények:<br />
+    <br />
+    <br />
+  </p>
+  <table>
+    <tr>
+      <td width="200px" class="m"><span class="f">sin</span>(x)</td>
+      <td>az x argumentum szinusza;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">cos</span>(x)</td>
+      <td>az x argumentum koszinusza;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">tan</span> (x)</td>
+      <td>az x argumentum tangense;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">asin</span>(x)</td>
+      <td>az <span class="m">x</span> argumentum árkusz szinusza, az értékkészlet a [-π/2,&nbsp;π/2] tartomány, x&nbsp;E&nbsp;[-1,&nbsp;1];</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">acos</span>(x)</td>
+      <td>az x argumentum árkusz koszinusza, az értékkészlet a [0,&nbsp;π] tartomány, x&nbsp;E&nbsp;[-1,&nbsp;1];</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">atan</span>(x)</td>
+      <td>az x argumentum árkusz tangense, az értékkészlet a [-π/2,&nbsp;π/2] tartomány;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">atan2</span>(y, x)</td>
+      <td>az y/x érték árkusz tangense, az értékkészlet a [-π,&nbsp;π] tartomány;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">sinh</span>(x)</td>
+      <td>az x argumentum szinusz hiperbolikusa;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">cosh</span>(x)</td>
+      <td>az x argumentum koszinusz hiperbolikusa;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">tanh</span>(x)</td>
+      <td>az x argumentum tangens hiperbolikusa;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">exp</span>(x)</td>
+      <td>az e<sup>x</sup> exponenciális függvény;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">log</span>(x)</td>
+      <td>az x argumentum természetes alapú logaritmusa (ln(x))), x&gt;0;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">log10</span>(x)</td>
+      <td>az x argumentum tízes alapú logaritmusa (lg(x))), x&gt;0;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">pow</span>(x, y)</td>
+      <td>az x<sup>y</sup> alakú hatványfüggvény, értelmezési tartomány hiba lép fel, ha x=0 és y&lt;0, vagy ha x&lt;0 és y értéke nem egész szám;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">sqrt</span>(x)</td>
+      <td>az x argumentum négyzetgyöke, x&gt;0;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">ceil</span>(x)</td>
+      <td>az x argumentumnál nem kisebb legkisebb egész szám, <span class="k">double</span> típusra konvertálva;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">floor</span>(x)</td>
+      <td>az x argumentumnál nem nagyobb legnagyobb egész szám, <span class="k">double</span> típusra konvertálva;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">fabs</span>(x)</td>
+      <td>az x argumentum abszolút értéke (|x|);</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">ldexp</span>(x, n)</td>
+      <td>az x*2<sup>n</sup> függvény értéke;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">frexp</span>(x, <span class="k">int</span> *exp)</td>
+      <td>a függvény az x argumentum értékét az [1/2,&nbsp;1) intervallumba eső normált törtrésszé alakítja és ezzel az értékkel tér vissza. A 2 hatványaként értelmezett kitevő a *exp című változóba tárolódik. Ha x=0, akkor az eredmény törtrésze és kitevője egyaránt nulla lesz;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">modf</span>(x, <span class="k">double</span> *ip)</td>
+      <td>az x argumentum eredeti x előjelével azonos előjelű egész- és törtrészre bontása. Az egészrész az *ip című változóban tárolódik, a függvény visszatérési értéke a törtrész lesz;</td>
+    </tr>
+    <tr>
+      <td class="m"><span class="f">fmod</span>(x, y)</td>
+      <td>az x/y lebegőpontos osztás lebegőpontos maradéka, ami ugyanolyan előjelű mint x. Ha y=0, akor az eredmény a gépi megvalósítástól függ.</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  <h3><a name="B5." id="B5."></a>B5. Kiegészítő rendszerfüggvények: az &lt;stdlib.h&gt; header<br />
+  </h3>
+  Az <span class="m">&lt;stdlib.h&gt;</span> standard headerben vannak deklarálva a számkonverziós, tárkezelő és más hasonló, általános jellegű függvények. Az egyes függvények leírása:<br />
+  <br />
+  <span class="m"><span class="k">double</span> <span class="f">atof</span>(<span class="k">const</span> <span class="k">char</span> *s)</span>
+  <blockquote> Az <span class="f">atof</span> függvény az <span class="m">s</span> karaktersorozat tartalmát <span class="k">double</span> típusú számmá alakítja. A függvény egyenértékű az <span class="m"><span class="f">strtod</span>(s, (<span class="k">char</span>**)<span class="f">NULL</span>, 10)</span> függvénnyel.</blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">atoi</span>(<span class="k">const</span> <span class="k">char</span> *s)</span>
+  <blockquote> Az <span class="f">atoi</span> függvény az <span class="m">s</span> karaktersorozat tartalmát <span class="k">int</span> típusú számmá alakítja. A függvény egyenértékű az <span class="m">(<span class="k">int</span>)<span class="f">strtol</span>(s, (<span class="k">char</span>**)<span class="f">NULL</span>, 10)</span> függvénnyel.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">long</span> <span class="f">atol</span>(<span class="k">const</span> <span class="k">char</span> *s)</span>
+  <blockquote> Az <span class="f">atol</span> függvény az <span class="m">s</span> karaktersorozat tartalmát <span class="k">long</span> típusú számmá alakítja. A függvény egyenértékű az <span class="m"><span class="f">strtol</span>(s, (<span class="k">char</span>**)<span class="f">NULL</span>, 10)</span> függvénnyel.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">double</span> <span class="f">strtod</span>(<span class="k">const</span> <span class="k">char</span> *s, <span class="k">char</span> **endp)</span>
+  <blockquote> Az <span class="f">strtod</span> függvény az <span class="m">s</span> karaktersorozatot a bevezető üreshely-karakterek elhagyása után egy <span class="k">double</span> típusú előtaggá (amely a függvény visszatérési értéke lesz), valamint egy konvertálatlan utótaggá (kivéve, ha <span class="m">*endp</span> értéke <span class="f">NULL</span>) alakítja. Az utótagot címző mutató a <span class="m">*endp</span> helyen tárolódik. Ha az eredmény túlcsordul, akkor a <span class="f">HUGE_VAL</span> a helyes előjelnek megfelelő értéket veszi fel; ha az eredmény alácsordul, akkor a visszatérési érték nulla lesz. Az <span class="f">errno</span> mindkét esetben az <span class="f">ERANGE</span> értékére áll be.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">long</span> <span class="f">strtol</span>(<span class="k">const</span> <span class="k">char</span> *s, <span class="k">char</span> **endp, <span class="k">int</span> alap)</span>
+  <blockquote> Az <span class="f">strtol</span> függvény az <span class="m">s</span> karaktersorozatot a bevezető üreshely-karakterek elhagyása után egy <span class="k">long</span> típusú előtaggá (amely a függvény visszatérési értéke lesz), valamint egy konvertálatlan utótaggá (kivéve, ha <span class="m">*endp</span> értéke <span class="f">NULL</span>) alakítja. Ha az <span class="m">alap</span> argumentum értéke 2 és 36 közé esik, akkor a konverzió úgy megy végbe, hogy feltételezi a bemeneti adat adott számrendszerbeli ábrázolását. Ha az <span class="m">alap</span> nulla értékű, akkor az átalakítás oktális, decimális vagy hexadecimális számrendszerbe történik, a bemeneti adat írásmódjától függően (ha a számjegykarakterek sorozata <span class="m">0</span> karakterrel kezdődik, akkor oktális, ha pedig <span class="m">0x</span> vagy <span class="m">0X</span> karakterekkel, akkor hexadecimális szám lesz az eredmény). A karaktersorozatban szereplő betűk minden esetben a <span class="m">10</span> és az <span class="m">(alap - 1)</span> közötti számjegyeket jelölik; a hexadecimális számoknál megengedett a bevezető <span class="m">0x</span> vagy <span class="m">0X</span>. Az utótagot címző mutató a <span class="m">*endp</span> helyen tárolódik. Ha az eredmény túlcsordul, akkor a függvény visszatérési értéke az eredmény előjelétől függően <span class="f">LONG_MAX</span> vagy <span class="f">LONG_MIN</span> és az <span class="f">errno</span> az <span class="f">ERANGE</span> értékére áll be.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">unsigned</span> <span class="k">long</span> <span class="f">strtoul</span>(<span class="k">const</span> <span class="k">char</span> *s, <span class="k">char</span> **endp, <span class="k">int</span> alap)</span>
+  <blockquote> Az <span class="f">strtoul</span> függvény megegyezik az <span class="f">strtol</span> függvénnyel, kivéve, hogy az eredmény (visszatérési érték) <span class="k">unsigned</span> <span class="k">long</span> típusú és túlcsordulás esetén a visszatérési érték <span class="f">ULONG_MAX</span> értékű.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">rand</span>(<span class="k">void</span>)</span>
+  <blockquote> A <span class="f">rand</span> függvény egy <span class="m">0</span> és <span class="f">RAND_MAX</span> közötti pszeudovéletlen egész számmal tér vissza. <span class="f">RAND_MAX</span> értéke legalább <span class="m">32 767</span>.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> <span class="f">srand</span>(<span class="k">unsigned</span> <span class="k">int</span> indul)</span>
+  <blockquote> Az <span class="f">srand</span> függvény az <span class="m">indul</span> értékével egy új pszeudovéletlen számsorozatot generál. A véletlenszám-generátor, kezdeti induló értéke 1.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> *<span class="f">calloc</span>(<span class="k">size_t</span> nobj, <span class="k">size_t</span> meret)</span>
+  <blockquote> A <span class="f">calloc</span> függvény egy <span class="m">nobj</span> számú, egyenként <span class="m">meret</span> méretű objektumot tartalmazó tömb számára lefoglalt tárterület kezdetét címző mutatóval tér vissza. A mutató értéke <span class="f">NULL</span>, ha a helyfoglalási igény nem elégíthető ki. A lefoglalt tárterület nulla értékű bájtokkal van feltöltve.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> *<span class="f">malloc</span>(<span class="k">size_t</span> meret)</span>
+  <blockquote> A <span class="f">malloc</span> függvény egyetlen <span class="m">meret</span> méretű objektum számára lefoglalt tárterület kezdetét címző mutatóval, vagy ha az igény nem elégíthető ki, akkor <span class="f">NULL</span> értékkel tér vissza. A lefoglalt tárterület inicializálatlan.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> *<span class="f">realloc</span>(<span class="k">void</span> *p, <span class="k">size_t</span> meret)</span>
+  <blockquote> A <span class="f">realloc</span> függvény a <span class="m">p</span> mutatóval címzett objektum méretét <span class="m">meret</span>-re változtatja. Az objektum tartalma a régi és új méretek közül a kisebb méretig változatlan marad. Ha az új méret nagyobb a réginél, akkor az új tárterület mutatójával tér vissza, ill. a <span class="f">NULL</span> értékkel, ha az igény nem elégíthető ki (ilyenkor <span class="m">*p</span> változatlan marad).<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> <span class="f">free</span>(<span class="k">void</span> *p)</span>
+  <blockquote> A <span class="f">free</span> függvény felszabadítja a <span class="f">calloc</span>, <span class="f">malloc</span> vagy <span class="f">realloc</span> függvényekkel lefoglalt, a <span class="m">p</span> mutatóval címzett tárterületet. Ha <span class="m">p</span> értéke <span class="f">NULL</span>, akkor a függvény nem csinál semmit.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> <span class="f">abort</span>(<span class="k">void</span>)</span>
+  <blockquote> Az <span class="f">abort</span> függvény a program futásának abnormális befejezését okozza. A függvény működése megegyezik a <span class="m"><span class="f">raise</span>(<span class="f">SIGABRT</span>)</span> függvényhívás működésével.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> <span class="f">exit</span>(<span class="k">int</span> allapot)</span>
+  <blockquote> Az <span class="f">exit</span> függvény a program futásának normális befejezését okozza. Az <span class="f">atexit</span> függvény hívásával kiüríti a megnyitott állományok puffereit, lezárja a megnyitott adatáramokat és a vezérlést visszaadja az operációs rendszernek. Az operációs rendszernek visszaadott állapot állapotjelzés értelmezése a gépi megvalósítástól függ, de a nulla érték mindig a normális (sikeres) befejezést jelenti. Az állapot <span class="f">EXIT_SUCCESS</span> és <span class="f">EXIT_FAILURE</span> értéke szintén használható.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">atexit</span>(<span class="k">void</span> (*fcn)(<span class="k">void</span>))</span>
+  <blockquote> Az <span class="f">atexit</span> függvény végrehajtásra előjegyzi az <span class="m">fcn</span> függvényt a program normális befejezése esetén. A függvény nem nulla értékkel tér vissza, ha az előjegyzés nem hajtható végre.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">system</span>(<span class="k">const</span> <span class="k">char</span> *s)</span>
+  <blockquote> A <span class="f">system</span> függvény végrehajtásra átadja az operációs rendszernek az s karaktersorozatot. Ha <span class="m">s</span> értéke <span class="f">NULL</span>, akkor a függvény nem nulla értékkel tér vissza létező parancsprocesszor esetén. Ha <span class="m">s</span> értéke nem <span class="f">NULL</span>, akkor a függvény visszatérési értéke a gépi megvalósítástól függ.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">getenv</span>(<span class="k">const</span> <span class="k">char</span> *nev)</span>
+  <blockquote> A <span class="f">getenv</span> függvény visszatérési értéke az operációs rendszertől kapott <span class="m">nev</span> nevű karaktersorozat vagy <span class="f">NULL</span>, ha nincs karaktersorozat. A függvény működésének részletei a gépi megvalósítástól függenek.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> *<span class="f">bsearch</span> (<span class="k">const</span> <span class="k">void</span> *kulcs, <span class="k">const</span> <span class="k">void</span> *tabla,
+   <span class="k">size_t</span> n, <span class="k">size_t</span> meret, <span class="k">int</span> (*comp)
+   (<span class="k">const</span> <span class="k">void</span> *kulcsv, <span class="k">const</span> <span class="k">void</span> *datum))</span>
+  <blockquote> A <span class="f">bsearch</span> függvény a <span class="m">tabla[0]...tabla[n-1]</span> táblázat elemei (amelyek mérete <span class="m">meret</span>) közül megkeresi a <span class="m">kulcs</span>-csal megegyezőt. A <span class="f">bsearch</span> függvény az összehasonlításhoz a <span class="m">cmp</span> függvényt használja, amely negatív értékkel tér vissza, ha az első argumentuma kisebb a másodiknál, nullával, ha a két argumentum megegyezik és pozitív értékkel, ha az első argumentum nagyobb a másodiknál. (Az első argumentum a <span class="m">kulcs</span>, a második a táblázat megfelelő eleme.) A <span class="m">tabla</span> tömb elemeinek növekvő sorrendbe rendezettnek kell lenni. A <span class="f">bsearch</span> függvény a <span class="m">kulcs</span>-csal megegyező elem mutatójával, ill. ha a <span class="m">kulcs</span>-nak megfelelő elem nem található meg a tömbben, akkor <span class="f">NULL</span> értékkel tér vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> <span class="f">qsort</span>(<span class="k">void</span> *tabla, <span class="k">size_t</span> n, <span class="k">size_t</span> meret, <span class="k">int</span> (*cmp)
+  (<span class="k">const</span> <span class="k">void</span> *, <span class="k">const</span> <span class="k">void</span> *))</span>
+  <blockquote> A <span class="f">qsort</span> függvény növekvő sorrendbe rendezi a <span class="m">tabla[0]...tabla[n-1]</span> <span class="m">meret</span> méretű objektumokból álló tömböt. Az összehasonlítást a <span class="f">bsearch</span> függvénynél alkalmazott <span class="m">cmp</span> függvény végzi.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">abs</span>(<span class="k">int</span> n)</span>
+  <blockquote> Az <span class="f">abs</span> függvény visszatérési értéke az egész típusú argumentumának abszolút értéke (egész értékként).<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">long</span> <span class="f">labs</span>(<span class="k">long</span> n)</span>
+  <blockquote> A <span class="f">labs</span> függvény <span class="k">long</span> típusú vissztérési értéke a <span class="k">long</span> típusú argumentum abszolút értéke.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="f">div_t</span> <span class="f">div</span>(<span class="k">int</span> szaml, <span class="k">int</span> nevez)</span>
+  <blockquote> A <span class="f">div</span> függvény kiszámítja az egész típusú argumentumokra felírt <span class="m">szaml/nevez</span> tört hányadosát és maradékát. Az eredmény egy <span class="f">div_t</span> típusú struktúra <span class="f">quot</span> és <span class="f">rem</span> nevű, <span class="k">int</span> típusú tagjaiban tárolódik (a <span class="f">quot</span> a hányadost, <span class="f">rem</span> a maradékot tárolja).<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="f">ldiv_t</span> <span class="f">ldiv</span>(<span class="k">long</span> szaml, <span class="k">long</span> nevez)</span>
+  <blockquote> Az <span class="f">ldiv</span> függvény kiszámítja a <span class="k">long</span> típusú argumentumokra felírt <span class="m">szaml/nevez</span> tört hányadosát és maradékát. Az eredmény egy <span class="f">ldiv_t</span> típusú struktúra <span class="k">long</span> típusú, <span class="f">quot</span> és <span class="f">rem</span> nevű tagjaiban tárolódik (a <span class="f">quot</span> a hányadost, <span class="f">rem</span> a maradékot tárolja).<br />
+  </blockquote>
+  <br />
+  <h3><a name="B6." id="B6."></a>B6. Programdiagnosztika: az &lt;assert.h&gt; header<br />
+  </h3>
+  Az <span class="f">assert</span> makró a programdiagnosztika segítésére használható. A makró általános formája:<br />
+  <pre>
+<span class="k">void</span> <span class="f">assert</span>(<span class="k">int</span> <span class="defit">kifejezés</span>)
+</pre>
+  A makrót az<br />
+  <pre>
+<span class="f">assert</span>(<span class="defit">kifejezés</span>)
+</pre>
+  formában híva az az <span class="f">stderr</span> állományba az<br />
+  <pre>
+Assertion failed: <span class="defit">kifejezés</span>, file <span class="defit">állománynév</span>, line <span class="defit">nnn</span>
+</pre>
+  üzenetet fogja kiírni. Ezután hívható az <span class="f">abort</span> függvény, amellyel a program futása befejezhető. Az üzenetben szereplő állománynevet és sorszámot az <span class="f">assert</span> az előfeldolgozó rendszerben definiált és kezelt <span class="m">__FILE__</span> és <span class="m">__LINE__</span> azonosítójú helyekről veszi. Ha az <span class="m">&lt;assert.h&gt;</span> header beépítésekor az <span class="m">NDEBUG</span> név definiálva van, akkor az <span class="f">assert</span> makrót a rendszer figyelmen kívül hagyja (nem hajtja végre).<br />
+  <br />
+  <h3><a name="B7." id="B7."></a>B7. Változó hosszúságú argumentumlisták kezelése: az &lt;stdarg.h&gt; header<br />
+  </h3>
+  Az <span class="m">&lt;stdarg.h&gt;</span> headerben definiált függvények és változók lehetővé teszik ismeretlen számú és típusú argumentumot tartalmazó függvényhívás argumentumlistájának feldolgozását.
+  <p> Tételezzük fel, hogy a <span class="m">f(a1, a2, utarg, ...)</span> alakú függvényhívásban <span class="m">utarg</span> az utolsó névvel ellátott argumentum, amelyet már a változó argumentumrész követ. Ekkor az <span class="m">f</span> függvényhez<br />
+  </p>
+  <pre>
+<span class="f">va_list</span> ap;
+</pre>
+  formában deklarálható egy <span class="f">va_list</span> típusú <span class="m">ap</span> változó (argumentummutató), amely az egyes argumentumokat címzi. Az <span class="m">ap</span> mutatót az első meg nem nevezett argumentumhoz való hozzáférés előtt a <span class="f">va_start</span> makróval a<br />
+  <pre>
+<span class="f">va_start</span>(<span class="f">va_list</span> ap, utarg);
+</pre>
+  módon inicializálni kell. Ezek után a <span class="f">va_arg</span> makró hívásával vehető elő a lista következő, meg nem nevezett argumentuma. A <span class="f">va_arg</span> makró a<br />
+  <pre>
+<span class="defit">típus</span> <span class="f">va_arg</span>(<span class="f">va_list</span> ap, <span class="defit">típus</span>);
+</pre>
+  formában hívható, és visszatérési értéke az <span class="m">ap</span> által címzett argumentum értéke a megadott típusra konvertálva. A hívás során a <span class="f">va_arg</span> makró az <span class="m">ap</span> mutatót a következő meg nem nevezett argumentumra lépteti. Az <span class="m">f</span> függvényben az argumentumlista feldolgozása után, de még a függvényből való visszatérés előtt egyszer hívni kell a <span class="f">va_end</span> makrót a<br />
+  <pre>
+<span class="k">void</span> <span class="f">va_end</span>(<span class="f">va_list</span> ap);
+</pre>
+  formában, ami lezárja az argumentumlista feldolgozását.<br />
+  <br />
+  <h3><a name="B8." id="B8."></a>B8. Nem lokális vezérlésátadások: a &lt;setjmp.h&gt; header<br />
+  </h3>
+  A <span class="m">&lt;setjmp.h&gt;</span> header deklarációi lehetőséget nyújtanak a normális függvényhívások és visszatérések elkerülésére, és tipikusan lehetővé teszik, hogy mélyen beágyazott függvényhívásokból közvetlenül térjünk vissza. Az egyes makrók:<br />
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">setjmp</span>(<span class="f">jmp_buf</span> env)</span>
+  <blockquote> A <span class="f">setjmp</span> makró az <span class="m">env</span> változóba elmenti az állapotinformációt. Az elmentett információ a <span class="f">longjmp</span> makró hívásakor használható fel. A <span class="f">setjmp</span> makrót közvetlenül híva a visszatérési értéke nulla. Ha a <span class="f">setjmp</span>-ot a soron következő <span class="f">longjmp</span> makró hívta, akkor a visszatérési értéke nem nulla. A <span class="f">setjmp</span> hívása csak meghatározott programkörnyezetekben fordulhat elő, alapvetően a <span class="k">switch</span>, <span class="k">if</span> utasítások, ill. ciklusok ellenőrző részében és csak egyszerű relációs kifejezésekben. A <span class="f">setjmp</span> használatát a következő programrészlet szemlélteti:<br />
+    <pre>
+<span class="k">if</span> (<span class="f">setjmp</span>(env) == 0)
+   <span class="c">/* a setjmp közvetlen hívása */</span>
+<span class="k">else</span>
+   <span class="c">/* itt következik a longjmp-on
+   keresztüli setjmp hívás */</span>
+</pre>
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">void</span> <span class="f">longjmp</span>(<span class="f">jmp_buf</span> env, <span class="k">int</span> ert)</span>
+  <blockquote> A <span class="f">longjmp</span> makró helyreállítja a korábbi <span class="f">setjmp</span> makró hívásával elmentett, <span class="m">env</span> változóban lévő állapotot, majd a végrehajtás úgy folytatódik, mintha egy <span class="f">setjmp</span> makrót hajtanánk végre és a visszatérés egy nem nulla <span class="m">ert</span> értékkel történik. A <span class="f">longjmp</span> makróban lévő <span class="f">setjmp</span> hívás nincs lezárva. A <span class="f">longjmp</span> hívásakor értéket kapott objektumok értéke hozzáférhető marad, kivéve a <span class="f">setjmp</span> hívásakor érvényben lévő nem <span class="k">volatile</span> automatikus tárolási osztályú változókat, amelyek definiálatlanná válnak, ha az értékük a <span class="f">setjmp</span> hívása után megváltozott.<br />
+  </blockquote>
+  <br />
+  <h3><a name="B9." id="B9."></a>B9. Jelzések kezelése: a &lt;signal.h&gt; header<br />
+  </h3>
+  A <span class="m">&lt;signal.h&gt;</span> header lehetőséget nyújt a program végrehajtása során előforduló váratlan események, mint pl. külső forrástól érkező megszakításkérés, végrehajtási hiba stb., kezelésére. Az eseményt kezelő függvény általános alakja:<br />
+  <br />
+  <span class="m"><span class="k">void</span> (*signal (<span class="k">int</span> sig, <span class="k">void</span> (*handler) (<span class="k">int</span>))) (<span class="k">int</span>)</span>
+  <blockquote> A <span class="m">signal</span> függvény meghatározza, hogy a rendszer a soron következő jelzést hogyan fogja kezelni. Ha <span class="m">handler</span>-nek a <span class="f">SIG_DFL</span> lett megadva, akkor a gépi megvalósításban meghatározott alapfeltételezés szerinti kezelést végez, ha pedig a <span class="f">SIG_IGN</span> lett megadva, akkor a jelzést figyelmen kívül hagyja. Minden más esetben a <span class="m">handler</span>-ben megadott, a jelzés típusának megfelelő argumentummal hívott függvény végzi a jelzés kezelését. A megengedett <span class="m">sig</span> jelzések:<br />
+    <br />
+    <table>
+      <tr>
+        <td width="100px"><span class="f">SIGABRT</span></td>
+        <td>program abnormális befejezése, pl. az <span class="f">abort</span> függvénytől kapott jelzés;</td>
+      </tr>
+      <tr>
+        <td><span class="f">SIGFPE</span></td>
+        <td>aritmetikai hiba, pl. nullával való osztás vagy túlcsordulás;</td>
+      </tr>
+      <tr>
+        <td><span class="f">SIGILL</span></td>
+        <td>illegális függvényhívás, pl. illegális utasítás;</td>
+      </tr>
+      <tr>
+        <td><span class="f">SIGINT</span></td>
+        <td>interaktív jelzés, pl. megszakításkérés;</td>
+      </tr>
+      <tr>
+        <td><span class="f">SIGSEGV</span></td>
+        <td>illegális tároló-hozzáférés, pl. címzés a tárhatáron kívülre;</td>
+      </tr>
+      <tr>
+        <td><span class="f">SIGTERM</span></td>
+        <td>lezárási igény küldése a programhoz.</td>
+      </tr>
+    </table>
+    <br />
+    A <span class="m">signal</span> függvény a megadott jelzéshez tartozó handler előző értékével vagy hiba esetén a <span class="f">SIG_ERR</span> értékkel tér vissza. Amikor a <span class="m">sig</span> jelzés bekövetkezik, akkor a <span class="m">signal</span> függvény alapállapotba áll vissza, majd <span class="m">(*handler)(sig)</span> formában létrejön a jelzést kezelő függvény hívása. A jelzést kezelő függvényből való visszatérés után a program végrehajtása ott folytatódik, ahol a jelzés megjelenésekor félbeszakadt. A jelzések kezdeti állapota a gépi megvalósítástól függ.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">int</span> <span class="f">raise</span>(<span class="k">int</span> sig)</span>
+  <blockquote> A <span class="f">raise</span> függvény a <span class="m">sig</span> argumentummal megadott jelzést küldi a programnak. Ha a jelzés átadása sikertelen volt, akkor a visszatérési értéke nem nulla.<br />
+  </blockquote>
+  <br />
+  <h3><a name="B10." id="B10."></a>B10. Dátumot és időt kezelő függvények: a &lt;time.h&gt; header<br />
+  </h3>
+  A &lt;<span class="f">time</span>.h&gt; headerben vannak deklarálva a dátummal és idővel kapcsolatos műveletekhez szükséges adattípusok és függvények. Néhány függvény a helyi időt dolgozza fel, amely különbözhet a naptári időtől, pl. más időzóna miatt. A <span class="f">clock_t</span> és <span class="f">time_t</span> az idő ábrázolására alkalmas aritmetikai adattípusok, és a <span class="m"><span class="k">struct</span> tm</span> a naptári idő komponenseit tartalmazza a következő felosztásban:<br />
+  <br />
+  <table>
+    <tr>
+      <td width="150px"><span class="k">int</span> <span class="f">tm_sec</span>;</td>
+      <td>a percet követő másodpercek, 0-tól 61-ig;</td>
+    </tr>
+    <tr>
+      <td><span class="k">int</span> <span class="f">tm_min</span>;</td>
+      <td>az órát követő percek, 0-tól 59-ig;</td>
+    </tr>
+    <tr>
+      <td><span class="k">int</span> <span class="f">tm_hour</span>;</td>
+      <td>az éjféltől eltelt órák száma, 0-tól 23-ig;</td>
+    </tr>
+    <tr>
+      <td><span class="k">int</span> <span class="f">tm_mday</span>;</td>
+      <td>a hónap napja, 1-től 31-ig;</td>
+    </tr>
+    <tr>
+      <td><span class="k">int</span> <span class="f">tm_mon</span>;</td>
+      <td>a január óta eltelt hónapok, 0-tól 11-ig;</td>
+    </tr>
+    <tr>
+      <td><span class="k">int</span> <span class="f">tm_year</span>;</td>
+      <td>az évszám 1900 óta;</td>
+    </tr>
+    <tr>
+      <td><span class="k">int</span> <span class="f">tm_wday</span>;</td>
+      <td>a napok vasárnap óta, 0-tól 6-ig;</td>
+    </tr>
+    <tr>
+      <td><span class="k">int</span> <span class="f">tm_yday</span>;</td>
+      <td>a január 1. óta eltelt napok száma, 0-tól 365-ig;</td>
+    </tr>
+    <tr>
+      <td><span class="k">int</span> <span class="f">tm_isdst</span>;</td>
+      <td>óraátállítás-jelző.</td>
+    </tr>
+  </table>
+  <br />
+  A <span class="f">tm_isdst</span> pozitív, ha az óraátállítás érvényben van, nulla ha nincs érvényben és negatív, ha az erre vonatkozó információ nem áll a rendelkezésünkre.<br />
+  <br />
+  A dátumot és időt kezelő függvények:<br />
+  <br />
+  <span class="m"><span class="f">clock_t</span> <span class="f">clock</span>(<span class="k">void</span>)</span>
+  <blockquote> A <span class="f">clock</span> függvény visszatérési értéke a program kezdete óta eltelt processzoridő, vagy ha ez nem áll rendelkezésünkre, akkor a -1 érték. A processzoridő a <span class="m"><span class="f">clock</span>() /CLOCKS_PER_SEC</span> összefüggéssel számolható át másodpercre.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="f">time_t</span> <span class="f">time</span>(<span class="f">time_t</span> *tp)</span>
+  <blockquote> A <span class="f">time</span> függvény visszatérési értéke az aktuális naptári idő, vagy -1, ha az nem áll a rendelkezésünkre. Ha <span class="m">tp</span> nem <span class="f">NULL</span> értékű, akkor a visszatérési érték a <span class="m">*tp</span> helyen is eltárolódik.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">double</span> <span class="f">difftime</span>(<span class="f">time_t</span> time2, <span class="f">time_t</span> time1)</span>
+  <blockquote> A <span class="f">difftime</span> függvény visszatérési értéke a <span class="m">time2 - time1</span> különbség másodpercben kifejezve.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="f">time_t</span> <span class="f">mktime</span>(<span class="k">struct</span> tm *tp)</span>
+  <blockquote> Az <span class="f">mktime</span> függvény a struktúra <span class="m">*tp</span> helyén lévő helyi időt a <span class="f">time</span> függvénynek megfelelő ábrázolású naptári idővé alakítja. Az idő egyes komponensei a leírtak szerinti tartományba fognak esni. A függvény visszatérési értéke a naptári idő, vagy -1, ha az nem ábrázolható a megfelelő formában.<br />
+  </blockquote>
+  <br />
+  A következő négy függvény statikus objektumhoz tartozó mutatóval tér vissza és ezek az objektumok más függvényhívásokkal felülírhatók.<br />
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">asctime</span>(<span class="k">const</span> <span class="k">struct</span> tm *tp)</span>
+  <blockquote> Az <span class="f">asctime</span> függvény a <span class="m">*tp</span> strutúrában található naptári időt a<br />
+    <pre>
+Sun Jan 3 15:14:13 1994<span class="e">\n</span><span class="e">\0</span>
+</pre>
+    alakú karaktersorozattá alakítja.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">char</span> *<span class="f">ctime</span>(<span class="k">const</span> <span class="f">time_t</span> *tp)</span>
+  <blockquote> A <span class="f">ctime</span> függvény a <span class="m">*tp</span> címen lévő naptári időt helyi idővé alakítja. A függvény egyenértékű az <span class="m"><span class="f">asctime</span>(<span class="f">localtime</span>(tp))</span> függvényhívással.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">struct</span> tm *<span class="f">gmtime</span>(<span class="k">const</span> <span class="f">time_t</span> *tp)</span>
+  <blockquote> A <span class="f">gmtime</span> függvény a <span class="m">*tp</span> címen lévő naptári időt a koordinált univerzális idővé (UTC) alakítja. A függvény <span class="f">NULL</span> értékkel tér vissza, ha az UTC nem áll rendelkezésre. A <span class="f">gmtime</span> elnevezés történeti okokra vezethető vissza.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">struct</span> tm *<span class="f">localtime</span>(<span class="k">const</span> <span class="f">time_t</span> *tp)</span>
+  <blockquote> A <span class="f">localtime</span> függvény a <span class="m">*tp</span> címen található naptári időt helyi idővé lakítja.<br />
+  </blockquote>
+  <br />
+  <span class="m"><span class="k">size_t</span> <span class="f">strftime</span>(<span class="k">char</span> *s, <span class="k">size_t</span> smax, <span class="k">const</span> <span class="k">char</span> *fmt)</span>
+  <blockquote> Az <span class="f">strftime</span> függvény a <span class="m">*tp</span> helyen található dátum- és időadatokat az <span class="m">fmt</span> formátum szerint karaktersorozattá alakítja és elhelyezi az <span class="m">s</span> karaktersorozatban. Az <span class="m">fmt</span> formátumleírás megegyezik a <span class="f">printf</span> függvény formátumleírásával. A formátumleírásban lévő közönséges karakterek (beleértve a lezáró <span class="m">'<span class="e">\0</span>'</span> karaktert is) átmásolódnak az s karaktersorozatba, a <span class="m">%c</span> alakú elemek pedig a következőkben leírtak szerint, a helyi operációs rendszer megfelelő értékeit felhasználva helyettesítődnek. Az <span class="m">s</span> karaktersorozatban legfeljebb <span class="m">smax</span> számú karakter helyezhető el. Az <span class="f">strftime</span> függvény visszatérési értéke az <span class="m">s</span>-ben elhelyezett karakterek száma (beleértve a lezáró <span class="m">'<span class="e">\0</span>'</span> karaktert is), vagy nulla, ha <span class="m">smax</span>-nál több karaktert kívántunk elhelyezni. A <span class="m">%c</span> alakú formátumspecifikációk:<br />
+    <br />
+    <table>
+      <tr>
+        <td width="60px" class="m">%a</td>
+        <td>a nap neve, rövidítve;</td>
+      </tr>
+      <tr>
+        <td class="m">%A</td>
+        <td>a nap neve, teljesen kiírva;</td>
+      </tr>
+      <tr>
+        <td class="m">%b</td>
+        <td>a hónap neve, rövidítve;</td>
+      </tr>
+      <tr>
+        <td class="m">%B</td>
+        <td>a hónap neve, teljesen kiírva;</td>
+      </tr>
+      <tr>
+        <td class="m">%c</td>
+        <td>helyidátum- és helyiidő-ábrázolás;</td>
+      </tr>
+      <tr>
+        <td class="m">%d</td>
+        <td>a hónap napja számmal (01...31);</td>
+      </tr>
+      <tr>
+        <td class="m">%H</td>
+        <td>az óra (24 órás kiírás, 00...23);</td>
+      </tr>
+      <tr>
+        <td class="m">%I</td>
+        <td>az óra (12 órás kiírás, 01...12);</td>
+      </tr>
+      <tr>
+        <td class="m">%j</td>
+        <td>az év napja számmal (001...365);</td>
+      </tr>
+      <tr>
+        <td class="m">%m</td>
+        <td>a hónap számmal (01...12);</td>
+      </tr>
+      <tr>
+        <td class="m">%M</td>
+        <td>a perc (00...59);</td>
+      </tr>
+      <tr>
+        <td class="m">%p</td>
+        <td>az AM vagy PM helyi megfelelője (pl. de vagy du);</td>
+      </tr>
+      <tr>
+        <td class="m">%S</td>
+        <td>a másodperc (00...61);</td>
+      </tr>
+      <tr>
+        <td class="m">%U</td>
+        <td>a hét sorszáma az évben (a hét első napjának a vasárnapot tekintve, 00...53);</td>
+      </tr>
+      <tr>
+        <td class="m">%w</td>
+        <td>a hét napja számmal (vasárnap a 0., 0...6);</td>
+      </tr>
+      <tr>
+        <td class="m">%W</td>
+        <td>a nap sorszáma az évben (a hét első napjának hétfőt tekintve, 000...365);</td>
+      </tr>
+      <tr>
+        <td class="m">%x</td>
+        <td>helyidátum ábrázolás;</td>
+      </tr>
+      <tr>
+        <td class="m">%X</td>
+        <td>helyiidő-ábrázolás;</td>
+      </tr>
+      <tr>
+        <td class="m">%y</td>
+        <td>az évszám, évszázad nélkül (00...99);</td>
+      </tr>
+      <tr>
+        <td class="m">%Y</td>
+        <td>az évszám évszázaddal;</td>
+      </tr>
+      <tr>
+        <td class="m">%Z</td>
+        <td>az időzóna elnevezése, ha van;</td>
+      </tr>
+      <tr>
+        <td class="m">%%</td>
+        <td>% jel.</td>
+      </tr>
+    </table>
+  </blockquote>
+  <br />
+  <br />
+  <h3><a name="B11." id="B11."></a>B11. A gépi megvalósításban definiált határértékek: a &lt;limits.h&gt; és &lt;float.h&gt; headerek<br />
+  </h3>
+  A <span class="m">&lt;climits.h&gt;</span> headerben vannak az egész típusú adatok méreteit megadó állandók definiálva. Az itt megadott értékek a szabvány szerint szóba jöhető minimális nagyságot jelentik, ezeknél nagyobb értékek is használhatók az egyes gépi megvalósításokban.<br />
+  <br />
+  <table border="1px">
+    <caption>
+    <b>B.3. táblázat.</b> Az egész típusú adatok méretét meghatározó állandók
+    </caption>
+    <tr>
+      <td align="center">Azonosító</td>
+      <td align="center">Érték</td>
+      <td align="center">Jelentés</td>
+    </tr>
+    <tr>
+      <td class="f">CHAR_BIT</td>
+      <td class="m" align="right">8</td>
+      <td>a bitek min. száma egy <span class="k">char</span> típusú változóban</td>
+    </tr>
+    <tr>
+      <td class="f">CHAR_MAX</td>
+      <td class="m" align="right"><span class="f">UCHAR_MAX</span> <span class="def">vagy</span> <span class="f">SCHAR_MAX</span></td>
+      <td>egy <span class="k">char</span> típusú változóban tárolható max. érték</td>
+    </tr>
+    <tr>
+      <td class="f">CHAR_MIN</td>
+      <td class="m" align="right">0 <span class="def">vagy</span> <span class="f">SCHAR_MIN</span></td>
+      <td>egy <span class="k">char</span> típusú változóban tárolható min. érték</td>
+    </tr>
+    <tr>
+      <td class="f">INT_MAX</td>
+      <td class="m" align="right">+32767</td>
+      <td>egy <span class="k">int</span> típusú változóban tárolható max. érték</td>
+    </tr>
+    <tr>
+      <td class="f">INT_MIN</td>
+      <td class="m" align="right">-32767</td>
+      <td>egy <span class="k">int</span> típusú változóban tárolható min. érték</td>
+    </tr>
+    <tr>
+      <td class="f">LONG_MAX</td>
+      <td class="m" align="right">+2147483647</td>
+      <td>egy <span class="k">long</span> típusú változóban tárolható max. érték</td>
+    </tr>
+    <tr>
+      <td class="f">LONG_MIN</td>
+      <td class="m" align="right">-2147483647</td>
+      <td>egy <span class="k">long</span> típusú változóban tárolható min. érték</td>
+    </tr>
+    <tr>
+      <td class="f">SCHAR_MAX</td>
+      <td class="m" align="right">+127</td>
+      <td>egy <span class="k">signed</span> <span class="k">char</span> típusú változóban tárolható max. érték</td>
+    </tr>
+    <tr>
+      <td class="f">SCHAR_MIN</td>
+      <td class="m" align="right">-127</td>
+      <td>egy <span class="k">signed</span> <span class="k">char</span> típusú változóban tárolható min. érték</td>
+    </tr>
+    <tr>
+      <td class="f">SHRT_MAX</td>
+      <td class="m" align="right">+32767</td>
+      <td>egy <span class="k">short</span> típusú változóban tárolható max. érték</td>
+    </tr>
+    <tr>
+      <td class="f">SHRT_MIN</td>
+      <td class="m" align="right">-32767</td>
+      <td>egy <span class="k">short</span> típusú változóban tárolható min. érték</td>
+    </tr>
+    <tr>
+      <td class="f">UCHAR_MAX</td>
+      <td class="m" align="right">255</td>
+      <td>egy <span class="k">unsigned</span> <span class="k">char</span> típusú változóban tárolható max. érték</td>
+    </tr>
+    <tr>
+      <td class="f">UINT_MAX</td>
+      <td class="m" align="right">65535</td>
+      <td>egy <span class="k">unsigned</span> <span class="k">int</span> típusú változóban tárolható max. érték</td>
+    </tr>
+    <tr>
+      <td class="f">ULONG_MAX</td>
+      <td class="m" align="right">4294967295</td>
+      <td>egy <span class="k">unsigned</span> <span class="k">long</span> típusú változóban tárolható max. érték</td>
+    </tr>
+    <tr>
+      <td class="f">USHRT_MAX</td>
+      <td class="m" align="right">65535</td>
+      <td>egy <span class="k">unsigned</span> <span class="k">short</span> típusú<br />
+        változóban tárolható max. érték</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  A következő táblázat a <span class="m">&lt;float.h&gt;</span> headerben definiált, a lebegőpontos aritmetikával kapcsolatos állandók egy részét tartalmazza. A megadott értékek itt is a szabvány szerinti minimumot jelentik, az egyes gépi megvalósítások más, ennél nagyobb értéket is megengedhetnek.<br />
+  <br />
+  <table border="1px">
+    <caption>
+    <b>B.4. táblázat.</b> A valós típusú adatok méretét meghatározó állandók
+    </caption>
+    <tr>
+      <td align="center">Azonosító</td>
+      <td align="center">Érték</td>
+      <td align="center">Jelentés</td>
+    </tr>
+    <tr>
+      <td class="f">FLT_RADIX</td>
+      <td class="m" align="right">2</td>
+      <td>a lebegőpontos számábrázolásban a számrendszer alapszáma</td>
+    </tr>
+    <tr>
+      <td class="f">FLT_ROUNDS</td>
+      <td class="m" align="right">&nbsp;</td>
+      <td>lebegőpontos kerekítési mód összeadásra</td>
+    </tr>
+    <tr>
+      <td class="f">FLT_DIG</td>
+      <td class="m" align="right">6</td>
+      <td><span class="k">float</span> típusú szám decimális számjegyekben mért pontossága</td>
+    </tr>
+    <tr>
+      <td class="f">FLT_EPSILON</td>
+      <td class="m" align="right">1E-5</td>
+      <td>az a legkisebb <span class="k">float</span> típusú <span class="m">x</span> szám, amelyre <span class="m">1.0+x != 1.0</span></td>
+    </tr>
+    <tr>
+      <td class="f">FLT_MANT_DIG</td>
+      <td class="m" align="right">&nbsp;</td>
+      <td>az <span class="f">FLT_RADIX</span> számrendszerű ábrázolásban a mantissza számjegyeinek száma</td>
+    </tr>
+    <tr>
+      <td class="f">FLT_MAX</td>
+      <td class="m" align="right">1E+37</td>
+      <td>egy <span class="k">float</span> típusú lebegőpontos szám max. értéke</td>
+    </tr>
+    <tr>
+      <td class="f">FLT_MAX_EXP</td>
+      <td class="m" align="right">&nbsp;</td>
+      <td>az a max. <span class="m">n</span> szám, amelyre az <span class="m"><span class="f">FLT_RADIX</span><sup>n</sup>-1</span> még ábrázolható</td>
+    </tr>
+    <tr>
+      <td class="f">FLT_MIN</td>
+      <td class="m" align="right">1E-37</td>
+      <td>egy normál <span class="k">float</span> típusú lebegőpontos szám min. értéke</td>
+    </tr>
+    <tr>
+      <td class="f">FLT+MIN+EXP</td>
+      <td>&nbsp;</td>
+      <td>az a min. <span class="m">n</span> szám, amelyre <span class="m">10</span><sup>n</sup> egy normált számot ad</td>
+    </tr>
+    <tr>
+      <td class="f">DBL_DIG</td>
+      <td class="m" align="right">10</td>
+      <td><span class="k">double</span> típusú szám decimális számjegyekben mért pontossága</td>
+    </tr>
+    <tr>
+      <td class="f">DBL_EPSILON</td>
+      <td class="m" align="right">&nbsp;</td>
+      <td>az a legkisebb <span class="k">double</span> típusú <span class="m">x</span> szám, amelyre <span class="m">1.0+x != 1.0</span></td>
+    </tr>
+    <tr>
+      <td class="f">DBL_MANT_DIG</td>
+      <td class="m" align="right">&nbsp;</td>
+      <td>az <span class="f">FLT_RADIX</span> számrendszerű ábrázolásban a mantissza számjegyeinek száma</td>
+    </tr>
+    <tr>
+      <td class="f">DBL_MAX</td>
+      <td class="m" align="right">1E+37</td>
+      <td>egy <span class="k">double</span> típusú lebegőpontos szám max. értéke</td>
+    </tr>
+    <tr>
+      <td class="f">DBL_MAX_EXP</td>
+      <td class="m" align="right">&nbsp;</td>
+      <td>az a max. <span class="m">n</span> szám, amelyre az <span class="m"><span class="f">FLT_RADIX</span><sup>n</sup>-1</span> még ábrázolható</td>
+    </tr>
+    <tr>
+      <td class="f">DBL_MIN</td>
+      <td class="m" align="right">1E-37</td>
+      <td>egy normált <span class="k">double</span> típusú lebegőpontos szám min. értéke</td>
+    </tr>
+    <tr>
+      <td class="f">DBL_MIN_EXP</td>
+      <td class="m" align="right">&nbsp;</td>
+      <td>az a min. <span class="m">n</span> szám, amelyre <span class="m">10</span><sup>n</sup> egy normált számot ad</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="a.html">A. FÜGGELÉK</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="c.html">C. FÜGGELÉK</a>
+   </td>
+</tr>
+</table>
+
+
+</div>
+</body>
+</html>

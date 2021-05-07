@@ -1,0 +1,870 @@
+&nbsp;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Adatbevitel és adatkivitel</title>
+<link href="krc.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div id="main">
+
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="06.html">6. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="08.html">8. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+  <h2><a name="7. FEJEZET" id="7. FEJEZET"></a><i>7. FEJEZET:</i><br />
+  </h2>
+  <h2>Adatbevitel és adatkivitel<br />
+  </h2>
+  Az adatbeviteli és adatkiviteli szolgáltatás nem része a C nyelvnek, így idáig nem fordítottunk rá nagy figyelmet. Nyilvánvaló viszont, hogy a programok a környezettel a korábban bemutatottnál sokkal bonyolultabb kapcsolatban is lehetnek. Ezen kapcsolat kialakítása érdekében ebben a fejezetben leírjuk a standard könyvtárat, ami függvények gyűjteménye. Ezek a függvények a C nyelvű programok adatbeviteli és adatkiviteli, karaktersorozat-kezelési, tárkezelési, matematikai műveletekkel kapcsolatos és más egyéb szolgáltatásait látják el.
+  <p> Az ANSI szabvány ezeket a könyvtári funkciókat pontosan definiálja, így ezek bármely C nyelvet használó számítógép és operációs rendszer számára kompatibilis formában léteznek. Azok a programok, amelyek az operációs rendszerrel való kölcsönhatásukat a standard könyvtáron keresztül bonyolítják, minden változtatás nélkül átvihetők az egyik számítógépről a másikra.</p>
+  <p> A könyvtári függvények tulajdonságait több mint egy tucat header állomány specifikálja, amelyek közül néhánnyal (<span class="m">&lt;stdio.h&gt;</span>, <span class="m">&lt;string.h&gt;</span>, <span class="m">&lt;ctype.h&gt;</span>) már találkoztunk. Most nem a teljes könyvtárat fogjuk ismertetni, hanem számos érdekes C nyelvű programot írunk a könyvtári függvények felhasználásával. Magának a könyvtárnak a részletesebb leírása a <a href="b.html">B. Függelékben</a> található.<br />
+    <br />
+  </p>
+  <h3><a name="7.1." id="7.1."></a>7.1. A standard adatbevitel és adatkivitel<br />
+  </h3>
+  Amint azt az <a href="01.html">1. fejezetben</a> már elmondtuk, a könyvtár adatátvitelt kezelő része a szöveges adatbevitelre és adatkivitelre kialakított egyszerű modell alapján működik. A modell szerint a szövegáram egymást követő sorokból áll és minden sor egy újsorkarakterrel zárul. Ha a rendszer nem működik másképpen, akkor a könyvtári eljárás feladata annak eldöntése, hogy mi a teendő az újsor-karakter megjelenésekor. Például a könyvtári eljárás a bemenetről érkező kocsivissza- és soremelés-karaktereket egy újsor-karakterré alakítja, majd kiírás esetén elvégzi a visszaalakítást.
+  <p> A legegyszerűbb adatbeviteli mechanizmus, hogy egy időben egy karaktert olvasunk be a <i>standard bemeneti eszközről</i> (szokásos módon a billentyűzetről) a <span class="f">getchar</span> függvénnyel:<br />
+  </p>
+  <pre>
+<span class="k">int</span> <span class="f">getchar</span>(<span class="k">void</span>)
+</pre>
+  A <span class="f">getchar</span> függvény minden hívásakor visszatér a következő karakterrel vagy az <span class="f">EOF</span> jellel, ha az állomány végét érzékelte. Az <span class="f">EOF</span> szimbolikus állandó az <span class="m">&lt;stdio.h&gt;</span> headerben van definiálva. Az <span class="f">EOF</span> értéke általában -1, de az ellenőrzéseknél inkább a szimbolikus állandót használjuk, hogy a program függetlenné váljék az adott számértéktől.
+  <p> A legtöbb környezetben egy állomány helyettesítheti a billentyűzetet a megállapodás szerinti <span class="m">&lt;</span> átirányítási jelet használva. Ha a <span class="m">prog</span> program a <span class="f">getchar</span> függvényt használja, akkor a<br />
+  </p>
+  <pre>
+prog &lt;allomanyban
+</pre>
+  parancssor hatására a rendszer a karaktereket az <span class="m">allomanyban</span> nevű adatállományból fogja beolvasni. A bemeneti eszköz átkapcsolása úgy történik, hogy a <span class="m">prog</span> maga nem érzékeli a változást, az &quot;<span class="m">&lt;allomanyban</span>&quot; karaktersorozat nem kerül be az <span class="m">argv</span> parancssor-argumentumba. A bemenet átirányítása szintén nem érzékelhető a <span class="m">prog</span> számára, ha a bemeneti adatait egy másik programtól az ún pipeing mechanizmussal (láncolással) kapja. Sok rendszerben ez a<br />
+  <pre>
+masprog | prog
+</pre>
+  parancssorral kérhető. Ennek hatására a <span class="m">masprog</span> standard kimenete, mintegy csővezetéken keresztül rákapcsolódik a prog bemenetére. A standard kimenetet az<br />
+  <pre>
+<span class="k">int</span> <span class="f">putchar</span>(<span class="k">int</span>)
+</pre>
+  függvény állítja elő. A <span class="m"><span class="f">putchar</span>(c)</span> a <span class="m">c</span> karaktert adja a standard kimeneti eszközre, ami alapfeltételezés szerint a képernyő. A <span class="f">putchar</span> függvény a hívása után a kiírt karakterrel vagy ha valamilyen hiba fordult elő, akkor az <span class="f">EOF</span> jelzéssel tér vissza. A standard kimenet is átirányítható egy adatállományba a <i>&gt;állománynév</i> parancskiegészítéssel. Ha a <span class="m">prog</span> használja a <span class="f">putchar</span> függvényt, akkor az átirányítás a<br />
+  <pre>
+prog &gt;kiallomany
+</pre>
+  parancssorral történhet, és ennek hatására a standard kimenet helyett a <span class="m">kiallomany</span> nevű adatállományba íródik a kimenet. A pipeing mechanizmus szintén megvalósítható a<br />
+  <pre>
+prog | masprog
+</pre>
+  parancssorral, ami a <span class="m">prog</span> standard kimenetét a <span class="m">masprog</span> standard bemenetére irányítja.
+  <p> A <span class="f">printf</span> függvény szintén a standard kimenetet használja. A <span class="f">putchar</span> és <span class="f">printf</span> függvények hívásai vegyesen is előfordulhatnak és a kimenet a hívások sorrendjében jön létre.</p>
+  <p> Minden forrásállományban, amely hivatkozik az adatbeviteli-adatkiviteli könyvtár függvényeire, kell hogy szerepeljen az<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+</pre>
+  sor az első függvényhivatkozás előtt. Amikor a rendszer megtalálja a hegyes zárójelek között a header nevét, akkor azt standard könyvtárban (pl. UNIX operációs rendszer esetén az <span class="m">/usr/include</span> könyvtárban) kezdi keresni.
+  <p> Nagyon sok program csak egyetlen bemeneti adatáramot használ és csak egyetlen kimeneti adatáramot hoz létre. Az ilyen programok adatbeviteli és adatkiviteli feladatainak ellátására a <span class="f">getchar</span>, <span class="f">putchar</span> és <span class="f">printf</span> függvények teljesen elegendőek, és ez az induláshoz szintén elegendő. Ez különösen igaz, ha kihasználjuk az átirányítás lehetőségét, amellyel az egyik program kimenetét a másik bemenetéhez kapcsoljuk. Példaként vizsgáljuk meg a karakteres adatbevitelt és adatkivitelt használó <span class="m">lower</span> programot, amely a bemenetére adott szöveget kisbetűs szöveggé alakítja.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;ctype.h&gt;
+
+main() <span class="c">/* a bemenetet kisbetűssé alakítja */</span>
+{
+   <span class="k">int</span> c;
+   <span class="k">while</span> ( (c = getchar()) != <span class="f">EOF</span>)
+      <span class="f">putchar</span>(<span class="f">tolower</span>(c));
+   <span class="k">return</span> 0; 
+}
+</pre>
+  A <span class="f">tolower</span> függvény a <span class="m">&lt;ctype.h&gt;</span> headerben van definiálva és a nagybetűket kisbetűkké alakítja, más karakterekkel érintetlenül visszatér a hívó függvénybe. Mint korábban már említettük, az <span class="m">&lt;stdio.h&gt;</span> <span class="f">getchar</span> és <span class="f">putchar</span>, valamint a <span class="m">&lt;ctype.h&gt;</span> <span class="f">tolower</span> „függvényei” gyakran makróként vannak megvalósítva, mivel így az egy karakterre eső műveletszám (és így a futási idő is) csökkenthető. Azt, hogy ez hogyan valósítható meg, a <a href="08.html#8.5.">8.5. pontban</a> fogjuk bemutatni. Függetlenül attól, hogy egy adott gépen ezek a függvények hogyan vannak megvalósítva, a program használja azokat és semmiféle ismerettel nem kell rendelkeznie a karakterkészletről.<br />
+  <br />
+  <p><b>7.1.</b> gyakorlat. Írjunk programot, amely a hívásakor az <span class="m">argv[0]</span>-ban elhelyezett paramétertől függően a nagybetűket kisbetűvé vagy a kisbetűket nagybetűvé alakítja!<br />
+    <br />
+  </p>
+  <h3><a name="7.2." id="7.2."></a>7.2. A formátumozott adatkivitel – a printf függvény<br />
+  </h3>
+  A <span class="f">printf</span> kimeneti függvény a gépen belüli értékeket karakterekké alakítja. A <span class="f">printf</span> függvényt már a korábbi fejezetekben is használtuk és ott megadtuk a tipikus alkalmazásokra vonatkozó, de korántsem teljes leírását. A teljes leírás a <a href="b.html">B. Függelékben</a> található. A függvény alakja:<br />
+  <pre>
+<span class="k">int</span> <span class="f">printf</span>(<span class="k">char</span> *format, arg1, arg2, ...)
+</pre>
+  A <span class="f">printf</span> függvény a <span class="m">format</span> vezérlése alatt konvertálja, formátumozza és a standard kimenetre írja az argumentumai értékét, majd visszatéréskor megadja a kiírt karakterek számát.
+  <p> A <span class="m">format</span> karaktersorozata kétféle objektumot tartalmaz: közönséges (nyomtatható) karaktereket, amelyek közvetlenül átmásolódnak a kimeneti adatáramba és konverziós specifikációkat, amelyek mindegyike a <span class="f">printf</span> soron következő argumentumának konverzióját és kiírását eredményezi. Mindegyik konverziós specifikáció a <span class="m">%</span> jellel kezdődik és egy konverziós karakterrel végződik. A <span class="m">%</span> jel és a konverziós karakter között sorrendben a következők lehetnek:<br />
+  </p>
+  <ul>
+    <li>Egy mínusz jel, ami a konvertált argumentum balra igazítását írja elő. </li>
+    <li>Egy szám, ami megadja a minimális mezőszélességet. A konvertált argumentum legalább ilyen széles mezőbe fog kiíródni. Ha szükséges, akkor a mező bal széle (vagy ha balra igazítást írtunk elő, akkor a jobb széle) üres helyekkel fog feltöltődni. </li>
+    <li>Egy pont, ami elválasztja a mezőszélességet a pontosságot megadó számtól. </li>
+    <li>Egy szám (pontosság), ami megadja egy karaktersorozatból kiírt karakterek maximális számát, vagy lebegőpontos adat kiírásánál a tizedespont után kiírt számjegyek számát, vagy egész típusú adat esetén a kiírt számjegyek minimális számát. </li>
+    <li>Egy h betű, ha egy egész számot <span class="k">short</span> típusúként vagy egy l betű, ha <span class="k">long</span> típusúként írunk ki.</li>
+  </ul>
+  A konverziós karaktereket a 7.1. táblázat tartalmazza. Ha a % jel utáni karakter nem konverziós specifikáció akkor a <span class="f">printf</span> viselkedése definiálatlan.<br />
+  <br />
+  <br />
+  <table border="1px" align="center">
+    <caption>
+    <b>7.1. táblázat.</b> A printf függvény konverziós karakterei
+    </caption>
+    <tr>
+      <td align="center">A konverziós karakter</td>
+      <td align="center">Az argumentum típusa</td>
+      <td align="center">A nyomtatás módja</td>
+    </tr>
+    <tr>
+      <td><span class="m">d, i</span></td>
+      <td><span class="k">int</span></td>
+      <td>decimális szám</td>
+    </tr>
+    <tr>
+      <td>o</td>
+      <td><span class="k">int</span></td>
+      <td>előjel nélküli oktális szám vezető nullák nélkül)</td>
+    </tr>
+    <tr>
+      <td><span class="m">x, X</span></td>
+      <td><span class="k">int</span></td>
+      <td>előjel nélküli hexadecimális szám (a vezető <span class="m">0x</span> vagy <span class="m">0X</span> nélkül), a <span class="m">10...15</span> jelzése az <span class="m">abcdef</span> vagy <span class="m">ABCDEF</span> karakterekkel</td>
+    </tr>
+    <tr>
+      <td><span class="m">u</span></td>
+      <td><span class="k">int</span></td>
+      <td>előjel nélküli decimális szám</td>
+    </tr>
+    <tr>
+      <td><span class="m">c</span></td>
+      <td><span class="k">int</span></td>
+      <td>egyetlen karakter</td>
+    </tr>
+    <tr>
+      <td><span class="m">s</span></td>
+      <td><span class="k">char</span>*</td>
+      <td>karaktersorozatból karaktereket nyomtat a '<span class="e">\0</span>' végjelzésig vagy a pontossággal megadott darabszámig</td>
+    </tr>
+    <tr>
+      <td><span class="m">f</span></td>
+      <td><span class="k">double</span></td>
+      <td><span class="m">[-]m.dddddd</span> alakú decimális szám, ahol <span class="m">d</span> számjegyeinek számát a pontosság adja meg (alapfeltételezés szerint <span class="m">d=6</span>)</td>
+    </tr>
+    <tr>
+      <td><span class="m">e, E</span></td>
+      <td><span class="k">double</span></td>
+      <td><span class="m">[-]m.dddddde</span> xx vagy <span class="m">[-]m.ddddddE xx</span> alakú decimális szám, ahol <span class="m">d</span> számjegyeinek számát a pontosság adja meg (alapfeltételezés szerint <span class="m">d=6</span></td>
+    </tr>
+    <tr>
+      <td><span class="m">g, G</span></td>
+      <td><span class="k">double</span></td>
+      <td><span class="m">%e</span> vagy <span class="m">%E</span> alakú kiírást használ, ha a kitevő <span class="m">&lt; -4</span> vagy <span class="m">&gt;=</span>&nbsp; pontosság, különben a <span class="m">%f</span> alakú kiírást használja. A tizedespont és az utána következő értéktelen nullák nem íródnak ki</td>
+    </tr>
+    <tr>
+      <td><span class="m">p</span></td>
+      <td><span class="k">void</span> *</td>
+      <td>mutató a géptől függő kiírási formában</td>
+    </tr>
+    <tr>
+      <td><span class="m">n</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>a <span class="f">printf</span> függvény aktuális hívásakor kiírt karakterek száma beíródik az argumentumba. Az argumentum nem konvertálódik</td>
+    </tr>
+    <tr>
+      <td><span class="m">%</span></td>
+      <td>nincs konvertálandó argumentum</td>
+      <td>egy <span class="m">%</span> jelet ír ki</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  A szélesség vagy pontosság a <span class="m">*</span> jellel is megadható, és ebben az esetben az érték a következő argumentum (amely kötelezően <span class="k">int</span> típusú kell, hogy legyen) konverziójakor jön létre. Például ha az <span class="m">s</span> karaktersorozatból legfeljebb <span class="m">max</span> számú karaktert akarunk kiírni, akkor ez a<br />
+  <pre>
+<span class="f">printf</span>(&quot;%.*s&quot;, max, s);
+</pre>
+  utasítással érhető el.
+  <p> A formátumkonverziók többségét a korábbi fejezetekben már bemutattuk, az egyetlen kivételt a karaktersorozatok kinyomtatásánál megadott pontosság hatásának elemzése képezi. A következő példasoron bemutatjuk a pontosság előírásának hatását a <span class="m">„Halló mindenki!”</span> 15 karakteres karaktersorozat kiírására. Az egyes mezők két szélén kettőspontokat íratunk ki, hogy jobban kiemeljük a mezőt.<br />
+  </p>
+  <pre>
+:%s:     :Halló mindenki!:
+:%10s:   :Halló mindenki!:
+:%.10s:              :Halló mind:
+:%-10s:              :Halló mindenki!:
+:%.20s:              :Halló mindenki!:
+:%-18s:              :Halló mindenki!   :
+:%18.10s:            :     Halló mind:
+:%-18.10s:           :Halló mind        :
+</pre>
+  Figyelem! A <span class="f">printf</span> függvény az első argumentumát használja annak eldöntésére, hogy még hány argumentum következik és azoknak mi a típusa. Programhiba keletkezik és hibás kiírást kapunk, ha nincs elegendő argumentum vagy azok nem a megfelelő típusúak. Ezt jól szemlélteti az alábbi két <span class="f">printf</span> hívás összehasonlítása.<br />
+  <pre>
+<span class="f">printf</span>(s); <span class="c">/* hibás, ha s % jelet is tartalmaz */</span>
+<span class="f">printf</span>(&quot;%s&quot;, s); <span class="c">/* ez így biztonságos */</span>
+</pre>
+  A <span class="f">sprintf</span> függvény ugyanazt a konverziót hajtja végre, mint a <span class="f">printf</span>, de a kimenetet egy karaktersorozatban tárolja. A függvény:<br />
+  <pre>
+<span class="k">int</span> <span class="f">sprintf</span>(<span class="k">char</span> *string, <span class="k">char</span> *format, arg1, arg2, ...)
+</pre>
+  A <span class="f">sprintf</span> függvény először a <span class="m">format</span> formátummegadás szerint formatálja az <span class="m">arg1</span>, <span class="m">arg2</span> stb. argumentumokat, majd az eredményt a standard kimenet helyett a <span class="m">string</span> karaktersorozatba helyezi. A string karaktersorozatnak elegendően nagynak kell lenni ahhoz, hogy az eredményt tárolni tudja. Az <span class="f">sprintf</span> függvényt főleg arra használhatjuk, hogy részekből egy átmeneti tárolóban állítsuk össze a kiírandó információt, majd amikor minden rész a rendelkezésünkre áll, akkor ezt az átmeneti változót a <span class="f">printf</span> függvénnyel kiíratjuk.<br />
+  <br />
+  <p><b>7.2.</b> gyakorlat. Írjunk programot, amely a tetszőleges bemeneti szöveget értelmes módon írja ki! A minimális igény, hogy a nem nyomtatható karaktereket a helyi szokásoknak megfelelően oktális vagy hexadecimális számként írjuk ki és a túl hosszú sorokat tördeljük rövidebb sorokra!<br />
+    <br />
+  </p>
+  <h3><a name="7.3." id="7.3."></a>7.3. A változó hosszúságú argumentumlisták kezelése<br />
+  </h3>
+  Ebben a pontban megírjuk a <span class="f">printf</span> függvény minimális igényeket kielégítő változatát, hogy bemutassuk, hogyan lehet olyan hordozható függvényeket írni, amelyek képesek egy változó hosszúságú argumentumlista feldolgozására. Mivel főleg az argumentumok feldolgozására helyeztük a hangsúlyt, az általunk írt <span class="m">minprintf</span> függvény csak a formátumot leíró karaktersorozatot és az argumentumokat dolgozza fel, a formátumkonverziót a valódi <span class="f">printf</span> függvény hívásával valósítja meg. A <span class="f">printf</span> deklarációja:<br />
+  <pre>
+<span class="k">int</span> <span class="f">printf</span>(<span class="k">char</span> *fmt, ...)
+</pre>
+  ahol a <span class="m">...</span> azt jelzi, hogy az argumentumok száma és típusa változhat. A deklarációban a <span class="m">...</span> csak az argumentumlista végén jelenhet meg. Az általunk írt <span class="m">minprintf</span> függvény deklarációja<br />
+  <pre>
+<span class="k">void</span> minprintf(<span class="k">char</span> *fmt, ...)
+</pre>
+  mivel mi nem adjuk vissza a kiírt karakterek számát, mint a <span class="f">printf</span>.
+  <p> Egy kicsit „trükkös”, ahogyan a <span class="m">minprintf</span> végigmegy az argumentumlistán, miközben az egyetlen nevet sem tartalmaz. A <span class="m">&lt;stdarg.h&gt;</span> headerben néhány makródefiníció található, amelyek lehetővé teszik az argumentumlistán való lépkedést. Ennek a headernek a konkrét kialakítása számítógéptől függ, de a makrók szoftver-interfésze egységes.</p>
+  <p> A <span class="f">va_list</span> típust fogjuk használni a sorjában következő egyes argumentumokra hivatkozó változók deklarálására. A <span class="m">minprintf</span> függvényben ezt a változót <span class="m">am</span>-nek nevezzük, az „argumentummutató” kifejezés alapján. A <span class="f">va_start</span> makró úgy inicializálja az <span class="m">am</span> változót, hogy az az első név nélküli argumentumra mutasson. Ezért <span class="m">am</span> használata előtt a <span class="f">va_start</span> makrót egyszer végre kell hajtatni. A listában legalább egy névvel ellátott argumentumnak kell lenni és ezt az utolsó, névvel ellátott argumentumot használja a <span class="f">va_start</span> a meg nem nevezett argumentumok listáján való elinduláshoz.</p>
+  <p> A <span class="f">va_arg</span> minden egyes hívása után egy argumentummal tér vissza és az <span class="m">am</span> mutatót tovább lépteti a következő argumentumra. A <span class="f">va_arg</span> visszatérésekor az argumentum értéke olyan típusú lesz, mint amit hívásakor megadtunk. Az argumentumlista feldolgozási folyamatát a <span class="m">minprintf</span> függvényt záró <span class="k">return</span> utasítás kiadása előtt a <span class="f">va_end</span> makró hívásával kell lezárni. (Az argumentumlistát feldolgozó makrók leírása a <a href="b.html#B7.">B. Függelék 7. pontjában</a> található.)</p>
+  <p> Ezekkel a jellemzőkkel kialakított <span class="m">minprintf</span> függvény:<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;stdarg.h&gt;
+<span class="d">#include</span> &lt;ctype.h&gt;
+
+<span class="c">/* minprintf: változó hosszúságú argumentumlistát
+kezelő, egyszerűsített printf függvény */</span>
+<span class="k">void</span> minprintf(<span class="k">char</span> *fmt, ...)
+{
+   <span class="f">va_list</span> am; <span class="c">/* sorjában az egyes név nélküli
+         argumentumokra mutat */</span>
+   <span class="k">char</span> *p, *sert;
+   <span class="k">int</span> iert;
+   <span class="k">double</span> dert;
+
+   <span class="f">va_start</span>(am, fmt); <span class="c">/* hatására am az első név
+         nélküli argumentumra fog mutatni */</span>
+   <span class="k">for</span> (p = fmt; *p; p++) {
+      <span class="k">if</span> (*p != '%') {
+         <span class="f">putchar</span>(*p);
+         <span class="k">continue</span>;
+      }
+   <span class="k">switch</span> (*++p) {
+      <span class="k">case</span> 'd':
+         iert = <span class="f">va_arg</span>(am, <span class="k">int</span>);
+         <span class="f">printf</span>(&quot;%d&quot;, iert);
+         <span class="k">break</span>;
+      <span class="k">case</span> 'f':
+         dert = <span class="f">va_arg</span>(am, <span class="k">double</span>);
+         <span class="f">printf</span> (&quot;%f&quot;, dert);
+         <span class="k">break</span>;
+      <span class="k">case</span> 's':
+         <span class="k">for</span> (sert = <span class="f">va_arg</span>(am, <span class="k">char</span> *); *sert; sert++)
+            <span class="f">putchar</span>(*sert);
+         <span class="k">break</span>;
+      <span class="k">default</span>:
+            <span class="f">putchar</span>(*p);
+            <span class="k">break</span>;
+      }
+   }
+   <span class="f">va_end</span>(am); <span class="c">/* a listafeldolgozás lezárása */</span>
+}
+</pre>
+  <p><b>7.3.</b> gyakorlat. Egészítsük ki a <span class="m">minprintf</span> programot újabb, <span class="f">printf</span> függvényben megengedett lehetőségekkel!<br />
+    <br />
+  </p>
+  <h3><a name="7.4." id="7.4."></a>7.4. Formátumozott adatbevitel – a scanf függvény<br />
+  </h3>
+  Az adatbevitelt végző <span class="f">scanf</span> függvény a <span class="f">printf</span> analógiája, és többségében azonos (de ellentétes irányú) adatkonverziókat képes elvégezni. Általános alakja:<br />
+  <pre>
+<span class="k">int</span> <span class="f">scanf</span>(<span class="k">char</span> *format, ...)
+</pre>
+  A <span class="f">scanf</span> függvény a standard bemenetről karaktereket olvas és a <span class="m">format</span>-ban megadott specifikációk szerint értelmezi azokat, majd az eredményt eltárolja a további argumentumokban. A formátumot leíró argumentumot hamarosan részleteiben is tárgyaljuk, a többi argumentumnak viszont kötelezően mutatónak kell lenni, ami arra a helyre mutat, ahová a konvertált értéket helyezzük. Csakúgy, ahogyan a <span class="f">printf</span> esetén, itt is csak a <span class="f">scanf</span> legfontosabb jellemzőit írjuk le és nem megyünk bele a részletekbe.
+  <p> A <span class="f">scanf</span> függvény működése befejeződik, ha feldolgozta a formátumot leíró karaktersorozatot vagy hibát érzékel (az aktuális bemenet nem illeszkedik a vezérlő specifikációhoz). A függvény visszatérési értéke a sikeresen illesztett (konvertált) és argumentumokban elhelyezett adatok száma. Ebből eldönthető, hogy a <span class="f">scanf</span> hány bemeneti tételt talált. Az adatállomány végének elérésekor a visszaadott érték <span class="f">EOF</span>. Ügyeljünk arra, hogy ez egy nullától különböző érték és azt jelenti, hogy a következő bemeneti karakter nem illeszkedik a formátumot leíró karaktersorozat első specifikációjához! Ha a <span class="f">scanf</span> függvényt többször egymás után hívjuk, akkor a következő hívás esetén a keresés közvetlenül az utoljára visszaadott és már konvertált karakter után folytatódik.</p>
+  <p> A <span class="f">scanf</span> függvénynek létezik egy <span class="f">sscanf</span> változata, ami a <span class="f">sprintf</span>-hez hasonló és a standard bemenet helyett egy karaktersorozatból olvas:<br />
+  </p>
+  <pre>
+<span class="k">int</span> <span class="f">sscanf</span>(<span class="k">char</span> *string, <span class="k">char</span> *format, arg1, arg2, ...)
+</pre>
+  A <span class="f">sscanf</span> függvény a <span class="m">format</span>-ban megadott formátum szerint kiolvassa a <span class="m">string</span> karaktersorozatot és a konvertált értékeket elhelyezi az <span class="m">arg1</span>, <span class="m">arg2</span> stb. argumentumokban, Természetesen ezek az argumentumok is mutatók.
+  <p> A formátumot leíró karaktersorozat konverziós specifikációkat tartalmaz, amelyeket a bemenet átalakításának vezérlésére használunk. A formátumvezérlő karaktersorozat a következő karaktereket tartalmazhatja:<br />
+  </p>
+  <ul>
+    <li>Szóközök és tabulátorkarakterek, amelyeket a <span class="f">scanf</span> nem vesz figyelembe. </li>
+    <li>Közönséges (<span class="m">%</span> jeltől különböző) karakterek, amelyek várhatóan illeszkednek a bemeneti adatáram következő nem üres karakteréhez. </li>
+    <li>Konverziós specifikáció, ami a <span class="m">%</span> jelből, az opcionális hozzárendelés-elnyomó <span class="m">*</span> karakterből, a maximális mezőszélességet előíró opcionális számból, egy opcionális <span class="m">h</span>, <span class="m">l</span> vagy <span class="m">L</span> betűből (amelyek a célmező szélességét jelzik), valamint egy konverziós karakterből áll.</li>
+  </ul>
+  <p>A konverziós specifikáció irányítja a következő bemeneti mező átalakítását. Normális esetben az eredmény a megfelelő argumentummal (mint mutatóval) címzett vátlozóba kerül. Ha a hozzárendelés-elnyomó <span class="m">*</span> karaktert alkalmaztuk, akkor a <span class="f">scanf</span> a bemeneti mezőt átlépi és nem történik meg az érték változóhoz rendelése. Egy bemeneti mező alatt a nem üres karakterekből álló karaktersorozatot értjük, ami a következő üres karakterig tart, vagy addig, amíg a mezőszélesség (ha megadtuk) el nem fogy. Ebből következik, hogy a <span class="f">scanf</span> átmegy a sorhatárokon is a bemeneti adat keresése közben, mivel az újsor-karakter is üres karakternek számít. (Üres karakter a szóköz, a tabulátor, a kocsi-vissza, a soremelés, a függőleges tabulátor és a lapdobás.)</p>
+  <p> A konverziós karakter adja meg a bemeneti mező értelmezését. A neki megfelelő argumentumnak mutatónak kell lenni, ahogyan ezt a C nyelv érték szerinti hívása megköveteli. A konverziós karaktereket a 7.2. táblázat tartalmazza.</p>
+  <p> A <span class="m">d</span>, <span class="m">i</span>, <span class="m">o</span>, <span class="m">u</span> és <span class="m">x</span> konverziós karakterek előtt álló <span class="m">h</span> azt jelzi, hogy a mutató az argumentumlistában szereplő <span class="k">int</span> típus <span class="k">short</span> változatára mutat, és hasonlóan az <span class="m">l</span> a <span class="k">long</span> változatra utal. Az <span class="m">e</span>, <span class="m">f</span> és <span class="m">g</span> konverziós karakterek előtt megjelenő <span class="m">l</span> arra utal, hogy a <span class="k">float</span> típusú argumentum <span class="k">double</span> változatú.<br />
+    <br />
+    <br />
+    <br />
+  </p>
+  <table border="1px" align="center">
+    <caption>
+    <b>7.2. táblázat.</b> A scanf függvény konverziós karakterei
+    </caption>
+    <tr>
+      <td align="center">A konverziós karakter</td>
+      <td align="center">Az argumentum típusa</td>
+      <td align="center">A beolvasott adat</td>
+    </tr>
+    <tr>
+      <td><span class="m">d</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>decimális egész</td>
+    </tr>
+    <tr>
+      <td><span class="m">i</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>egész szám, ami lehet oktális (vezető nullákkal) vagy hexadecimális (vezető <span class="m">0x</span> vagy <span class="m">0X</span> karakterekkel)</td>
+    </tr>
+    <tr>
+      <td><span class="m">o</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>oktális egész szám (vezető nullákkal vagy azok nélkül)</td>
+    </tr>
+    <tr>
+      <td><span class="m">u</span></td>
+      <td><span class="k">unsigned</span>&nbsp;<span class="k">int</span>*</td>
+      <td>előjel nélküli decimális egész szám</td>
+    </tr>
+    <tr>
+      <td><span class="m">x</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>hexadecimális egész szám (a vezető <span class="m">0x</span>, ill. <span class="m">0X</span> karakterekkel vagy azok nélkül)</td>
+    </tr>
+    <tr>
+      <td><span class="m">c</span></td>
+      <td><span class="k">char</span> *</td>
+      <td>karakterek. A következő bemeneti karakterek (alapfeltételezés szerint 1) elhelyezése a kijelölt mezőben. Az üres helyek átlépését (mint normális esetet) elnyomja, ha a következő nem üres karaktert akarjuk beolvastatni, akkor a <span class="m">%1s</span> specifikációt kell használni</td>
+    </tr>
+    <tr>
+      <td><span class="m">s</span></td>
+      <td><span class="k">char</span> *</td>
+      <td>karaktersorozat (aposztrófok nélkül). A <span class="k">char</span>&nbsp;* mutató egy elegendően nagy karaktersorozatra mutat és a záró '<span class="e">\0</span>' jelzést a beolvasás után automatikusan elhelyezi</td>
+    </tr>
+    <tr>
+      <td><span class="m">e, f, g</span></td>
+      <td><span class="k">float</span> *</td>
+      <td>lebegőpontos szám, opcionális előjellel opcionális tizedesponttal és opcionális kitevővel</td>
+    </tr>
+    <tr>
+      <td><span class="m">p</span></td>
+      <td><span class="k">void</span> *</td>
+      <td>mutató, olyan formában, ahogyan azt a <span class="m"><span class="f">printf</span>(&quot;%p&quot;)</span> kiírta</td>
+    </tr>
+    <tr>
+      <td><span class="m">n</span></td>
+      <td><span class="k">int</span> *</td>
+      <td>az aktuális <span class="f">scanf</span> hívással beolvasott karakterek száma beíródik az argumentumba. Nem történik adatbeolvasás, a konvertált tételek száma nem nő</td>
+    </tr>
+    <tr>
+      <td><span class="m">[...]</span></td>
+      <td><span class="k">char</span> *</td>
+      <td>a bemeneti karakteráramból beolvassa a zárójelek közötti karakterekkel (illeszkedési halmazzal) megegyező karakterekből álló leghosszabb nem üres karaktersorozatot és lezárja a <span class="m">'<span class="e">\0</span>'</span> végjellel. A <span class="m">[]...]</span> formában megadott halmaz esetén a <span class="m">]</span> karakter a halmaz része lesz</td>
+    </tr>
+    <tr>
+      <td><span class="m">[^...]</span></td>
+      <td><span class="k">char</span> *</td>
+      <td>az illeszkedési halmazzal nem megegyező karakterekből álló karaktersorozat beolvasása és <span class="m">'<span class="e">\0</span>'</span> végjellel történő lezárása. A <span class="m">[^]...]</span> formában megadott halmaz esetén a <span class="m">]</span> karakter a halmaz része lesz</td>
+    </tr>
+    <tr>
+      <td><span class="m">%</span></td>
+      <td>nincs hozzárendelés</td>
+      <td><span class="m">%</span> jel mint karakteres állandó</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  <br />
+  <p>A <span class="f">scanf</span> használatának bemutatását kezdjük a <a href="04.html">4. fejezetben</a> ismertetett egyszerű kalkulátor programjának módosításával! A programban a bemeneti adatok átalakítását oldjuk meg a <span class="f">scanf</span> függvénnyel.<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+main() <span class="c">/* egyszerű kalkulátor */</span>
+{
+   <span class="k">double</span> sum, v;
+
+   sum = 0;
+   <span class="k">while</span> (<span class="f">scanf</span>(&quot;%lf&quot;, &amp;v) == 1)
+      <span class="f">printf</span> (&quot;<span class="e">\t</span>%.2f<span class="e">\n</span>&quot;, sum += v);
+   <span class="k">return</span> 0;
+}
+</pre>
+  A következő példában tegyük fel, hogy<br />
+  <pre>
+1994 december 25
+</pre>
+  alakban írt dátumot akarunk beolvasni. Ez a <span class="f">scanf</span> függvénnyel<br />
+  <pre>
+<span class="k">int</span> nap, ev;
+<span class="k">char</span> honapnev[20];
+<span class="f">scanf</span>(&quot;%d %s %d&quot;, &amp;ev, honapnev, &amp;nap);
+</pre>
+  formában valósítható meg a beolvasás. Vegyük észre, hogy a <span class="m">honapnev</span> előtt nem írtuk ki az <span class="m">&amp;</span> jelet, mivel egy tömbnév mindig mutató!
+  <p> A <span class="f">scanf</span> formátumot leíró karaktersorozatában karakteres állandók (literálisok) is megjelenhetnek, de azoknak illeszkedni kell a bemenetről érkező ugyanolyan karakterekhez. Ha pl. a dátumot éé/hh/nn alakban akarjuk beolvastatni a <span class="f">scanf</span> függvénnyel, akkor az<br />
+  </p>
+  <pre>
+<span class="k">int</span> nap, honap, ev;
+<span class="f">scanf</span>(&quot;%d/%d/%d&quot;, &amp;ev, &amp;honap, &amp;nap);
+</pre>
+  formátumleírást kell alkalmazni.
+  <p> A <span class="f">scanf</span> függvény beolvasáskor kiszűri a formátumot megadó karaktersorozatban lévő szóközöket és tabulátorokat, sőt átlépi az üreshely-karaktereket (szóköz, tabulátor, új sor stb.) a beolvasott adatáramban is a beolvasandó érték keresése közben. Ha a bemeneti adatáram nem rögzített formátumú, akkor célszerű egyszerre egy egész adatsort beolvasni és az <span class="f">sscanf</span> függvénnyel részleteiben elővenni és feldolgozni. Ha például olyan sort akarunk beolvasni, ami a korábbi két dátumírási mód bármelyikével írt dátumot tartalmaz, akkor ezt úgy tehetjük meg, hogy a <span class="m">getline</span> függvénnyel beolvassuk a teljes sort, majd az <span class="f">sscanf</span> függvénnyel feldolgozzuk.<br />
+  </p>
+  <pre>
+<span class="k">while</span> (getline(sor, <span class="k">sizeof</span>(sor)) &gt; 0) {
+   <span class="k">if</span> (<span class="f">sscanf</span> (sor, &quot;%d %s %d&quot;, &amp;ev, honapnev, &amp;nap) == 3)
+      <span class="f">printf</span> (&quot;érvényes: %s<span class="e">\n</span>&quot;, sor);
+         <span class="c">/* 1994 december 25 alakú dátum */</span>
+   <span class="k">else</span> <span class="k">if</span> (<span class="f">sscanf</span>(sor, &quot;%d/%d/%d&quot;, &amp;ev, &amp;honap, &amp;nap) == 3)
+      <span class="f">printf</span>(&quot;érvényes: %s<span class="e">\n</span>&quot;, sor);
+         <span class="c">/* éé/hh/nn alakú dátum */</span>
+   <span class="k">else</span>
+      <span class="f">printf</span>(&quot;érvénytelen: %s<span class="e">\n</span>&quot;, sor);
+         <span class="c">/* érvénytelen alakú dátum */</span>
+}
+</pre>
+  A <span class="f">scanf</span> és más adatbeviteli függvények hívásai egymással keverhetők. Bármelyik adatbeviteli függvény következő hívásakor a beolvasás az első, <span class="f">scanf</span> által már be nem olvasott karakterrel kezdődik.
+  <p> Befejezésül még egyszer kihangsúlyozzuk, hogy a <span class="f">scanf</span> és <span class="f">sscanf</span> függvények argumentumainak mutatóknak kell lennie! Nagyon gyakori hiba, hogy<br />
+  </p>
+  <pre>
+<span class="f">scanf</span> (&quot;%d&quot;, n); <span class="c">/* HIBÁS!!! */</span>
+</pre>
+  alakban írjuk a függvényhívást a<br />
+  <pre>
+<span class="f">scanf</span>(&quot;%d&quot;, &amp;n); <span class="c">/* Helyes! */</span>
+</pre>
+  helyett. Ez a hiba általában nem derül ki a program fordítása közben.<br />
+  <br />
+  <p><b>7.4.</b> gyakorlat. Írjuk meg a <span class="f">scanf</span> függvény egyszerűsített változatát az előző pontban látott <span class="m">minprintf</span> mintájára!</p>
+  <p> <b>7.5.</b> gyakorlat. Írjuk meg a <a href="04.html">4. fejezetben</a> ismertetett postfix adatbeírási formátumú kalkulátorprogram új változatát, amely a bemeneti adatok és számok átalakítását a <span class="f">scanf</span> és/vagy <span class="f">sscanf</span> függvénnyel valósítja meg!<br />
+    <br />
+  </p>
+  <h3><a name="7.5." id="7.5."></a>7.5. Hozzáférés adatállományokhoz<br />
+  </h3>
+  Az eddigi példaprogramok mindegyike a standard bemenetről olvasta az adatokat és a standard kimenetre írta az eredményt. A standard bemenetet és kimenetet a helyi operációs rendszer automatikusan hozzárendeli a programhoz.
+  <p> A következőkben egy olyan programot mutatunk be, amely egy adatállományhoz fér hozzá, amit <i>nem</i> az operációs rendszer rendelt átirányítással a programhoz. Az adatállományokhoz való hozzáférés szükségességét és megvalósítási lehetőségét illusztráló <span class="m">cat</span> program megnevezett adatállományok halmazát gyűjti egybe (konkatenálja az állományokat) és az eredményt a standard kimenetre írja. A <span class="m">cat</span> fő alkalmazási területe, hogy állományokat gyűjtsön egybe és nyomtassa ki azokat, vagy az önálló, név szerinti állomány-hozzáférésre nem felkészített programok bemeneti információit gyűjtse be. Például a<br />
+  </p>
+  <pre>
+cat x.c y.c
+</pre>
+  parancs a standard kimenetre írja az <span class="m">x.c</span> és <span class="m">y.c</span> nevű állományok (és csak ezen állományok) tartalmát.
+  <p> A program kialakításánál a fő kérdés, hogy hogyan érhetjük el a megnevezett állományok beolvasását, vagyis azt, hogy a felhasználó által szabadon választott külső állománynevet az adatbeolvasó utasításhoz rendeljük.</p>
+  <p> A szabály rendkívül egyszerű! Mielőtt az állományból olvasnánk vagy abba írnánk, az állományt a <span class="f">fopen</span> könyvtári függvénnyel meg kell nyitni. A <span class="f">fopen</span> veszi a külső állománynevet (mint pl. <span class="m">x.c</span> vagy <span class="m">y.c</span>), mindenféle belső adminisztrációt végez, felveszi a kapcsolatot az operációs rendszerrel (amelynek részleteivel nem kell törődnünk), majd egy mutatót ad vissza, ami ezt követően az állomány olvasásánál vagy írásánál használható.</p>
+  <p> Ez a mutató, amit <i>állomány-mutatónak (fájlpointernek)</i> neveznek, egy struktúrát címez, ami az állományra vonatkozó információkat (a puffer helye; az aktuális karakterpozíció a pufferban; annak jelzése, hogy az állományt írásra vagy olvasásra vesszük-e igénybe; a hiba vagy állományvég előfordulásakor szükséges teendők stb.) tartalmazza. A felhasználónak nem szükséges a részleteket ismerni, mivel a struktúra <span class="f">FILE</span> néven definiálva van az <span class="m">&lt;stdio.h&gt;</span> standard headerben. Az állománykezeléshez csak az állománymutatót kell deklarálni a következő minta szerint:<br />
+  </p>
+  <pre>
+<span class="f">FILE</span> *fp;
+<span class="f">FILE</span> *<span class="f">fopen</span>(<span class="k">char</span> *nev, <span class="k">char</span> *mod);
+</pre>
+  A deklaráció azt mondja ki, hogy <span class="m">fp</span> egy <span class="f">FILE</span> típusú struktúrához tartozó mutató és a <span class="f">fopen</span> egy <span class="f">FILE</span> típusú struktúrát címző mutatóval tér vissza. Vegyük észre, hogy <span class="f">FILE</span> egy típusnév, mint pl. az <span class="k">int</span>, és nem igazi struktúranév. A <span class="f">FILE</span> típust <span class="k">typedef</span> utasítással deklarálták a könyvtárban (egyébként a <span class="f">fopen</span> UNIX operációs rendszer alatti megvalósításának részleteit a <a href="08.html#8.5.">8.5. pontban</a> írjuk le). A <span class="f">fopen</span> függvény egy programból az<br />
+  <pre>
+fp = <span class="f">fopen</span>(nev, mod);
+</pre>
+  utasítással hívható. A <span class="f">fopen</span> első argumentuma egy karaktersorozat, amely a megnyitandó állomány nevét tartalmazza. A második argumentum szintén egy karaktersorozat, ami azt jelzi, hogy a felhasználó hogyan akarja használni az állományt (használati mód). A használati mód karaktersorozatában használható karakterek: olvasás (<span class="m">&quot;r&quot;</span>), írás (<span class="m">&quot;w&quot;</span>) és hozzáfűzés (<span class="m">&quot;a&quot;</span>, append). Néhány rendszer különbséget tesz szöveges és bináris állományok között, ilyenkor bináris állomány esetén a használati módot a <span class="m">&quot;b&quot;</span> karakterrel kell kiegészíteni.
+  <p> Ha írásra vagy hozzáfűzésre egy nem létező állományt akarunk megnyitni, akkor az adott nevű állomány (ha lehetséges) létrejön. Egy létező állományt írásra megnyitva, annak korábbi tartalma elvész, hozzáfűzésre megnyitva viszont megmarad. Ha megpróbálunk olvasásra megnyitni egy nem létező állományt, akkor hibajelzést kapunk. Más hibaokok is előfordulhatnak, pl. ha olvasni akarunk egy létező, de számunkra nem hozzáférhető (nem engedélyezett) állományt. Ha bármilyen állománykezelési hiba fordul elő, akkor a <span class="f">fopen</span> <span class="f">NULL</span> értékű mutatóval tér vissza. A hiba oka pontosabban is meghatározható, az erre alkalmas hibakezelő függvények leírása a <a href="b.html#B1.">B. Függelék 1. részében</a> található.</p>
+  <p> A <span class="m">cat</span> program megírásához szükséges következő tudnivaló, hogy hogyan lehet a már megnyitott állományt olvasni vagy írni. Ennek számos lehetősége van, amelyek közül a legegyszerűbb a <span class="f">getc</span> és <span class="f">putc</span> függvények alkalmazásán alapszik. A <span class="f">getc</span> függvény az állományból kiolvasott következő karakterrel tér vissza, és hívásakor az állománymutató megadásával kell közölni, hogy melyik állományból olvasson. Általános alakja:<br />
+  </p>
+  <pre>
+<span class="k">int</span> <span class="f">getc</span>(<span class="f">FILE</span> *fp)
+</pre>
+  A függvény az <span class="m">fp</span>-vel címzett adatáramból vett következő karakterrel vagy hiba esetén <span class="f">EOF</span> jelzéssel tér vissza.
+  <p> A <span class="f">putc</span> adatkiviteli függvény<br />
+  </p>
+  <pre>
+<span class="k">int</span> <span class="f">putc</span>(<span class="k">int</span> c, <span class="f">FILE</span> *fp)
+</pre>
+  alakú, és hívásakor a függvény az <span class="m">fp</span>-vel címzett állományba kiírja a <span class="m">c</span> karaktert, és visszatér a kiírt karakterrel vagy hiba esetén az <span class="f">EOF</span> jellel. Hasonlóan a <span class="f">getchar</span> és <span class="f">putchar</span> eljárásokhoz, gyakran a <span class="f">getc</span> és <span class="f">putc</span> eljárásokat is makrók formájában írják meg, nem pedig függvényként, de ez a használatukat nem befolyásolja.
+  <p> Egy C nyelvű program indításakor az operációs rendszer három állományt mindig automatikusan megnyit és az ezekhez tartozó állománymutatókat a program rendelkezésére bocsátja. Ez a három állomány a standard bemenet, a standard kimenet és a standard hibaállomány, amelyek állománymutatói a <span class="m">&lt;stdio.h&gt;</span> headerben vannak deklarálva <span class="f">stdin</span>, <span class="f">stdout</span> és <span class="f">stderr</span> néven. Normális esetben az <span class="f">stdin</span> a billentyűzethez, <span class="f">stdout</span> a képernyőhöz kapcsolódik, de ahogy azt a <a href="07.html#7.1.">7.1. pontban</a> már leírtuk, az <span class="f">stdin</span> és <span class="f">stdout</span> minden további nélkül átirányítható adatállományokhoz vagy a pipeing mechanizmussal egy másik programhoz.</p>
+  <p> A <span class="f">getc</span>, <span class="f">putc</span>, <span class="f">stdin</span> és <span class="f">stdout</span> felhasználásával a <span class="f">getchar</span> és <span class="f">putchar</span> a következő módon definiálható:<br />
+  </p>
+  <pre>
+<span class="d">#define</span> <span class="f">getchar</span> () <span class="f">getc</span>(<span class="f">stdin</span>)
+<span class="d">#define</span> <span class="f">putchar</span>(c) <span class="f">putc</span>((c), <span class="f">stdout</span>)
+</pre>
+  Adatállományok formátumozott olvasására vagy írására az <span class="f">fscanf</span> és <span class="f">fprintf</span> függvényeket használhatjuk. Ezek használata lényegében megegyezik a <span class="f">scanf</span> vagy <span class="f">printf</span> függvények használatával, kivéve, hogy az első argumentumuknak az olvasandó vagy írandó állományt kijelölő állománymutatónak kell lennie és a formátumot leíró karaktersorozat a második argumentum. A függvények általános alakja:<br />
+  <pre>
+<span class="k">int</span> <span class="f">fscanf</span> (<span class="f">FILE</span> *fp, <span class="k">char</span> *format, ...)
+<span class="k">int</span> <span class="f">fprintf</span> (<span class="f">FILE</span> *fp, <span class="k">char</span> *format, ...)
+</pre>
+  Ezen előzetes ismeretek birtokában most már hozzákezdhetünk az állományokat összekapcsoló <span class="m">cat</span> program írásához! A program felépítése megegyezik a korábbi programoknál már bevált felépítéssel: ha a programot parancssor-argumentummal hívjuk, akkor az argumentumok az állománynevek, ha nincs argumentum, akkor a standard bemenetről jövő adatok kerülnek feldolgozásra. A program:<br />
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+
+<span class="c">/* cat: állományok konkatenálása - 1. változat */</span>
+main(<span class="k">int</span> argc, <span class="k">char</span> *argv[])
+{
+   <span class="f">FILE</span> *fp;
+   <span class="k">void</span> filecopy (<span class="f">FILE</span> *, <span class="f">FILE</span> *);
+
+   <span class="k">if</span> (argc ==1) <span class="c">/* nincs argumentum,
+         a standard bemenetet másolja */</span>
+      filecopy (<span class="f">stdin</span>, <span class="f">stdout</span>);
+   <span class="k">else</span>
+      <span class="k">while</span> (--argc &gt; 0)
+         <span class="k">if</span> ((fp = <span class="f">fopen</span>(*++argv, &quot;r&quot;)) == <span class="f">NULL</span>) {
+            <span class="f">printf</span> (&quot;cat: nem nyitható meg %s<span class="e">\n</span>&quot;, *argv);
+            <span class="k">return</span> 1;
+         } <span class="k">else</span> {
+            filecopy (fp, <span class="f">stdout</span>);
+            <span class="f">fclose</span> (fp);
+         }
+   <span class="k">return</span> 0; 
+}
+
+<span class="c">/* filecopy: az ifp-vel címzett állományt
+az ofp-vel cimzett állományba másolja */</span>
+<span class="k">void</span> filecopy(<span class="f">FILE</span> *ifp, <span class="f">FILE</span> *ofp)
+{
+   <span class="k">int</span> c;
+
+   <span class="k">while</span> ((c = <span class="f">getc</span>(ifp)) != <span class="f">EOF</span>)
+      <span class="f">putc</span> (c, ofp);
+}
+</pre>
+  Az <span class="f">stdin</span> és <span class="f">stdout</span> állománymutatók <span class="f">FILE</span> * típusú objektumok. Az <span class="f">stdin</span> és <span class="f">stdout</span> állandók, amelyeket a standard könyvtárban definiáltak, és nem pedig változók, így értéket sem rendelhetünk hozzájuk. Az<br />
+  <pre>
+<span class="k">int</span> <span class="f">fclose</span> (<span class="f">FILE</span> *fp)
+</pre>
+  függvény a <span class="f">fopen</span> inverze, és hatására megszakad a kapcsolat az állománymutató és a külső állománynév között, az állománymutató felszabadul és más állományhoz rendelhető. A legtöbb operációs rendszer korlátozza az egy program futása során egyidejűleg nyitott állományok számát, ezért amikor már nincs szükség rá, célszerű felszabadítani az állománymutatót, ahogy ezt a <span class="m">cat</span> programban is tettük. Az <span class="f">fclose</span> másik fontos feladata, hogy kimeneti állományok esetén kiírja az állományba a <span class="f">putc</span> által használt puffer tartalmát. (Normális esetben a puffer tartalma csak akkor íródna ki, ha már a puffer megtelt. Az utolsó, általában nem egész puffernyi tartalmat az <span class="f">fclose</span> függvénnyel kell kiíratni.) A <span class="f">fclose</span> automatikusan végrehajtódik minden egyes megnyitott állományra, ha a program normálisan fut le. A standard bemenetet és kimenetet szintén lezárhatjuk, ha nincs szükségünk rájuk. Amennyiben újra szükségessé válik a használatuk, akkor a <span class="f">freopen</span> könyvtári függvénnyel nyithatók meg újra.<br />
+  <br />
+  <h3><a name="7.6." id="7.6."></a>7.6. Hibakezelés – az stderr és exit függvények<br />
+  </h3>
+  A <span class="m">cat</span> program hibakezelése messze nem ideális. A problémát az okozza, hogy ha egy állomány valamilyen hiba folytán hozzáférhetetlenné válik, a hibaüzenet a konkatenált kimeneti állomány (vagyis az eredmény) végére íródik ki. Ez megfelelő lehet, ha a kimeneti eszköz a képernyő, viszont elfogadhatatlan, ha egy állományba írunk vagy az eredményt a pipeing mechanizmussal egy másik programnak adjuk át.
+  <p> A hibák jobb kezelése érdekében a programhoz automatikusan egy második kimeneti állományt is hozzárendel az operációs rendszer (hasonlóan az <span class="f">stdin</span> és <span class="f">stdout</span> állományokhoz), és ez az <span class="f">stderr</span> hibaállomány. Az <span class="f">stderr</span> állományba írt üzenetek normális esetben mindig a képernyőn jelennek meg, még akkor is, ha a standard kimenetet átirányítottuk.</p>
+  <p> Ennek alapján módosítsuk a <span class="m">cat</span> programot és a hibaüzenetet írassuk a standard hibaállományba!<br />
+  </p>
+  <pre>
+<span class="d">#include</span> &lt;stdio.h&gt;
+<span class="d">#include</span> &lt;stdlib.h&gt;
+
+<span class="c">/* cat: állományok konkatenálása - 2. változat */</span>
+main (<span class="k">int</span> argc, <span class="k">char</span> *argv[])
+{
+   <span class="f">FILE</span> *fp;
+   <span class="k">void</span> filecopy(<span class="f">FILE</span> *, <span class="f">FILE</span> *);
+   <span class="k">char</span> *prog = argv[0]; <span class="c">/* a program neve hiba esetén */</span>
+   
+   <span class="k">if</span> (argc == 1) <span class="c">/* nincs parancssor-argumentum,
+         a standard bemenetről másol */</span>
+      filecopy(<span class="f">stdin</span>, <span class="f">stdout</span>);
+   <span class="k">else</span>
+      <span class="k">while</span> (--argc &gt; 0)
+         <span class="k">if</span> ((fp = <span class="f">fopen</span>(*++argv, &quot;f&quot;)) == <span class="f">NULL</span>) {
+            <span class="f">fprintf</span>(<span class="f">stderr</span>, &quot;%s: nem nyitható meg: %s<span class="e">\n</span>&quot;,
+                  prog, *argv);
+            <span class="f">exit</span> (1);
+         } <span class="k">else</span> {
+            filecopy(fp, <span class="f">stdout</span>);
+            <span class="f">fclose</span> (fp);
+         }
+      <span class="k">if</span> (<span class="f">ferror</span>(<span class="f">stdout</span>)) {
+         <span class="f">fprintf</span>(<span class="f">stderr</span>, &quot;%s: hiba <span class="f">stdout</span> írásakor<span class="e">\n</span>&quot;,
+               prog);
+         <span class="f">exit</span> (2);
+      }
+   <span class="f">exit</span>(0);
+}
+</pre>
+  A program a hibákat kétféle módon jelzi. Először is az <span class="f">fprintf</span> által létrehozott hibaüzenetek az <span class="f">stderr</span> állományba íródnak, tehát mindig a képernyőn jelennek meg, ahelyett, hogy a kimeneti (eredmény) állományba íródnának vagy a pipeing mechanizmussal egy másik program bemenetére kerülnének. A hibaüzenet kiírásába belefoglaltuk a program <span class="m">argv[0]</span>-ból vett nevét, így ha a programot más programokkal együtt használjuk, azonosítható a hiba forrása.
+  <p> Az <span class="f">stderr</span> állományon keresztüli hibajelzésen kívül a program használja az <span class="f">exit</span> standard könyvtári függvényt, ami hívásakor leállítja a program futását. Az <span class="f">exit</span> argumentuma bármely, az <span class="f">exit</span>-et hívó eljárás rendelkezésére áll, így a program sikeres vagy hibás végrehajtása egy másik, ezt a programot alprogramként használó eljárásból ellenőrizhető. Megállapodás szerint a <span class="m">0</span> argumentum a program sikeres lefutását, a nem nulla argumentum pedig valamilyen, normálistól eltérő működését jelzi. Az <span class="f">exit</span> függvény automatikusan hívja az <span class="f">fclose</span> függvényt és minden egyes megnyitott kimeneti állományba kiírja a kimeneti pufferének tartalmát.</p>
+  <p> A <span class="m">main</span> eljárásban a <span class="k">return</span> <i>kifejezés</i> utasítás egyenértékű az <span class="f">exit</span> (<i>kifejezés</i>) utasítással. Viszont az <span class="f">exit</span> előnye, hogy az más függvényekből is hívható és a hívás helye az <a href="05.html">5. fejezetben</a> leírt mintakereső programhoz hasonló programmal meghatározható.</p>
+  <p> Az <span class="f">ferror</span> függvény nem nulla értékkel tér vissza, ha az <span class="m">fp</span> állománymutatóval megcímzett állomány írása vagy olvasása közben hiba fordult elő. A függvény általános alakja:<br />
+  </p>
+  <pre>
+<span class="k">int</span> <span class="f">ferror</span>(<span class="f">FILE</span> *fp)
+</pre>
+  A gyakorlatban az adatkiviteli hibák ritkábban fordulnak elő, mint a beolvasási hibák (bár pl. hibát jelent, ha lemezre írás közben elfogy az üres hely), de a programot mindenképpen célszerű ellenőrizni.
+  <p> A <span class="f">feof</span> (<span class="f">FILE</span> * ) függvény analóg a <span class="f">ferror</span> függvénnyel és szintén nem nulla értékkel tér vissza, ha a megadott állományhoz való hozzáférés során hiba fordult elő. A függvény általános alakja:<br />
+  </p>
+  <pre>
+<span class="k">int</span> <span class="f">feof</span>(<span class="f">FILE</span> *fp)
+</pre>
+  A kis mintaprogramunk kapcsán általában nem érdemes túlzottan aggódni a kilépéskori állapotjelzés miatt, de nagyobb programok esetén gondot kell fordítani az értelmes és jól használható állapotjelzésekre.<br />
+  <h3><a name="7.7." id="7.7."></a>7.7. Szövegsorok beolvasása és kiírása<br />
+  </h3>
+  A standard könyvtár tartalmazza az <span class="f">fgets</span> bemeneti függvényt, ami hasonló a korábbról már ismert <span class="m">getline</span> függvényhez, és általános alakja:<br />
+  <pre>
+<span class="k">char</span> *<span class="f">fgets</span>(<span class="k">char</span> *sor, <span class="k">int</span> maxsor, <span class="f">FILE</span> *fp)
+</pre>
+  Az <span class="f">fgets</span> függvény az <span class="m">fp</span> állománymutatóval megadott állományból beolvassa a következő bemenő sort (az újsor-karaktert is beleértve) és elhelyezi a sor nevű karakteres tömbben. A függvény legfeljebb <span class="m">maxsor-1</span> karaktert fog beolvasni és a beolvasott sort a <span class="m">'<span class="e">\0</span>'</span> jellel fogja lezárni. Normális esetben az <span class="f">fgets</span> a sor tömbbel tér vissza, de állomány vége vagy hiba esetén a visszatérési érték <span class="f">NULL</span>. (A korábban használt <span class="m">getline</span> függvény a sor hosszával tért vissza, ami nagyon hasznos volt, mivel így a nulla jelenthette az állomány végét.)
+  <p> Adatkiírásra az <span class="f">fputs</span> függvény használható, amivel egy karaktersorozat (ami nem szükségszerű, hogy újsor-karaktert tartalmazzon) írható ki egy megadott állományba. A függvény általános alakja:<br />
+  </p>
+  <pre>
+<span class="k">int</span> <span class="f">fputs</span>(<span class="k">char</span> *sor, <span class="f">FILE</span> *fp)
+</pre>
+  A függvény <span class="f">EOF</span> jellel tér vissza, ha a kiíráskor hibát érzékel és nulla értékkel, ha minden rendben volt.
+  <p> A könyvtári <span class="f">gets</span> és <span class="f">puts</span> függvények hasonlóak az <span class="f">fgets</span> és <span class="f">fputs</span> függvényekhez, de mindig az <span class="f">stdin</span> és <span class="f">stdout</span> állománymutatókkal kijelölt állományt kezelik. Használatuk során zavaró lehet, hogy a <span class="f">gets</span> törli a billentyűzetről érkező '<span class="e">\n</span>' újsor-karaktert, a <span class="f">puts</span> pedig mindig azzal zárja a kiírást.</p>
+  <p> Annak bizonyítására, hogy az <span class="f">fgets</span> vagy <span class="f">fputs</span> függvényekben nincs semmi speciális, idemásoltuk a könyvtári függvények eredeti programkódját:<br />
+  </p>
+  <pre>
+<span class="c">/* fgets: beolvas egy legfeljebb n karakteres sort
+az iop állománymutatóval kijelölt állományból */</span>
+<span class="k">char</span> *<span class="f">fgets</span>(<span class="k">char</span> *s, <span class="k">int</span> n, <span class="f">FILE</span> *iop)
+{
+   <span class="k">register</span> <span class="k">int</span> c;
+   <span class="k">register</span> <span class="k">char</span> *cs;
+
+   cs = s;
+   <span class="k">while</span> (--n &gt; 0 &amp;&amp; (c = <span class="f">getc</span>(iop)) != <span class="f">EOF</span>)
+      <span class="k">if</span> ((*cs++ = c) == '<span class="e">\n</span>')
+         <span class="k">break</span>;
+   *cs = '<span class="e">\n</span>';
+   <span class="k">return</span> (c == <span class="f">EOF</span> &amp;&amp; cs == s) ? <span class="f">NULL</span> : s;
+}
+
+<span class="c">/* fputs: kiírja az s karaktersorozatot
+az iop állománymutatóval kijelölt állományba */</span>
+<span class="k">int</span> <span class="f">fputs</span>(<span class="k">char</span> *s, <span class="f">FILE</span> *iop)
+{
+   <span class="k">int</span> c;
+
+   <span class="k">while</span> (c = *s++)
+      <span class="f">putc</span>(c, iop);
+   <span class="k">return</span> <span class="f">ferror</span>(iop) ? <span class="f">EOF</span> : 0; 
+}
+</pre>
+  A szabvány azt írja elő, hogy a <span class="f">ferror</span> függvény nem nulla értékkel tér vissza, ha hiba volt, ezzel szemben az <span class="f">fputs</span> hiba esetén <span class="f">EOF</span> jelzéssel, minden más esetben nem negatív értékkel tér vissza.
+  <p> Az <span class="f">fgets</span> függvény felhasználásával már egyszerűen megvalósíthatjuk a <span class="m">getline</span> függvényt:<br />
+  </p>
+  <pre>
+<span class="c">/* getline: beolvas egy sort és visszatér
+a sor hosszával */</span>
+<span class="k">int</span> getline(<span class="k">char</span> *sor, <span class="k">int</span> max)
+{
+   <span class="k">if</span> (<span class="f">fgets</span>(sor, max, <span class="f">stdin</span>) == <span class="f">NULL</span>)
+      <span class="k">return</span> 0;
+   <span class="k">else</span>
+      <span class="k">return</span> <span class="f">strlen</span>(sor);
+}
+</pre>
+  <br />
+  <p><b>7.6.</b> gyakorlat. Írjunk programot, amely összehasonlít két állományt, és kiírja az első olyan sort, ahol különböznek!</p>
+  <p> <b>7.7.</b> gyakorlat. Módosítsuk az <a href="05.html">5. fejezetben</a> ismetetett mintakereső programot úgy, hogy bemenetét a parancssor-argumentumként megadott állománynevek listájából, vagy ha nincs argumentum, akkor a standard bemenetről vegye! Ki kell-e íratni az állomány nevét, ha a program egymáshoz illeszkedő sorokat talál?</p>
+  <p> <b>7.8.</b> gyakorlat. Írjunk programot, amely több állományt ír ki egymás után, minden állományt új oldalon kezdve! A program minden állomány kiírása előtt írja ki a lap tetejére a címet és az oldalakat állományonként folyamatosan számozza!<br />
+    <br />
+  </p>
+  <h3><a name="7.8." id="7.8."></a>7.8. További könyvtári függvények<br />
+  </h3>
+  A standard könyvtárban számos, különböző feladatok megoldására alkalmas függvény található. Ebben a pontban néhány hasznos függvény rövid leírását adjuk. A részletes leírás, ill. a könyvtár további függvényeinek ismertetése a <a href="b.html">B. Függelékben</a> található.<br />
+  <br />
+  <h4>7.8.1. Karaktersorozatokat kezelő függvények<br />
+  </h4>
+  Mint már korábban említettük, az <span class="f">strlen</span>, <span class="f">strcpy</span>, <span class="f">strcat</span>, ill. <span class="f">strcmp</span> függvények deklarációja a <span class="m">&lt;string.h&gt;</span> standard headerben található, a többi, karaktersorozatot kezelő függvény deklarációjával együtt. A következő leírásban <span class="m">s</span> és <span class="m">t</span> <span class="k">char</span> * típusú karaktersorozatot, <span class="m">c</span> és <span class="m">n</span> <span class="k">int</span> típusú adatot jelöl. Az egyes karaktersorozat-kezelő függvények:<br />
+  <br />
+  <br />
+  <table border="1px" align="center">
+    <tr>
+      <td width="200px"><span class="m"><span class="f">strcat</span> (s , t)</span></td>
+      <td>a <span class="m">t</span> karaktersorozatot az <span class="m">s</span> végéhez fűzi (konkatenálja);</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">strncat</span> (s , t, n)</span></td>
+      <td>a <span class="m">t</span> karaktersorozat <span class="m">n</span> darab karakterét az <span class="m">s</span> végéhez fűzi;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">strcmp</span> (s, t)</span></td>
+      <td>negatív, nulla vagy pozitív értékkel tér vissza, ha <span class="m">s&nbsp;&lt;&nbsp;t</span>, <span class="m">s&nbsp;=&nbsp;t</span> vagy <span class="m">s&nbsp;&gt;&nbsp;t</span>;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">strncmp</span> (s, t, n)</span></td>
+      <td>ugyanúgy működik, mint az <span class="f">strcmp</span>, de az összehasonlítást csak az első <span class="m">n</span> karakterrel végzi el;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">strcpy</span> (s, t)</span></td>
+      <td>a <span class="m">t</span> karaktersorozatot <span class="m">s</span>-be másolja;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">strncpy</span> (s, t, n)</span></td>
+      <td>a <span class="m">t</span> karaktersorozat első <span class="m">n</span> karakterét <span class="m">s</span>-be másolja;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">strlen</span> (s)</span></td>
+      <td>a visszatérési érték az <span class="m">s</span> karaktersorozat hossza;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">strchr</span> (s, c)</span></td>
+      <td>visszatér a <span class="m">c</span> karakter <span class="m">s</span> karaktersorozatbeli első előfordulási helyének mutatójával, vagy <span class="f">NULL</span> értékkel, ha <span class="m">c</span> nem fordul elő <span class="m">s</span>-ben;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">strrchr</span> (s, c)</span></td>
+      <td>visszatér a <span class="m">c</span> karakter <span class="m">s</span> karaktersorozatbeli utolsó előfordulási helyének mutatójával, vagy <span class="f">NULL</span> értékkel, ha <span class="m">c</span> nem fordul elő <span class="m">s</span>-ben.</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  <h4>7.8.2. Karaktervizsgáló és -átalakító függvények<br />
+  </h4>
+  A <span class="m">&lt;ctype.h&gt;</span> standard header számos, karakterek vizsgálatára vagy átalakítására alkalmas függvényt tartalmaz. A leírt függvények visszatérési értéke <span class="k">int</span> típusú, a leírásukban szereplő <span class="m">c</span> <span class="k">int</span> típusú, és <span class="k">unsigned</span> <span class="k">char</span> vagy <span class="f">EOF</span> adatként értelmezhető.<br />
+  <br />
+  <br />
+  <table border="1px" align="center">
+    <tr>
+      <td width="120px"><span class="m"><span class="f">isalpha</span> (c)</span></td>
+      <td>visszatérési érték nem nulla, ha <span class="m">c</span> alfabetikus karakter és nulla, ha nem az;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">isupper</span> (c)</span></td>
+      <td>visszatérési érték nem nulla, ha <span class="m">c</span> nagybetűs karakter és nulla, ha nem az;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">islower</span> (c)</span></td>
+      <td>visszatérési érték nem nulla, ha <span class="m">c</span> kisbetűs karakter és nulla, ha nem az;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">isdigit</span> (c)</span></td>
+      <td>visszatérési érték nem nulla, ha <span class="m">c</span> számjegykarakter és nulla, ha nem az;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">isalnum</span> (c)</span></td>
+      <td>visszatérési érték nem nulla, ha <span class="m">c</span> alfabetikus vagy számjegykarakter és nulla, ha nem az;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">isspace</span> (c)</span></td>
+      <td>visszatérési érték nem nulla, ha <span class="m">c</span> szóköz-, tabulátor-, újsor-, kocsivissza-, lapemelés- vagy függőlegestabulátor-karakter és nulla, ha nem az;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">toupper</span> (c)</span></td>
+      <td>visszatérési érték <span class="m">c</span> nagybetűssé alakított értéke;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">tolower</span> (c)</span></td>
+      <td>visszatérési érték <span class="m">c</span> kisbetűssé alakított értéke.</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  <h4>7.8.3. Az ungetc függvény<br />
+  </h4>
+  A standard könyvtárban megtalálható a <a href="04.html">4. fejezetben</a> megírt <span class="m">ungetch</span> függvény egy szűkített változata, az <span class="f">ungetc</span>. A függvény általános alakja:<br />
+  <pre>
+<span class="k">int</span> <span class="f">ungetc</span> (<span class="k">int</span> c, <span class="f">FILE</span> *fp)
+</pre>
+  Az <span class="f">ungetc</span> függvény a <span class="m">c</span> karaktert visszahelyezi az <span class="m">fp</span> állománymutatóval kiválasztott állományba, és visszatér magával a <span class="m">c</span> értékkel, vagy hiba esetén az <span class="f">EOF</span> jelzéssel. Állományonként csak egy karakter visszahelyezése megengedett. Az <span class="f">ungetc</span> függvény minden <span class="f">scanf</span>, <span class="f">getc</span> vagy <span class="f">getchar</span> jellegű bemeneti függvénnyel használható.<br />
+  <br />
+  <h4>7.8.4. Parancsvégrehajtás<br />
+  </h4>
+  A <span class="m"><span class="f">system</span> (<span class="k">char</span> *s)</span> függvény végrehajtja az <span class="m">s</span> karaktersorozatban elhelyezett parancsot, ha az éppen futó programban rá kerül a vezérlés. Az <span class="m">s</span> karaktersorozat megengedett tartalma (a megengedett parancsok halmaza) nagymértékben függ a használt operációs rendszertől. A <span class="f">system</span> függvény alkalmazására jó példa a UNIX operációs rendszer esetén kiadott<br />
+  <pre>
+<span class="f">system</span> (&quot;date&quot;);
+</pre>
+  utasítás, ami a rendszer <span class="m">date</span> parancsának végrehajtását, azaz a dátum és a napi idő standard kimeneten való kiírását idézi elő. A <span class="f">system</span> a használt operációs rendszertől függő egész állapotjelzéssel tér vissza a végrehajtott parancsból. UNIX operációs rendszer esetén a <span class="f">system</span> visszatérési állapotjelzése megegyezik az <span class="f">exit</span> visszatérési értékével.<br />
+  <br />
+  <h4>7.8.5. Tárkezelő függvények<br />
+  </h4>
+  A tárolóban adott méretű terület dinamikus lefoglalása a <span class="f">malloc</span> és <span class="f">calloc</span> függvényekkel lehetséges. A <span class="f">malloc</span> függvény általános alakja:<br />
+  <pre>
+<span class="k">void</span> *<span class="f">malloc</span> (<span class="k">size_t</span> n)
+</pre>
+  A függvény egy <span class="m">n</span> bájtos, inicializálatlan tárterületet címző mutatóval, vagy ha a helyfoglalási igény nem elégíthető ki, a <span class="f">NULL</span> értékű mutatóval tér vissza. A<br />
+  <pre>
+<span class="k">void</span> *<span class="f">calloc</span>(<span class="k">size_t</span> n, <span class="k">size_t</span> meret)
+</pre>
+  általános alakú <span class="f">calloc</span> függvény <span class="m">n</span> darab megadott méretű objektum számára elegendő helyet biztosító tömb mutatójával, vagy ha a helyigény nem elégíthető ki, akkor <span class="f">NULL</span> értékű mutatóval tér vissza.
+  <p> A <span class="f">malloc</span> vagy <span class="f">calloc</span> függvények visszatérési értékeként kapott mutató a megadott objektumnak megfelelő helyre mutat, de kényszerített típuskonverzióval a kívánt típusúvá kell alakítani, pl. az<br />
+  </p>
+  <pre>
+<span class="k">int</span> *ip;
+ip = (<span class="k">int</span> *) <span class="f">calloc</span> (n, <span class="k">sizeof</span>(<span class="k">int</span>));
+</pre>
+  módon.
+  <p> A <span class="m"><span class="f">free</span> (p)</span> függvény felszabadítja a <span class="m">p</span> mutatóval megcímzett helyet, ahol <span class="m">p</span> egy eredendően <span class="f">malloc</span> vagy <span class="f">calloc</span> hívásával kapott mutató. Arra vonatkozóan, hogy melyik helyet szabadítjuk fel, nincs semmiféle megszorítás, de fatális hiba a következménye, ha nem a <span class="f">malloc</span> vagy <span class="f">calloc</span> függvény hívásával lefoglalt helyet akarunk felszabadítani.</p>
+  <p> Szintén programhibát okoz, ha a hely felszabadítása után akarjuk használni az adott hely tartalmát. Az alábbi, egy lista helyeit felszabadító ciklus tipikus, de inkorrekt programot ad:<br />
+  </p>
+  <pre>
+<span class="k">for</span>(p = fej; p != <span class="f">NULL</span>; p = p-&gt;kovetkezo) <span class="c">/* HIBÁS! */</span>
+   <span class="f">free</span>(p);
+</pre>
+  A feladatot helyesen csak úgy tudjuk megoldani, ha a hely felszabadítása előtt annak tartalmát elmentjük egy segédváltozóba:<br />
+  <pre>
+<span class="k">for</span> (p = fej; p != <span class="f">NULL</span>; p = q) {
+   q = p-&gt;kovetkezo;
+   <span class="f">free</span>(p); 
+}
+</pre>
+  A <a href="08.html#8.7.">8.7. pontban</a> bemutatjuk egy <span class="f">malloc</span>-hoz hasonló tárhelykiosztó függvény megvalósítását. Az általa kiosztott tárterületek tetszőleges sorrendben szabadíthatók fel.<br />
+  <br />
+  <h4>7.8.6. A matematikai függvények<br />
+  </h4>
+  A <span class="m">&lt;math.h&gt;</span> standard headerben húsznál több matematikai függvény van deklarálva, itt most csak a leggyakrabban használatosakat mutatjuk be. Mindegyik függvénynek egy vagy két <span class="k">double</span> típusú argumentuma van és viszatérési értéke <span class="k">double</span> típusú.<br />
+  <br />
+  <br />
+  <table border="1px" align="center">
+    <tr>
+      <td><span class="m"><span class="f">sin</span>(x)</span></td>
+      <td>a radiánban adott <span class="m">x</span> érték szinusza;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">cos</span> (x)</span></td>
+      <td>a radiánban adott <span class="m">x</span> érték koszinusza;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">atan2</span> (y, x)</span></td>
+      <td>az <span class="m">y/x</span> árkusz tangense radiánban;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">exp</span> (x)</span></td>
+      <td>az <i>e<sup>x</sup></i> exponenciális függvény értéke;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">log</span> (x)</span></td>
+      <td><span class="m">x</span> természetes (<i>e</i> alapú) logaritmusa (<span class="m">x&gt;0</span>);</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">log10</span> (x)</span></td>
+      <td>x tízes alapú logaritmusa (x&gt;0);</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">pow</span> (x, y)</span></td>
+      <td>az <i>x<sup>y</sup></i> függvény értéke;</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">sqrt</span> (x)</span></td>
+      <td><span class="m">x</span> négyzetgyöke (x&gt;0);</td>
+    </tr>
+    <tr>
+      <td><span class="m"><span class="f">fabs</span> (x)</span></td>
+      <td><span class="m">x</span> abszolút értéke.</td>
+    </tr>
+  </table>
+  <br />
+  <br />
+  <h4>7.8.7. Véletlenszám-generálás<br />
+  </h4>
+  A <span class="f">rand</span> függvény egész számok pszeudovéletlen-szerű sorozatát állítja elő. A kapott számok nulla és az <span class="m">&lt;stdlib.h&gt;</span> standard headerben definiált <span class="f">RAND_MAX</span> érték közé esnek. Ennek felhasználásával a <span class="m">0 &lt;= x &lt; 1</span> tartományba eső lebegőpontos véletlenszámok a<br />
+  <pre>
+<span class="d">#define</span> frand() ((<span class="k">double</span>) <span class="f">rand</span>() / (<span class="f">RAND_MAX</span>+1.0))
+</pre>
+  definícióval állíthatók elő. (Ha az adott gépen futó C rendszer könyvtárában már létezik a lebegőpontos véletlenszám-generáló függvény, akkor az valószínűleg kedvezőbb statisztikai tulajdonságokkal rendelkezik, mint az így definiált véletlen szám.)
+  <p> A <span class="f">rand</span> függvény kiindulási értéke a <span class="m"><span class="f">srand</span>(<span class="k">unsigned</span>)</span> függvénnyel állítható be. A <span class="f">rand</span> és <span class="f">srand</span> függvények szabványban javasolt hordozható változatát a <a href="02.html#2.7.">2.7. pontban</a> ismertettük.<br />
+    <br />
+  </p>
+  <p><b>7.9.</b> gyakorlat. Az <span class="f">isupper</span>-hez hasonló függvények helytakarékos vagy időtakarékos változatban írhatók meg. Vizsgálja meg, hogyan lehetséges mindkét változat kialakítása!<br />
+    <br />
+  </p>
+<br>
+<br>
+
+<table align="center">
+<tr>
+   <td width="200px" align="left">
+         <a href="06.html">6. FEJEZET</a>
+   </td>
+   <td width="200px" align="center">
+         <a href="../index.html#Tartalom">Tartalom</a>
+   </td>
+   <td width="200px" align="right">
+         <a href="08.html">8. FEJEZET</a>
+   </td>
+</tr>
+</table>
+
+
+</div>
+</body>
+</html>
